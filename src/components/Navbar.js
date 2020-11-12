@@ -3,15 +3,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import Chip from '@material-ui/core/Chip'
 import { ThemeProvider } from '@material-ui/core'
 import { SvgIcon } from '@material-ui/core'
-import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import Avatar from '@material-ui/core/Avatar';
 
 import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
@@ -26,13 +25,34 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
     textAlign: 'center'
+  },
+  motto: {
+    marginLeft: theme.spacing(2)
   }
 }))
 
 const useSelectStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    alignItems: 'baseline',
+    fontSize: '12px'
+  },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120
+    minWidth: 120,
+    flexDirection: 'row'
+  },
+  labelControl: {
+    margin: theme.spacing(1),
+    marginRight: 0,
+    minWidth: 0,
+    color: '#000',
+    opacity: 0.5
+  },
+  optionControl: {
+    color: '#000',
+    fontSize: '12px',
+    fontWeight: 500,
   },
 }))
 
@@ -42,6 +62,7 @@ const useChipStyles = makeStyles(theme => ({
     overflowX: 'auto',
     '& > *': {
       margin: theme.spacing(0.5),
+      marginLeft: theme.spacing(1),
       marginBottom: theme.spacing(2)
     }
   }
@@ -55,10 +76,13 @@ function SimpleSelect () {
     changeSort(event.target.value)
   }
   return (
-    <div>
+    <div className={classes.root}>
+      <FormControl className={classes.labelControl}>
+        <div id='demo-simple-select-label'>Sorted by</div>
+      </FormControl>
       <FormControl className={classes.formControl}>
-        <InputLabel id='demo-simple-select-label'>Sort by</InputLabel>
         <Select
+          className={classes.optionControl}
           autoWidth
           labelId='demo-simple-select-label'
           id='demo-simple-select'
@@ -114,11 +138,12 @@ export default function Navbar (props) {
             <Typography variant='h6' className={classes.title}>
               Mahi Care
             </Typography>
-            <Button color='inherit'>Login</Button>
+            <Avatar src='https://react.semantic-ui.com/images/avatar/small/christian.jpg' alt='Mahi'/>
           </Toolbar>
+          <h3 className={classes.motto}>Be the Change</h3>
           <Chips />
           <SimpleSelect />
-        </AppBar>
+        </AppBar> 
       </ThemeProvider>
     </div>
   )
