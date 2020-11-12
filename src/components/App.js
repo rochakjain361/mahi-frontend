@@ -1,9 +1,9 @@
-import Test from './test'
+import Navbar from './Navbar'
 
 function App() {
   return (
     <div>
-      <Test/>
+      <Navbar/>
     </div>
   );
 }
