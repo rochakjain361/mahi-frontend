@@ -24,7 +24,7 @@ import { theme } from '../theme'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '90%',
+    width: '100%',
     borderRadius: '0.5rem',
     marginBottom: '0.8rem'
   },

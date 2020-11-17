@@ -6,9 +6,9 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         justifyContent: 'center',
-        marginTop: '2rem',
         flexFlow: 'column',
         alignItems: 'center',
+        padding: '1.25rem'
     },
   }));
 

@@ -10,41 +10,44 @@ import { SvgIcon } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '@material-ui/core/Avatar'
 
 import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)'
   },
-  menuButton: {
-    marginRight: theme.spacing(2)
+  toolBar: {
+    padding: '1.25rem 1.25rem 0 1.25rem'
   },
   title: {
     flexGrow: 1,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: 500
   },
   motto: {
-    marginLeft: theme.spacing(2)
+    padding: '0 1.25rem',
+    fontSize: '1.5rem',
+    fontWeight: 500
   }
 }))
 
 const useSelectStyles = makeStyles(theme => ({
   root: {
+    padding: '0 1.25rem 1.25rem 1.25rem',
     display: 'flex',
     alignItems: 'baseline',
-    fontSize: '12px'
+    fontSize: '0.75rem'
   },
   formControl: {
-    margin: theme.spacing(1),
+    marginLeft: theme.spacing(1),
     minWidth: 120,
     flexDirection: 'row'
   },
   labelControl: {
-    margin: theme.spacing(1),
-    marginLeft: theme.spacing(2),
     marginRight: 0,
     minWidth: 0,
     color: '#000',
@@ -53,22 +56,23 @@ const useSelectStyles = makeStyles(theme => ({
   optionControl: {
     color: '#000',
     fontSize: '12px',
-    fontWeight: 500,
-  },
+    fontWeight: 500
+  }
 }))
 
 const useChipStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     overflowX: 'auto',
-    marginLeft: theme.spacing(1),
+    padding: '0 0 0 1.25rem',
+    marginBottom: theme.spacing(2),
     '& > *': {
       backgroundColor: '#F5F5F5',
-      margin: theme.spacing(0.5),
-      marginLeft: theme.spacing(1),
-      marginBottom: theme.spacing(2)
+      padding: '0.875rem 1rem',
+      fontWeight: 500,
+      marginRight: theme.spacing(1),
     }
-  }
+  },
 }))
 
 function SimpleSelect () {
@@ -81,14 +85,13 @@ function SimpleSelect () {
   return (
     <div className={classes.root}>
       <FormControl className={classes.labelControl}>
-        <div id='demo-simple-select-label'>Sorted by</div>
+        <div>Sorted by</div>
       </FormControl>
       <FormControl className={classes.formControl}>
         <Select
           className={classes.optionControl}
           autoWidth
           labelId='demo-simple-select-label'
-          id='demo-simple-select'
           value={sort_by}
           onChange={handleChange}
           disableUnderline
@@ -106,10 +109,10 @@ function Chips () {
   const classes = useChipStyles()
   return (
     <div className={classes.root}>
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
+      <Chip label='All' clickable />
+      <Chip label='Exam Transit' clickable />
+      <Chip label='Hunger' clickable />
+      <Chip label='Homeless' clickable />
       <Chip label='Basic' clickable />
       <Chip label='Basic' clickable />
       <Chip label='Basic' clickable />
@@ -126,14 +129,9 @@ export default function Navbar (props) {
   return (
     <div className={classes.root}>
       <ThemeProvider theme={theme}>
-        <AppBar position='static' elevation={2}>
-          <Toolbar>
-            <IconButton
-              edge='start'
-              className={classes.menuButton}
-              color='inherit'
-              aria-label='menu'
-            >
+        <AppBar position='static' elevation={0}>
+          <Toolbar className={classes.toolBar}>
+            <IconButton edge='start' color='inherit' aria-label='menu'>
               <SvgIcon>
                 <MenuIcon />
               </SvgIcon>
@@ -141,12 +139,15 @@ export default function Navbar (props) {
             <Typography variant='h6' className={classes.title}>
               Mahi Care
             </Typography>
-            <Avatar src='https://react.semantic-ui.com/images/avatar/small/christian.jpg' alt='Mahi'/>
+            <Avatar
+              src='https://react.semantic-ui.com/images/avatar/small/christian.jpg'
+              alt='Mahi'
+            />
           </Toolbar>
           <h3 className={classes.motto}>Be the Change</h3>
           <Chips />
           <SimpleSelect />
-        </AppBar> 
+        </AppBar>
       </ThemeProvider>
     </div>
   )
