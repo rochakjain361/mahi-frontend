@@ -44,6 +44,7 @@ const useSelectStyles = makeStyles(theme => ({
   },
   labelControl: {
     margin: theme.spacing(1),
+    marginLeft: theme.spacing(2),
     marginRight: 0,
     minWidth: 0,
     color: '#000',
@@ -60,7 +61,9 @@ const useChipStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     overflowX: 'auto',
+    marginLeft: theme.spacing(1),
     '& > *': {
+      backgroundColor: '#F5F5F5',
       margin: theme.spacing(0.5),
       marginLeft: theme.spacing(1),
       marginBottom: theme.spacing(2)

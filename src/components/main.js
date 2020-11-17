@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PostCard from './postCard'
 import { makeStyles } from '@material-ui/core/styles';
 

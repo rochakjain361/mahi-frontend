@@ -9,4 +9,7 @@ export const theme = createMuiTheme({
       main: '#0f0'
     }
   },
+  typography: {
+    fontFamily: 'Metropolis'
+  }
 })

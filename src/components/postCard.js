@@ -1,22 +1,20 @@
 import React from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
-import clsx from 'clsx'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
-import Collapse from '@material-ui/core/Collapse'
 import Avatar from '@material-ui/core/Avatar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
-import { green, red } from '@material-ui/core/colors'
+import { red } from '@material-ui/core/colors'
 import { ThemeProvider } from '@material-ui/core'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
-import { Icon, SvgIcon } from '@material-ui/core'
+import { SvgIcon } from '@material-ui/core'
 import {
   PostCardFooterFavLeftIcon,
   PostCardFooterFavRightIcon,
@@ -121,7 +119,7 @@ const BorderLinearProgress = withStyles(theme => ({
 export default function PostCard () {
   const classes = useStyles()
 
-  const subheader = <LocationOnIcon size='small' />
+  // const subheader = <LocationOnIcon size='small' />
 
   return (
     <Card className={classes.root}>
@@ -143,7 +141,7 @@ export default function PostCard () {
           }
         />
         <CardContent>
-          <Typography variant='body2' color='textSecondary' component='p'>
+          <Typography variant='body2' color='textPrimary' component='p'>
             This impressive paella is a perfect party dish and a fun meal to
             cook together with your guests.
           </Typography>
