@@ -119,8 +119,6 @@ const BorderLinearProgress = withStyles(theme => ({
 export default function PostCard () {
   const classes = useStyles()
 
-  // const subheader = <LocationOnIcon size='small' />
-
   return (
     <Card className={classes.root}>
       <ThemeProvider theme={theme}>
