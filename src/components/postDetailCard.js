@@ -47,7 +47,8 @@ const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     borderRadius: '0.5rem',
-    paddingBottom: '0.8rem'
+    paddingBottom: '0.8rem',
+    marginBottom: '0.5rem'
   },
   header: {
     display: 'flex',

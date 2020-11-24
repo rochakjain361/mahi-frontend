@@ -1,6 +1,11 @@
 import React from 'react'
-import PostDetailCard from './postDetailCard'
 import { makeStyles } from '@material-ui/core/styles';
+
+import PostDetailCard from './postDetailCard'
+import BankDetails from './bankDetails'
+import Volunteer from './volunteer'
+import Log from './log'
+import Suggestions from './suggestion'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -17,6 +22,10 @@ export default function MainDetail() {
     return (
             <div className={classes.root}>
                 <PostDetailCard />
+                <BankDetails/>
+                <Volunteer/>
+                <Log/>
+                <Suggestions/>
             </div>
         )
     }
