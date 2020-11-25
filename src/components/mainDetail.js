@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
+import AskUpdate from './askUpdate';
 
 import PostDetailCard from './postDetailCard'
 import BankDetails from './bankDetails'
@@ -9,11 +10,11 @@ import Suggestions from './suggestion'
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        padding: '1.25rem',
         display: 'flex',
-        justifyContent: 'center',
         flexFlow: 'column',
-        alignItems: 'center',
-        padding: '1.25rem'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
   }));
 
@@ -26,6 +27,7 @@ export default function MainDetail() {
                 <Volunteer/>
                 <Log/>
                 <Suggestions/>
+                <AskUpdate />
             </div>
         )
     }
