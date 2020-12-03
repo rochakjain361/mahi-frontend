@@ -1,0 +1,1 @@
+// declare constants to be used in the project

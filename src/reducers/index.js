@@ -1,9 +1,9 @@
-
 import { combineReducers } from 'redux'
 import exampleReducer from './exampleReducer'
+import causeReducer from './causeReducer'
 
 const rootReducers = combineReducers({
-  exampleReducer
+  causes: causeReducer
 })
 
 export default rootReducers

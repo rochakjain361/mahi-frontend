@@ -1,4 +1,5 @@
 import React from 'react'
+import { findDaysLeft } from '../helpers/helperfunctions'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
@@ -116,10 +117,10 @@ const BorderLinearProgress = withStyles(theme => ({
   }
 }))(LinearProgress)
 
-export default function PostCard () {
+export default function PostCard ({cause}) {
   const classes = useStyles()
-
-  // const subheader = <LocationOnIcon size='small' />
+  const percentage = cause.raised/cause.goal
+  const daysLeft = findDaysLeft(cause.deadline)
 
   return (
     <Card className={classes.root}>
@@ -142,8 +143,7 @@ export default function PostCard () {
         />
         <CardContent>
           <Typography variant='body2' color='textPrimary' component='p'>
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests.
+            {cause.description}
           </Typography>
         </CardContent>
         <CardMedia
@@ -153,16 +153,16 @@ export default function PostCard () {
         >
           <div className={classes.daysLeft}>
             <AccessTimeIcon className={classes.timeIcon} />
-            <p>14 Days left</p>
+            <p>{daysLeft} Days left</p>
           </div>
           <div className={classes.PostCardBottom}>
             <div className={classes.PostCardBottomDetailLeft}>
-              <div>₹4000</div>
+              <div>₹{cause.raised}</div>
               <div>RAISED</div>
             </div>
-            <BorderLinearProgress variant='determinate' value={50} />
+            <BorderLinearProgress variant='determinate' value={percentage} />
             <div className={classes.PostCardBottomDetailRight}>
-            <div>₹8000</div>
+            <div>₹{cause.goal}</div>
             <div>GOAL</div>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function PostCard () {
               <PostCardFooterFavLeftIcon />
             </SvgIcon>
           </IconButton>
-          <p>24 Supporters</p>
+          <p>{cause.supporter_count} Supporters</p>
           <IconButton className={classes.LikeIcon}>
             <SvgIcon>
               <PostCardFooterFavRightIcon />
