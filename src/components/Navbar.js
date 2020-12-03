@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect }  from 'react'
+import { useSelector, useDispatch, useActions } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -14,6 +15,7 @@ import Avatar from '@material-ui/core/Avatar'
 
 import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
+import { getAllTags } from '../actions/extraActions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -70,9 +72,9 @@ const useChipStyles = makeStyles(theme => ({
       backgroundColor: '#F5F5F5',
       padding: '0.875rem 1rem',
       fontWeight: 500,
-      marginRight: theme.spacing(1),
+      marginRight: theme.spacing(1)
     }
-  },
+  }
 }))
 
 function SimpleSelect () {
@@ -107,20 +109,15 @@ function SimpleSelect () {
 
 function Chips () {
   const classes = useChipStyles()
-  return (
-    <div className={classes.root}>
-      <Chip label='All' clickable />
-      <Chip label='Exam Transit' clickable />
-      <Chip label='Hunger' clickable />
-      <Chip label='Homeless' clickable />
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
-      <Chip label='Basic' clickable />
-    </div>
-  )
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getAllTags())
+  }, [])
+  const all_tags = useSelector(state => state.extras.Tags)
+  const chipList = all_tags.map(tag => {
+    return <Chip label={tag.tag_name} clickable />
+  })
+  return <div className={classes.root}>{chipList}</div>
 }
 
 export default function Navbar (props) {

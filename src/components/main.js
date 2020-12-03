@@ -1,5 +1,5 @@
-import React, { useState, useEffect }  from 'react'
-import { useSelector, useDispatch, useActions } from 'react-redux'
+import React, { useEffect }  from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import PostCard from './postCard'
 import { makeStyles } from '@material-ui/core/styles';
 import { getAllCauses } from '../actions/CauseActions';
