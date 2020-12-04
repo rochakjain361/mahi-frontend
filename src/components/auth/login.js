@@ -5,11 +5,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import { Button } from '@material-ui/core'
 
-import {get_firebase_config} from '../../configurations/firebase_config'
 import { send_phone_otp, verify_phone_otp } from './phoneLogin'
 import { google_sign_in } from './googleLogin'
 import { fb_sign_in } from './fbLogin'
 import {logout} from './logout'
+import {delete_user} from './delete'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,14 +20,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+// TODO: Handle exceptions like account exists with different credentials
 export default function Login () {
   const classes = useStyles()
   const [phone_number, set_phone_number] = useState(null)
   const [otp, set_otp] = useState(null)
 
   useEffect(() => {
-    const firebaseConfig = get_firebase_config()
-    firebase.initializeApp(firebaseConfig)
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('reCaptcha')
     window.recaptchaVerifier.render().then(function (widgetId) {
       window.recaptchaWidgetId = widgetId
@@ -80,6 +79,9 @@ export default function Login () {
       </Button>
       <Button variant='contained' onClick={logout}>
         Logout
+      </Button>
+      <Button variant='contained' onClick={delete_user}>
+        Delete account
       </Button>
     </form>
   )
