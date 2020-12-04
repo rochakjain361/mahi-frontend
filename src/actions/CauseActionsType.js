@@ -1,0 +1,4 @@
+export const GET_ALL_CAUSES = 'GET_ALL_CAUSES'
+export const CAUSE_API_ERROR = 'CAUSE_API_ERROR'
+
+export const GET_CAUSES_PENDING = 'GET_CAUSES_PENDING'
