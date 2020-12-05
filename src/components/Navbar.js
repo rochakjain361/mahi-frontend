@@ -15,7 +15,7 @@ import Avatar from '@material-ui/core/Avatar'
 
 import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
-import { getAllTags } from '../actions/extraActions'
+import { getAllTags, setTag } from '../actions/extraActions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -115,9 +115,9 @@ function Chips () {
   }, [])
   const all_tags = useSelector(state => state.extras.Tags)
   const chipList = all_tags.map(tag => {
-    return <Chip label={tag.tag_name} clickable />
+    return <Chip onClick={() => dispatch(setTag(tag.id))} label={tag.tag_name} key={tag.id} clickable />
   })
-  return <div className={classes.root}>{chipList}</div>
+  return <div className={classes.root}><Chip onClick={() => dispatch(setTag(0))} label='all' key='0' clickable />{chipList}</div>
 }
 
 export default function Navbar (props) {

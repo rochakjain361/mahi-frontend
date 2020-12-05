@@ -119,7 +119,7 @@ const BorderLinearProgress = withStyles(theme => ({
 
 export default function PostCard ({cause}) {
   const classes = useStyles()
-  const percentage = cause.raised/cause.goal
+  const percentage = (cause.raised/cause.goal)*100
   const daysLeft = findDaysLeft(cause.deadline)
 
   return (
