@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import ShowMoreText from 'react-show-more-text'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import Button from '@material-ui/core/Button'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
@@ -136,6 +139,10 @@ export default function PostDetailCard () {
   const theme = useTheme()
   const [activeStep, setActiveStep] = React.useState(0)
   const maxSteps = tutorialSteps.length
+  const [expand, setExpand] = useState(false)
+  const onClick = () => {
+    setExpand(!expand)
+  }
 
   const handleNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1)
@@ -201,8 +208,23 @@ export default function PostDetailCard () {
         </CardActions>
         <div className={classes.PostCardDescription}>
           <Typography variant='body2' color='textPrimary' component='p'>
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests.
+            <ShowMoreText
+              lines={2}
+              more={'Show More'}
+              less={'Show Less'}
+              onClick={onClick}
+              expanded={expand}
+            >
+              This impressive paella is a perfect party dish and a fun meal to
+              cook together with your guests. Lorem ipsum dolor sit amet,
+              adipiscing, sed do eiusmod tempor incididunt ut labore et dolore
+              magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+              ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum dolore
+              eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+              proident, sunt in culpa qui officia deserunt mollit anim id est
+              laborum.
+            </ShowMoreText>
           </Typography>
         </div>
         <div className={classes.PostCardBottom}>

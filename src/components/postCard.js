@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { findDaysLeft } from '../helpers/helperfunctions'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -12,6 +12,9 @@ import Typography from '@material-ui/core/Typography'
 import { red } from '@material-ui/core/colors'
 import { ThemeProvider } from '@material-ui/core'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import ShowMoreText from 'react-show-more-text'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
@@ -51,18 +54,18 @@ const useStyles = makeStyles(theme => ({
     width: '80%',
     alignItems: 'center',
     color: 'white',
-    fontSize: '0.8rem',
+    fontSize: '0.8rem'
   },
   PostCardBottomDetailRight: {
     width: '20%',
     display: 'flex',
     flexDirection: 'column',
-    placeItems: 'flex-end',
+    placeItems: 'flex-end'
   },
   PostCardBottomDetailLeft: {
     width: '20%',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   subheader: {
     display: 'flex',
@@ -117,10 +120,15 @@ const BorderLinearProgress = withStyles(theme => ({
   }
 }))(LinearProgress)
 
-export default function PostCard ({cause}) {
+export default function PostCard ({ cause }) {
   const classes = useStyles()
-  const percentage = (cause.raised/cause.goal)*100
+  const percentage = (cause.raised / cause.goal) * 100
   const daysLeft = findDaysLeft(cause.deadline)
+
+  const [expand, setExpand] = useState(false)
+  const onClick = () => {
+    setExpand(!expand)
+  }
 
   return (
     <Card className={classes.root}>
@@ -143,7 +151,15 @@ export default function PostCard ({cause}) {
         />
         <CardContent>
           <Typography variant='body2' color='textPrimary' component='p'>
-            {cause.description}
+            <ShowMoreText
+              lines={1}
+              more={'Show More'}
+              less={'Show Less'}
+              onClick={onClick}
+              expanded={expand}
+            >
+              {cause.description}
+            </ShowMoreText>
           </Typography>
         </CardContent>
         <CardMedia
@@ -162,8 +178,8 @@ export default function PostCard ({cause}) {
             </div>
             <BorderLinearProgress variant='determinate' value={percentage} />
             <div className={classes.PostCardBottomDetailRight}>
-            <div>₹{cause.goal}</div>
-            <div>GOAL</div>
+              <div>₹{cause.goal}</div>
+              <div>GOAL</div>
             </div>
           </div>
         </CardMedia>
