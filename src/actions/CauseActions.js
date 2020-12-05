@@ -21,8 +21,8 @@ const apiDispatch = (actionType = '', data) => {
     }
   }
 
-export const getAllCauses = () => {
-    const url = `${CAUSE_APIS.CauseItems}`
+export const getAllCauses = (tag) => {
+    const url = tag ? `${CAUSE_APIS.CauseItems}?tag=${tag}` :  `${CAUSE_APIS.CauseItems}`
     return dispatch => {
       dispatch(apiDispatch(GET_CAUSES_PENDING, true))
       apiClient

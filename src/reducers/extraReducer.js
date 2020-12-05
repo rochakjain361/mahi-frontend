@@ -1,7 +1,8 @@
 import {
     GET_ALL_TAGS,
     EXTRA_API_ERROR,
-    GET_TAGS_PENDING
+    GET_TAGS_PENDING,
+    SET_TAG
   } from '../actions/extraActionsType'
   
   const initialPendingState = {
@@ -10,7 +11,8 @@ import {
   
   const initialState = {
     ...initialPendingState,
-    Tags: []
+    Tags: [],
+    tag: 0,
   }
   const extraReducer = (state = initialState, action) => {
     const { type, payload, error } = action
@@ -19,6 +21,8 @@ import {
         return { ...state, Tags: payload }
       case GET_TAGS_PENDING:
         return { ...state, getTagsPending: payload }
+      case SET_TAG:
+        return { ...state, tag: payload }
       case EXTRA_API_ERROR:
         return { ...state, error: error }
       default:

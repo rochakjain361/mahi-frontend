@@ -5,6 +5,7 @@ import {
     GET_ALL_TAGS,
     GET_TAGS_PENDING,
     EXTRA_API_ERROR,
+    SET_TAG
 } from './extraActionsType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -37,4 +38,10 @@ export const getAllTags = () => {
         })
     }
   }
+
+export const setTag = (tag) => {
+  return dispatch => {
+    dispatch(apiDispatch(SET_TAG, tag))
+  }
+}
   
