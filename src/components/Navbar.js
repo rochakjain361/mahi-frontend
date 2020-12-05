@@ -122,6 +122,8 @@ function Chips () {
 
 export default function Navbar (props) {
   const classes = useStyles()
+  const LoggedInUser = useSelector(state => state.users.Loggedinuser)
+  console.log(LoggedInUser)
 
   return (
     <div className={classes.root}>
@@ -137,7 +139,7 @@ export default function Navbar (props) {
               Mahi Care
             </Typography>
             <Avatar
-              src='https://react.semantic-ui.com/images/avatar/small/christian.jpg'
+              src={LoggedInUser && LoggedInUser.display_picture ? `${LoggedInUser.display_picture}` : 'https://react.semantic-ui.com/images/avatar/small/christian.jpg'}
               alt='Mahi'
             />
           </Toolbar>

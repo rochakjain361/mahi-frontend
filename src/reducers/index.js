@@ -2,10 +2,12 @@ import { combineReducers } from 'redux'
 import exampleReducer from './exampleReducer'
 import causeReducer from './causeReducer'
 import extraReducer from './extraReducer'
+import userReducer from './userReducer'
 
 const rootReducers = combineReducers({
   causes: causeReducer,
-  extras: extraReducer
+  users: userReducer,
+  extras: extraReducer,
 })
 
 export default rootReducers

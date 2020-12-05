@@ -5,3 +5,7 @@ export const CAUSE_APIS = {
 export const EXTRA_APIS = {
     tags: '/tags'
 }
+
+export const USER_APIS = {
+    whoami : '/who_am_i'
+}
