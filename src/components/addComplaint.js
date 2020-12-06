@@ -460,23 +460,6 @@ export default function AddComplaint () {
           ) : (
             <div className={classes.formDiv}>
               <div>{getStepContent(activeStep)}</div>
-              {/* <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant='contained'
-                  color='primary'
-                  onClick={handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              </div> */}
             </div>
           )}
         </div>
