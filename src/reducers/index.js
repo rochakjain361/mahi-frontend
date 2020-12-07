@@ -2,12 +2,14 @@ import { combineReducers } from 'redux'
 import exampleReducer from './exampleReducer'
 import causeReducer from './causeReducer'
 import extraReducer from './extraReducer'
-import userReducer from './userReducer'
+import OTPReducer from './otpReducer'
+import AuthReducer from './authReducer'
 
 const rootReducers = combineReducers({
   causes: causeReducer,
-  users: userReducer,
   extras: extraReducer,
+  OTP: OTPReducer,
+  auth: AuthReducer
 })
 
 export default rootReducers

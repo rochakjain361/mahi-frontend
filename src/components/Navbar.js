@@ -112,7 +112,7 @@ function Chips () {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllTags())
-  }, [])
+  }, [dispatch])
   const all_tags = useSelector(state => state.extras.Tags)
   const chipList = all_tags.map(tag => {
     return <Chip onClick={() => dispatch(setTag(tag.id))} label={tag.tag_name} key={tag.id} clickable />
@@ -122,7 +122,7 @@ function Chips () {
 
 export default function Navbar (props) {
   const classes = useStyles()
-  const LoggedInUser = useSelector(state => state.users.Loggedinuser)
+  const LoggedInUser = useSelector(state => state.auth.Loggedinuser)
   console.log(LoggedInUser)
 
   return (
