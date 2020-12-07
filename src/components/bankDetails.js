@@ -55,7 +55,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function BankDetails () {
+export default function BankDetails (BankDetails) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 

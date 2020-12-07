@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch, useActions } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     padding: '0 1.25rem',
     fontSize: '1.5rem',
     fontWeight: 500
-  }
+  },
 }))
 
 const useSelectStyles = makeStyles(theme => ({
@@ -74,7 +74,11 @@ const useChipStyles = makeStyles(theme => ({
       fontWeight: 500,
       marginRight: theme.spacing(1)
     }
-  }
+  },
+  selectedTag: {
+    background: 'black !important',
+    color: 'white'
+  },
 }))
 
 function SimpleSelect () {
@@ -113,11 +117,32 @@ function Chips () {
   useEffect(() => {
     dispatch(getAllTags())
   }, [dispatch])
+  const selected_tag = useSelector(state => state.extras.tag)
+  console.log(selected_tag)
   const all_tags = useSelector(state => state.extras.Tags)
   const chipList = all_tags.map(tag => {
-    return <Chip onClick={() => dispatch(setTag(tag.id))} label={tag.tag_name} key={tag.id} clickable />
+    return (
+      <Chip
+        className={selected_tag==tag.id ? classes.selectedTag : ''}
+        onClick={() => dispatch(setTag(tag.id))}
+        label={tag.tag_name}
+        key={tag.id}
+        clickable
+      />
+    )
   })
-  return <div className={classes.root}><Chip onClick={() => dispatch(setTag(0))} label='all' key='0' clickable />{chipList}</div>
+  return (
+    <div className={classes.root}>
+      <Chip
+        className={selected_tag=='0' ? classes.selectedTag : ''}
+        onClick={() => dispatch(setTag(0))}
+        label='all'
+        key='0'
+        clickable
+      />
+      {chipList}
+    </div>
+  )
 }
 
 export default function Navbar (props) {
@@ -139,9 +164,17 @@ export default function Navbar (props) {
               Mahi Care
             </Typography>
             <Avatar
-              src={LoggedInUser && LoggedInUser.display_picture ? `${LoggedInUser.display_picture}` : 'https://react.semantic-ui.com/images/avatar/small/christian.jpg'}
-              alt='Mahi'
-            />
+              src={
+                LoggedInUser && LoggedInUser.display_picture
+                  ? `${LoggedInUser.display_picture}`
+                  : ''
+              }
+              className={classes.avatar}
+            >
+              {LoggedInUser && LoggedInUser.first_name
+                ? LoggedInUser.first_name[0]
+                : 'Mahi'}
+            </Avatar>
           </Toolbar>
           <h3 className={classes.motto}>Be the Change</h3>
           <Chips />
