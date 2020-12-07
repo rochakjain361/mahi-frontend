@@ -4,7 +4,9 @@ import { CAUSE_APIS } from '../urls'
 import {
   GET_ALL_CAUSES,
   GET_CAUSES_PENDING,
-  CAUSE_API_ERROR
+  CAUSE_API_ERROR,
+  GET_CAUSE_PENDING,
+  GET_CAUSE
 } from './CauseActionsType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -36,6 +38,23 @@ export const getAllCauses = tag => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(GET_CAUSES_PENDING, false))
+      })
+  }
+}
+
+export const getCause = id => {
+  const url =`${CAUSE_APIS.CauseItems}/${id}`
+  return dispatch => {
+    dispatch(apiDispatch(GET_CAUSE_PENDING, true))
+    apiClient
+      .get(url)
+      .then(res => {
+        dispatch(apiDispatch(GET_CAUSE_PENDING, false))
+        dispatch(apiDispatch(GET_CAUSE, res.data))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(GET_CAUSE_PENDING, false))
       })
   }
 }

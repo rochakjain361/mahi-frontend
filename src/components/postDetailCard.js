@@ -22,6 +22,8 @@ import {
   PostCardFooterFavRightIcon,
   PostCardFooterShareIcon
 } from '../icons/menu'
+import { useParams } from 'react-router-dom'
+import { getCause } from '../actions/CauseActions'
 
 const tutorialSteps = [
   {
@@ -134,7 +136,7 @@ const BorderLinearProgress = withStyles(theme => ({
   }
 }))(LinearProgress)
 
-export default function PostDetailCard () {
+export default function PostDetailCard (cause) {
   const classes = useStyles()
   const theme = useTheme()
   const [activeStep, setActiveStep] = React.useState(0)
@@ -151,6 +153,10 @@ export default function PostDetailCard () {
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1)
   }
+
+  const activeCause = cause.cause
+  const percentage = (activeCause.raised / activeCause.goal) * 100
+  console.log(cause)
 
   return (
     <Card className={classes.root}>
@@ -194,7 +200,7 @@ export default function PostDetailCard () {
               <PostCardFooterFavLeftIconDetail />
             </SvgIcon>
           </IconButton>
-          <p>24 Supporters</p>
+          <p>{activeCause.supporter_count} Supporters</p>
           <IconButton className={classes.LikeIcon}>
             <SvgIcon>
               <PostCardFooterFavRightIcon />
@@ -215,26 +221,18 @@ export default function PostDetailCard () {
               onClick={onClick}
               expanded={expand}
             >
-              This impressive paella is a perfect party dish and a fun meal to
-              cook together with your guests. Lorem ipsum dolor sit amet,
-              adipiscing, sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-              ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-              irure dolor in reprehenderit in voluptate velit esse cillum dolore
-              eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-              proident, sunt in culpa qui officia deserunt mollit anim id est
-              laborum.
+              {activeCause.description}
             </ShowMoreText>
           </Typography>
         </div>
         <div className={classes.PostCardBottom}>
           <div className={classes.PostCardBottomDetailLeft}>
-            <div>₹4000</div>
+            <div>₹{activeCause.raised}</div>
             <div>RAISED</div>
           </div>
-          <BorderLinearProgress variant='determinate' value={50} />
+          <BorderLinearProgress variant='determinate' value={percentage} />
           <div className={classes.PostCardBottomDetailRight}>
-            <div>₹8000</div>
+            <div>₹{activeCause.goal}</div>
             <div>GOAL</div>
           </div>
         </div>

@@ -126,6 +126,10 @@ export default function AddComplaint () {
   const history = useHistory()
   const [activeStep, setActiveStep] = React.useState(0)
   const [personName, setPersonName] = React.useState([])
+  const initCause = {
+      
+  }
+  const [cause, setCause] = React.useState({...initCause})
   const steps = getSteps()
 
   const handleNext = () => {

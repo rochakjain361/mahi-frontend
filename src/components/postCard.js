@@ -25,6 +25,7 @@ import {
   PostCardFooterShareIcon
 } from '../icons/menu'
 import { theme } from '../theme'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -82,10 +83,14 @@ const useStyles = makeStyles(theme => ({
   LikeIcon: {
     marginLeft: 'auto'
   },
+  mediaDiv: {
+    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);'
+  },
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
-    position: 'relative'
+    position: 'relative',
+    backgroundSize: 'contain'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -124,9 +129,10 @@ export default function PostCard ({ cause }) {
   const classes = useStyles()
   const percentage = (cause.raised / cause.goal) * 100
   const daysLeft = findDaysLeft(cause.deadline)
-
+  const history = useHistory()
+  console.log(cause)
   const [expand, setExpand] = useState(false)
-  const onClick = () => {
+  const setExpandDetail = () => {
     setExpand(!expand)
   }
 
@@ -135,17 +141,22 @@ export default function PostCard ({ cause }) {
       <ThemeProvider theme={theme}>
         <CardHeader
           avatar={
-            <Avatar aria-label='recipe' className={classes.avatar}>
-              R
+            <Avatar
+              src={cause.needy_photo ? cause.needy_photo : ''}
+              className={classes.avatar}
+            >
+              {cause.needy_name[0]}
             </Avatar>
           }
-          title='Shrimp and Chorizo Paella'
+          title={cause.needy_name}
           subheader={
             <div className={classes.subheader}>
               <div>
                 <LocationOnIcon className={classes.subheader_icon} />
               </div>
-              <div className={classes.subheader_text}>Mumbai, Maharashtra</div>
+              <div className={classes.subheader_text}>
+                {cause.needy_address}
+              </div>
             </div>
           }
         />
@@ -155,34 +166,36 @@ export default function PostCard ({ cause }) {
               lines={1}
               more={'Show More'}
               less={'Show Less'}
-              onClick={onClick}
+              onClick={setExpandDetail}
               expanded={expand}
             >
               {cause.description}
             </ShowMoreText>
           </Typography>
         </CardContent>
-        <CardMedia
-          className={classes.media}
-          image='https://www.businessinsider.in/thumb/msid-77685011,width-600,resizemode-4,imgsize-191817/tech/how-to/how-to-turn-on-dark-mode-in-google-chrome-on-your-computer-or-mobile-device/img5f4024f189aff80028ab7494.jpg'
-          title='Paella dish'
-        >
-          <div className={classes.daysLeft}>
-            <AccessTimeIcon className={classes.timeIcon} />
-            <p>{daysLeft} Days left</p>
-          </div>
-          <div className={classes.PostCardBottom}>
-            <div className={classes.PostCardBottomDetailLeft}>
-              <div>₹{cause.raised}</div>
-              <div>RAISED</div>
+        <div className={classes.mediaDiv}  onClick={() => history.push(`/${cause.id}`)}>
+          <CardMedia
+            className={classes.media}
+            image={cause.cover_photo}
+            title='cover photo'
+          >
+            <div className={classes.daysLeft}>
+              <AccessTimeIcon className={classes.timeIcon} />
+              <p>{daysLeft} Days left</p>
             </div>
-            <BorderLinearProgress variant='determinate' value={percentage} />
-            <div className={classes.PostCardBottomDetailRight}>
-              <div>₹{cause.goal}</div>
-              <div>GOAL</div>
+            <div className={classes.PostCardBottom}>
+              <div className={classes.PostCardBottomDetailLeft}>
+                <div>₹{cause.raised}</div>
+                <div>RAISED</div>
+              </div>
+              <BorderLinearProgress variant='determinate' value={percentage} />
+              <div className={classes.PostCardBottomDetailRight}>
+                <div>₹{cause.goal}</div>
+                <div>GOAL</div>
+              </div>
             </div>
-          </div>
-        </CardMedia>
+          </CardMedia>
+        </div>
         <CardActions disableSpacing>
           <IconButton>
             <SvgIcon>
