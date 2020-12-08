@@ -6,7 +6,8 @@ import {
   GET_CAUSES_PENDING,
   CAUSE_API_ERROR,
   GET_CAUSE_PENDING,
-  GET_CAUSE
+  GET_CAUSE,
+  CREATE_CAUSE_PENDING
 } from './CauseActionsType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -43,7 +44,7 @@ export const getAllCauses = tag => {
 }
 
 export const getCause = id => {
-  const url =`${CAUSE_APIS.CauseItems}/${id}`
+  const url = `${CAUSE_APIS.CauseItems}/${id}`
   return dispatch => {
     dispatch(apiDispatch(GET_CAUSE_PENDING, true))
     apiClient
@@ -55,6 +56,23 @@ export const getCause = id => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(GET_CAUSE_PENDING, false))
+      })
+  }
+}
+
+export const createCause = (formdata, callback = () => {}) => {
+  const url = `${CAUSE_APIS.CauseItems}/`
+  return dispatch => {
+    dispatch(apiDispatch(CREATE_CAUSE_PENDING, true))
+    apiClient
+      .post(url, formdata)
+      .then(res => {
+        dispatch(apiDispatch(CREATE_CAUSE_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(CREATE_CAUSE_PENDING, false))
       })
   }
 }
