@@ -33,6 +33,7 @@ import Button from '@material-ui/core/Button'
 import PostCard from './postCard'
 import PostDetailCard from './postDetailCard'
 import { useHistory } from 'react-router-dom'
+import { createCause } from '../actions/CauseActions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -64,6 +65,11 @@ const useStyles = makeStyles(theme => ({
   textfield: {
     width: '100%',
     fontSize: 'small'
+  },
+  hiddentextfield: {
+    width: '100%',
+    fontSize: 'small',
+    display: 'none'
   },
   formInput: {
     marginBottom: '2rem'
@@ -126,11 +132,57 @@ export default function AddComplaint () {
   const history = useHistory()
   const [activeStep, setActiveStep] = React.useState(0)
   const [personName, setPersonName] = React.useState([])
+  const all_tags = useSelector(state => state.extras.Tags)
   const initCause = {
-      
+    tags: [],
+    description: '',
+    needy_name: '',
+    needy_number: '',
+    needy_email: '',
+    needy_address: '',
+    account_name: '',
+    account_no: '',
+    ifsc_code: '',
+    upi_id: '',
+    goal: null,
+    deadline: null,
+    cover_photo: '',
+    needy_photo: '',
+    media: {
+      benchmark_data: [],
+      additional_files: []
+    }
   }
-  const [cause, setCause] = React.useState({...initCause})
+  const [cause, setCause] = React.useState({ ...initCause })
+  const [bank, setBank] = React.useState(false)
+  const [upi, setUpi] = React.useState(false)
   const steps = getSteps()
+
+  const handleChange = event => {
+    setCause({ ...cause, [event.target.name]: event.target.value })
+  }
+
+  const handleSingleImageChange = e => {
+    setCause({ ...cause, [e.target.name]: [...e.target.files] })
+  }
+
+  const handleMediaImageChange = e => {
+    setCause({
+      ...cause,
+      media: { ...cause.media, [e.target.name]: [...cause.media[e.target.name],...e.target.files] }
+    })
+  }
+
+  const removeImage = name => {
+    setCause({ ...cause, [name]: [] })
+  }
+
+  const removeMediaImage = (opt, name) => {
+    var array = [...cause.media[name]] // make a separate copy of the array
+    var index = array.indexOf(opt)
+    array.splice(index, 1)
+    setCause({...cause,media:{...cause.media,[name]:array}})
+  }
 
   const handleNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1)
@@ -144,8 +196,35 @@ export default function AddComplaint () {
     setActiveStep(0)
   }
 
-  const handleChange = event => {
-    setPersonName(event.target.value)
+  const handleSubmit = () => {
+    let formdata = new FormData()
+    for (let i = 0; i < cause.tags.length; i++) {
+      formdata.append('tag', cause.tags[i].toString())
+    }
+    for (let i = 0; i < cause.media.additional_files.length; i++) {
+      formdata.append('media_files', cause.media.additional_files[i])
+    }
+    for (let i = 0; i < cause.media.benchmark_data.length; i++) {
+      formdata.append('benchmark_media', cause.media.benchmark_data[i])
+    }
+    formdata.append('cover_photo',cause.cover_photo)
+    formdata.append('description',cause.description)
+    formdata.append('goal',cause.goal)
+    formdata.append('deadline',cause.deadline)
+    formdata.append('needy_name',cause.needy_name)
+    formdata.append('needy_phone_number',cause.needy_number)
+    formdata.append('needy_email',cause.needy_email)
+    formdata.append('needy_address',cause.needy_address)
+    formdata.append('needy_photo',cause.needy_photo)
+    formdata.append('bank_name',cause.account_name)
+    formdata.append('bank_ifsc_code',cause.ifsc_code)
+    formdata.append('bank_account_no',cause.account_no)
+    formdata.append('bank_upi_id',cause.upi_id)
+    dispatch(createCause(formdata, handleSuccess))
+  }
+
+  const handleSuccess = () => {
+    handleNext()
   }
 
   const ITEM_HEIGHT = 48
@@ -160,19 +239,6 @@ export default function AddComplaint () {
       }
     }
   }
-
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder'
-  ]
 
   const getNavbarIcon = step => {
     switch (step) {
@@ -214,7 +280,7 @@ export default function AddComplaint () {
         )
       case 2:
         return (
-          <div onClick={handleNext} className={classes.bottomButtonPublish}>
+          <div onClick={handleSubmit} className={classes.bottomButtonPublish}>
             Publish Complaint
           </div>
         )
@@ -222,6 +288,13 @@ export default function AddComplaint () {
   }
 
   const getStepContent = step => {
+    const additional_files_names = cause.media.additional_files.map(additional_file => {
+          return <div onClick={() => removeMediaImage(additional_file,'additional_files')} >{additional_file.name}</div>
+      })
+
+      const benchmark_data_names = cause.media.benchmark_data.map(data => {
+        return <div onClick={() => removeMediaImage(data,'benchmark_data')}>{data.name}</div>
+    })
     switch (step) {
       case 0:
         return (
@@ -235,18 +308,22 @@ export default function AddComplaint () {
                   labelId='demo-mutiple-checkbox-label'
                   id='demo-mutiple-checkbox'
                   multiple
-                  value={personName}
+                  value={cause.tags}
+                  name='tags'
                   onChange={handleChange}
                   input={<Input />}
                   renderValue={selected => selected.join(', ')}
                   MenuProps={MenuProps}
                 >
-                  {names.map(name => (
-                    <MenuItem key={name} value={name}>
-                      <Checkbox checked={personName.indexOf(name) > -1} />
-                      <ListItemText primary={name} />
-                    </MenuItem>
-                  ))}
+                  {all_tags &&
+                    all_tags.map(tag => (
+                      <MenuItem key={tag.id} value={tag.tag_name}>
+                        <Checkbox
+                          checked={cause.tags.indexOf(tag.tag_name) > -1}
+                        />
+                        <ListItemText primary={tag.tag_name} />
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </div>
@@ -254,6 +331,9 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>Description</FormLabel>
               <TextField
                 className={classes.textfield}
+                onChange={handleChange}
+                value={cause.description}
+                name='description'
                 id='standard-basic'
                 label='Give brief details of your complaint'
               />
@@ -264,21 +344,33 @@ export default function AddComplaint () {
               </FormLabel>
               <TextField
                 className={classes.textfield}
+                onChange={handleChange}
+                value={cause.needy_name}
+                name='needy_name'
                 id='standard-basic'
                 label='Enter name of the neeedy'
               />
               <TextField
                 className={classes.textfield}
+                onChange={handleChange}
+                value={cause.needy_number}
+                name='needy_number'
                 id='standard-basic'
                 label='Enter contact number'
               />
               <TextField
                 className={classes.textfield}
+                onChange={handleChange}
+                name='needy_email'
+                value={cause.needy_email}
                 id='standard-basic'
                 label='Enter email address(optional)'
               />
               <TextField
                 className={classes.textfield}
+                onChange={handleChange}
+                value={cause.needy_address}
+                name='needy_address'
                 id='standard-basic'
                 label='Address'
               />
@@ -289,21 +381,36 @@ export default function AddComplaint () {
               </FormLabel>
               <FormControlLabel
                 className={classes.checkbox}
-                control={<Checkbox name='checkedC' />}
+                control={
+                  <Checkbox
+                    onChange={() => setBank(!bank)}
+                    name='bank'
+                    value={bank}
+                  />
+                }
                 label='Bank'
               />
               <TextField
-                className={classes.textfield}
+                className={bank ? classes.textfield : classes.hiddentextfield}
+                onChange={handleChange}
+                value={cause.account_name}
+                name='account_name'
                 id='standard-basic'
                 label='Account Name'
               />
               <TextField
-                className={classes.textfield}
+                className={bank ? classes.textfield : classes.hiddentextfield}
+                onChange={handleChange}
+                value={cause.account_no}
+                name='account_no'
                 id='standard-basic'
                 label='Account Number'
               />
               <TextField
-                className={classes.textfield}
+                className={bank ? classes.textfield : classes.hiddentextfield}
+                onChange={handleChange}
+                value={cause.ifsc_code}
+                name='ifsc_code'
                 id='standard-basic'
                 label='IFSC Code'
               />
@@ -311,11 +418,20 @@ export default function AddComplaint () {
             <div className={classes.formInput}>
               <FormControlLabel
                 className={classes.checkbox}
-                control={<Checkbox name='checkedC' />}
+                control={
+                  <Checkbox
+                    onChange={() => setUpi(!upi)}
+                    name='upi'
+                    value={upi}
+                  />
+                }
                 label='UPI ID'
               />
               <TextField
-                className={classes.textfield}
+                className={upi ? classes.textfield : classes.hiddentextfield}
+                onChange={handleChange}
+                value={cause.upi_id}
+                name='upi_id'
                 id='standard-basic'
                 label='UPI ID'
               />
@@ -326,6 +442,9 @@ export default function AddComplaint () {
               </FormLabel>
               <TextField
                 className={classes.textfield}
+                onChange={handleChange}
+                value={cause.goal}
+                name='goal'
                 id='standard-basic'
                 label='Enter the amount in Rs'
               />
@@ -334,6 +453,9 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>Deadline</FormLabel>
               <TextField
                 className={classes.textfield}
+                onChange={handleChange}
+                value={cause.deadline}
+                name='deadline'
                 id='standard-basic'
                 label='dd/mm/yyyy'
               />
@@ -347,16 +469,20 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>
                 Needy photograph
               </FormLabel>
+              <div onClick={() => removeImage('needy_photo')}>
+                {cause.needy_photo[0] ? cause.needy_photo[0].name : ''}
+              </div>
               <input
                 accept='image/*'
+                onChange={handleSingleImageChange}
+                name='needy_photo'
                 className={classes.input}
-                id='contained-button-file'
-                multiple
+                id='contained-button-file-needy_photo'
                 type='file'
               />
-              <label htmlFor='contained-button-file'>
+              <label htmlFor='contained-button-file-needy_photo'>
                 <Button variant='contained' color='primary' component='span'>
-                  Upload
+                  {cause.needy_photo[0] ? 'Update' : 'Upload'}
                 </Button>
               </label>
             </Card>
@@ -364,31 +490,38 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>
                 BenchMark Data
               </FormLabel>
+              {cause.media.benchmark_data[0] ? benchmark_data_names : ''}
               <input
                 accept='image/*'
                 className={classes.input}
-                id='contained-button-file'
+                onChange={handleMediaImageChange}
+                name='benchmark_data'
+                id='contained-button-file-benchmark_data'
                 multiple
                 type='file'
               />
-              <label htmlFor='contained-button-file'>
+              <label htmlFor='contained-button-file-benchmark_data'>
                 <Button variant='contained' color='primary' component='span'>
-                  Upload
+                {cause.media.benchmark_data[0] ? 'Upload More' : 'Upload'}
                 </Button>
               </label>
             </Card>
             <Card className={classes.inputCard}>
               <FormLabel className={classes.formLabel}>Cover Photo</FormLabel>
+              <div onClick={() => removeImage('cover_photo')}>
+                {cause.cover_photo[0] ? cause.cover_photo[0].name : ''}
+              </div>
               <input
                 accept='image/*'
+                onChange={handleSingleImageChange}
+                name='cover_photo'
                 className={classes.input}
-                id='contained-button-file'
-                multiple
+                id='contained-button-file-cover_photo'
                 type='file'
               />
-              <label htmlFor='contained-button-file'>
+              <label htmlFor='contained-button-file-cover_photo'>
                 <Button variant='contained' color='primary' component='span'>
-                  Upload
+                  {cause.cover_photo[0] ? 'Update' : 'Upload'}
                 </Button>
               </label>
             </Card>
@@ -396,16 +529,19 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>
                 Additional Files
               </FormLabel>
+              {cause.media.additional_files[0] ? additional_files_names : ''}
               <input
                 accept='image/*'
                 className={classes.input}
-                id='contained-button-file'
+                onChange={handleMediaImageChange}
+                name='additional_files'
+                id='contained-button-file-additional_files'
                 multiple
                 type='file'
               />
-              <label htmlFor='contained-button-file'>
+              <label htmlFor='contained-button-file-additional_files'>
                 <Button variant='contained' color='primary' component='span'>
-                  Upload
+                {cause.media.additional_files[0] ? 'Upload More' : 'Upload'}
                 </Button>
               </label>
             </Card>
@@ -418,7 +554,7 @@ export default function AddComplaint () {
               Complaint Preview
             </FormLabel>
             <div className={classes.previewCard}>
-              <PostDetailCard />
+              <PostCard cause={cause} />
             </div>
           </div>
         )
