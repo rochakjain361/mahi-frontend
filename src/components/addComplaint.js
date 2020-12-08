@@ -130,6 +130,7 @@ function getSteps () {
 export default function AddComplaint () {
   const classes = useStyles()
   const history = useHistory()
+  const dispatch = useDispatch()
   const [activeStep, setActiveStep] = React.useState(0)
   const [personName, setPersonName] = React.useState([])
   const all_tags = useSelector(state => state.extras.Tags)
@@ -207,7 +208,7 @@ export default function AddComplaint () {
     for (let i = 0; i < cause.media.benchmark_data.length; i++) {
       formdata.append('benchmark_media', cause.media.benchmark_data[i])
     }
-    formdata.append('cover_photo',cause.cover_photo)
+    formdata.append('cover_photo',cause.cover_photo[0])
     formdata.append('description',cause.description)
     formdata.append('goal',cause.goal)
     formdata.append('deadline',cause.deadline)
@@ -215,7 +216,7 @@ export default function AddComplaint () {
     formdata.append('needy_phone_number',cause.needy_number)
     formdata.append('needy_email',cause.needy_email)
     formdata.append('needy_address',cause.needy_address)
-    formdata.append('needy_photo',cause.needy_photo)
+    formdata.append('needy_photo',cause.needy_photo[0])
     formdata.append('bank_name',cause.account_name)
     formdata.append('bank_ifsc_code',cause.ifsc_code)
     formdata.append('bank_account_no',cause.account_no)
@@ -317,9 +318,9 @@ export default function AddComplaint () {
                 >
                   {all_tags &&
                     all_tags.map(tag => (
-                      <MenuItem key={tag.id} value={tag.tag_name}>
+                      <MenuItem key={tag.id} value={tag.id}>
                         <Checkbox
-                          checked={cause.tags.indexOf(tag.tag_name) > -1}
+                          checked={cause.tags.indexOf(tag.id) > -1}
                         />
                         <ListItemText primary={tag.tag_name} />
                       </MenuItem>
