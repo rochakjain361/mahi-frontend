@@ -213,7 +213,7 @@ export default function PostDetailCard (cause) {
           </IconButton>
         </CardActions>
         <div className={classes.PostCardDescription}>
-          <Typography variant='body2' color='textPrimary' component='p'>
+          <Typography variant='body2' color='textPrimary' component='div'>
             <ShowMoreText
               lines={2}
               more={'Show More'}

@@ -7,7 +7,8 @@ import {
   CAUSE_API_ERROR,
   GET_CAUSE_PENDING,
   GET_CAUSE,
-  CREATE_CAUSE_PENDING
+  CREATE_CAUSE_PENDING,
+  UPDATE_LIKE_BUTTON
 } from './CauseActionsType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -73,6 +74,24 @@ export const createCause = (formdata, callback = () => {}) => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(CREATE_CAUSE_PENDING, false))
+      })
+  }
+}
+
+export const updateLikedUser = causeId => {
+  const url = `${CAUSE_APIS.CauseItems}/${causeId}/update_liked_user/`
+  console.log('HW')
+  return dispatch => {
+    dispatch(apiDispatch(GET_CAUSES_PENDING, true))
+    apiClient
+      .patch(url)
+      .then(res => {
+        dispatch(apiDispatch(GET_CAUSES_PENDING, false))
+        dispatch(apiDispatch(UPDATE_LIKE_BUTTON, res.data))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(GET_CAUSES_PENDING, false))
       })
   }
 }

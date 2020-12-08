@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { findDaysLeft } from '../helpers/helperfunctions'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -13,6 +14,9 @@ import { red } from '@material-ui/core/colors'
 import { ThemeProvider } from '@material-ui/core'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import ShowMoreText from 'react-show-more-text'
+import { updateLikedUser } from '../actions/CauseActions'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
@@ -125,7 +129,7 @@ const BorderLinearProgress = withStyles(theme => ({
   }
 }))(LinearProgress)
 
-export default function PostCard ({ cause }) {
+export default function PostCard ({ cause, user }) {
   const classes = useStyles()
   const percentage = (cause.raised / cause.goal) * 100
   const daysLeft = findDaysLeft(cause.deadline)
@@ -135,6 +139,8 @@ export default function PostCard ({ cause }) {
   const setExpandDetail = () => {
     setExpand(!expand)
   }
+
+  const dispatch = useDispatch()
 
   return (
     <Card className={classes.root}>
@@ -161,7 +167,7 @@ export default function PostCard ({ cause }) {
           }
         />
         <CardContent>
-          <Typography variant='body2' color='textPrimary' component='p'>
+          <Typography variant='body2' color='textPrimary' component='div'>
             <ShowMoreText
               lines={1}
               more={'Show More'}
@@ -173,7 +179,10 @@ export default function PostCard ({ cause }) {
             </ShowMoreText>
           </Typography>
         </CardContent>
-        <div className={classes.mediaDiv}  onClick={() => history.push(`/${cause.id}`)}>
+        <div
+          className={classes.mediaDiv}
+          onClick={() => history.push(`/${cause.id}`)}
+        >
           <CardMedia
             className={classes.media}
             image={cause.cover_photo}
@@ -203,10 +212,15 @@ export default function PostCard ({ cause }) {
             </SvgIcon>
           </IconButton>
           <p>{cause.supporter_count} Supporters</p>
-          <IconButton className={classes.LikeIcon}>
-            <SvgIcon>
-              <PostCardFooterFavRightIcon />
-            </SvgIcon>
+          <IconButton
+            className={classes.LikeIcon}
+            onClick={() => cause && dispatch(updateLikedUser(cause.id))}
+          >
+            {cause.liked_by.includes(user.id) ? (
+              <FavoriteIcon style={{ fill: '#FC747A' }} />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
           </IconButton>
           <IconButton>
             <SvgIcon>
