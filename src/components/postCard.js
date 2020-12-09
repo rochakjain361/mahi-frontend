@@ -129,11 +129,12 @@ const BorderLinearProgress = withStyles(theme => ({
   }
 }))(LinearProgress)
 
-export default function PostCard ({ cause, user }) {
+export default function PostCard ({ cause }) {
   const classes = useStyles()
   const percentage = (cause.raised / cause.goal) * 100
   const daysLeft = findDaysLeft(cause.deadline)
   const history = useHistory()
+  const user = useSelector(state => state.auth.Loggedinuser)
   console.log(cause)
   const [expand, setExpand] = useState(false)
   const setExpandDetail = () => {
@@ -141,7 +142,6 @@ export default function PostCard ({ cause, user }) {
   }
 
   const dispatch = useDispatch()
-
   return (
     <Card className={classes.root}>
       <ThemeProvider theme={theme}>
@@ -214,7 +214,9 @@ export default function PostCard ({ cause, user }) {
           <p>{cause.supporter_count} Supporters</p>
           <IconButton
             className={classes.LikeIcon}
-            onClick={() => cause && dispatch(updateLikedUser(cause.id))}
+            onClick={() => {
+              dispatch(updateLikedUser(cause.id))
+            }}
           >
             {cause.liked_by.includes(user.id) ? (
               <FavoriteIcon style={{ fill: '#FC747A' }} />

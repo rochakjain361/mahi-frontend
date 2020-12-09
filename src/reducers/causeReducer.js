@@ -5,13 +5,15 @@ import {
   GET_CAUSE_PENDING,
   GET_CAUSE,
   CREATE_CAUSE_PENDING,
-  UPDATE_LIKE_BUTTON
+  UPDATE_LIKE_BUTTON,
+  UPDATE_LIKE_USER_PENDING
 } from '../actions/CauseActionsType'
 
 const initialPendingState = {
   getCausesPending: false,
   getCausePending: false,
-  createCausePending: false
+  createCausePending: false,
+  updateLikeUserPending: false,
 }
 
 const initialState = {
@@ -47,6 +49,8 @@ const causeReducer = (state = initialState, action) => {
             : el
         )
       }
+    case UPDATE_LIKE_USER_PENDING:
+      return {...state, updateLikeUserPending: payload}
     default:
       return state
   }
