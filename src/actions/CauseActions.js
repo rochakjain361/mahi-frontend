@@ -8,7 +8,8 @@ import {
   GET_CAUSE_PENDING,
   GET_CAUSE,
   CREATE_CAUSE_PENDING,
-  UPDATE_LIKE_BUTTON,
+  UPDATE_LIKE_USER,
+  UPDATE_LIKE_USER_ON_ACTIVE_CAUSE,
   UPDATE_LIKE_USER_PENDING,
 } from './CauseActionsType'
 
@@ -87,11 +88,28 @@ export const updateLikedUser = causeId => {
       .patch(url)
       .then(res => {
         dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
-        dispatch(apiDispatch(UPDATE_LIKE_BUTTON, res.data))
+        dispatch(apiDispatch(UPDATE_LIKE_USER, res.data))
       })
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
       })
+  }
+}
+
+export const updateLikedUserOnActiveCause = causeId => {
+  const url = `${CAUSE_APIS.CauseItems}/${causeId}/update_liked_user/`
+  return dispatch => {
+    dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, true))
+    apiClient
+    .patch(url)
+    .then(res => {
+      dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
+      dispatch(apiDispatch(UPDATE_LIKE_USER_ON_ACTIVE_CAUSE, res.data))
+    })
+    .catch(error => {
+      dispatch(apiError(error))
+      dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
+    })
   }
 }

@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { updateLikedUserOnActiveCause } from '../actions/CauseActions'
 import Typography from '@material-ui/core/Typography'
 import ShowMoreText from 'react-show-more-text'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import Button from '@material-ui/core/Button'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import {
@@ -153,11 +157,11 @@ export default function PostDetailCard (cause) {
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1)
   }
-
+  const user = useSelector(state => state.auth.Loggedinuser)
   const activeCause = cause.cause
   const percentage = (activeCause.raised / activeCause.goal) * 100
-  console.log(cause)
-
+  console.log(user)
+  const dispatch = useDispatch()
   return (
     <Card className={classes.root}>
       <ThemeProvider theme={theme}>
@@ -201,10 +205,17 @@ export default function PostDetailCard (cause) {
             </SvgIcon>
           </IconButton>
           <p>{activeCause.supporter_count} Supporters</p>
-          <IconButton className={classes.LikeIcon}>
-            <SvgIcon>
-              <PostCardFooterFavRightIcon />
-            </SvgIcon>
+          <IconButton
+            className={classes.LikeIcon}
+            onClick={() => {
+              dispatch(updateLikedUserOnActiveCause(activeCause.id))
+            }}
+          >
+            {user && user.id && activeCause.liked_by && activeCause.liked_by.includes(user.id) ? (
+              <FavoriteIcon style={{ fill: '#FC747A' }} />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
           </IconButton>
           <IconButton>
             <SvgIcon>

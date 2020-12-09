@@ -18,13 +18,12 @@ export default function Main () {
   const classes = useStyles()
   const dispatch = useDispatch()
   const tag = useSelector(state => state.extras.tag)
-  const user = useSelector(state => state.auth.Loggedinuser)
   useEffect(() => {
     dispatch(getAllCauses(tag))
   }, [tag])
   const all_causes = useSelector(state => state.causes.Causes)
   const PostCards = all_causes.map(cause => {
-    return <PostCard cause={cause} key={cause.id} user={user}/>
+    return <PostCard cause={cause} key={cause.id} />
   })
 
   return (

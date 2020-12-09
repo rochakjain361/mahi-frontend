@@ -31,11 +31,9 @@ export default function MainDetail() {
     }, [id])
     const activeCause = useSelector(state => state.causes.activeCause)
     console.log(activeCause)
-    const user = useSelector(state => state.auth.Loggedinuser)
-    console.log(user)
     return (
             <div className={classes.root}>
-                <PostDetailCard cause={activeCause} user={user}/>
+                <PostDetailCard cause={activeCause}/>
                 <BankDetails bankDetails={activeCause.bankDetail}/>
                 <Volunteer/>
                 <Log/>
