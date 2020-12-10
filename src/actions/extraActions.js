@@ -5,7 +5,10 @@ import {
   GET_ALL_TAGS,
   GET_TAGS_PENDING,
   EXTRA_API_ERROR,
-  SET_TAG
+  SET_TAG,
+  ADD_SUGGESTION_PENDING,
+  ADD_ACTIVITY_PENDING,
+  ADD_DONATION_PENDING
 } from './extraActionsType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -35,6 +38,57 @@ export const getAllTags = () => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(GET_TAGS_PENDING, false))
+      })
+  }
+}
+
+export const addSuggestion = (formdata, callback = () => {}) => {
+  const url = `${EXTRA_APIS.suggestion}/`
+  return dispatch => {
+    dispatch(apiDispatch(ADD_SUGGESTION_PENDING, true))
+    apiClient
+      .post(url, formdata)
+      .then(res => {
+        dispatch(apiDispatch(ADD_SUGGESTION_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(ADD_SUGGESTION_PENDING, false))
+      })
+  }
+}
+
+export const addDonation = (formdata,callback = () => {}) => {
+  const url = `${EXTRA_APIS.donation}/`
+  return dispatch => {
+    dispatch(apiDispatch(ADD_DONATION_PENDING, true))
+    apiClient
+      .post(url, formdata)
+      .then(res => {
+        dispatch(apiDispatch(ADD_DONATION_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(ADD_DONATION_PENDING, false))
+      })
+  }
+}
+
+export const addActivity = (formdata,callback = () => {}) => {
+  const url = `${EXTRA_APIS.activity}/`
+  return dispatch => {
+    dispatch(apiDispatch(ADD_ACTIVITY_PENDING, true))
+    apiClient
+      .post(url, formdata)
+      .then(res => {
+        dispatch(apiDispatch(ADD_ACTIVITY_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(ADD_ACTIVITY_PENDING, false))
       })
   }
 }

@@ -30,7 +30,7 @@ export default function Comment (props) {
   return (
     <Card className={classes.root}>
       <CardHeader
-        avatar={<Avatar src={avatar.src} alt={avatar.alt} />}
+        avatar={avatar}
         title={<Typography>{title}</Typography>}
         subheader={subtitle}
       />

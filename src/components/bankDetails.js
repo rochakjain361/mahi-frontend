@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
@@ -21,6 +22,9 @@ const useStyles = makeStyles({
       width: '50%'
     }
   },
+  hiddenDiv: {
+    display: 'none'
+  },
   header: {
     fontSize: '1.25em',
     marginTop: '0.75em',
@@ -28,7 +32,7 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: '0.875rem',
-    fontWeight: 500,
+    fontWeight: 500
   },
   info: {
     fontSize: '0.875rem',
@@ -55,10 +59,10 @@ const useStyles = makeStyles({
   }
 })
 
-export default function BankDetails (BankDetails) {
+export default function BankDetails (cause) {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
-
+  const activeCause = useSelector(state => state.causes.activeCause)
   const copyToClipboard = str => {
     const el = document.createElement('textarea')
     el.value = str
@@ -82,81 +86,110 @@ export default function BankDetails (BankDetails) {
 
   return (
     <React.Fragment>
-      <Typography className={classes.header}>
-        Bank Details
-      </Typography>
+      <Typography className={classes.header}>Bank Details</Typography>
       <Card className={classes.root}>
         <CardContent>
-          <Typography className={classes.title} color='textSecondary'>
-            Account name
-          </Typography>
-          <Typography variant='body2' className={classes.info} component='p'>
-            Venkatesh Prabhu - Milaap
-          </Typography>
-          <div className={classes.account_info}>
-            <div>
-              <Typography className={classes.title} color='textSecondary'>
-                IFSC code:
-              </Typography>
-              <Typography
-                variant='body2'
-                className={classes.info}
-                component='p'
-              >
-                RATN0VAAPIS
-              </Typography>
-            </div>
-            <div>
-              <Typography className={classes.title} color='textSecondary'>
-                Account number
-              </Typography>
-              <Typography
-                variant='body2'
-                className={classes.info}
-                component='p'
-              >
-                2222333300008888
-              </Typography>
+          <div
+            className={
+              activeCause && activeCause.id && activeCause.bank_name
+                ? ''
+                : classes.hiddenDiv
+            }
+          >
+            <Typography className={classes.title} color='textSecondary'>
+              Account name
+            </Typography>
+            <Typography variant='body2' className={classes.info} component='p'>
+              {activeCause && activeCause.id ? activeCause.bank_name : ''}
+            </Typography>
+            <div className={classes.account_info}>
+              <div>
+                <Typography className={classes.title} color='textSecondary'>
+                  IFSC code:
+                </Typography>
+                <Typography
+                  variant='body2'
+                  className={classes.info}
+                  component='p'
+                >
+                  {activeCause && activeCause.id
+                    ? activeCause.bank_ifsc_code
+                    : ''}
+                </Typography>
+              </div>
+              <div>
+                <Typography className={classes.title} color='textSecondary'>
+                  Account number
+                </Typography>
+                <Typography
+                  variant='body2'
+                  className={classes.info}
+                  component='p'
+                >
+                  {activeCause && activeCause.id
+                    ? activeCause.bank_account_no
+                    : ''}
+                </Typography>
+              </div>
             </div>
           </div>
-          <div className={classes.divider}>
-            <div className={classes.separator} />
-            <span className={classes.dividerContent}>or</span>
-            <div className={classes.separator} />
+          <div
+            className={
+              activeCause &&
+              activeCause.id &&
+              activeCause.bank_name &&
+              activeCause.bank_upi_id
+                ? ''
+                : classes.hiddenDiv
+            }
+          >
+            <div className={classes.divider}>
+              <div className={classes.separator} />
+              <span className={classes.dividerContent}>or</span>
+              <div className={classes.separator} />
+            </div>
           </div>
-          <div className={classes.upi}>
-            <div>
-              <Typography className={classes.title} color='textSecondary'>
-                UPI ID:
-              </Typography>
-              <Typography
-                id='upi_id'
-                variant='body2'
-                className={classes.info}
-                component='p'
-              >
-                givetomlp.venkateshprabhu1@icici
-              </Typography>
+          <div
+            className={
+              activeCause && activeCause.id && activeCause.bank_upi_id
+                ? ''
+                : classes.hiddenDiv
+            }
+          >
+            <div className={classes.upi}>
+              <div>
+                <Typography className={classes.title} color='textSecondary'>
+                  UPI ID:
+                </Typography>
+                <Typography
+                  id='upi_id'
+                  variant='body2'
+                  className={classes.info}
+                  component='p'
+                >
+                  {activeCause && activeCause.id ? activeCause.bank_upi_id : ''}
+                </Typography>
+              </div>
+              <div style={{ marginLeft: 'auto' }}>
+                <IconButton
+                  onClick={() =>
+                    copyToClipboard('givetomlp.venkateshprabhu1@icici')
+                  }
+                >
+                  <CopyIcon />
+                </IconButton>
+              </div>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                open={open}
+                autoHideDuration={1500}
+                onClose={handleClose}
+                message='UPI id copied to clipboard'
+              />
             </div>
-            <div style={{ marginLeft: 'auto' }}>
-              <IconButton
-                onClick={() =>
-                  copyToClipboard('givetomlp.venkateshprabhu1@icici')
-                }
-              >
-                <CopyIcon />
-              </IconButton>
-            </div>
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center'
-              }}
-              open={open}
-              autoHideDuration={1500}
-              onClose={handleClose}
-              message='UPI id copied to clipboard'
-            />
           </div>
         </CardContent>
       </Card>

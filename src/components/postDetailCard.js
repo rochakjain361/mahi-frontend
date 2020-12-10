@@ -29,29 +29,6 @@ import {
 import { useParams } from 'react-router-dom'
 import { getCause } from '../actions/CauseActions'
 
-const tutorialSteps = [
-  {
-    imgPath:
-      'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60'
-  },
-  {
-    imgPath:
-      'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60'
-  },
-  {
-    imgPath:
-      'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250&q=80'
-  },
-  {
-    imgPath:
-      'https://images.unsplash.com/photo-1518732714860-b62714ce0c59?auto=format&fit=crop&w=400&h=250&q=60'
-  },
-  {
-    imgPath:
-      'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60'
-  }
-]
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -121,7 +98,11 @@ const useStyles = makeStyles(theme => ({
   img: {
     height: 0,
     paddingTop: '56.25%', // 16:9
-    position: 'relative'
+    position: 'relative',
+    backgroundSize: 'contain'
+  },
+  mediaDiv: {
+    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);'
   }
 }))
 
@@ -144,7 +125,8 @@ export default function PostDetailCard (cause) {
   const classes = useStyles()
   const theme = useTheme()
   const [activeStep, setActiveStep] = React.useState(0)
-  const maxSteps = tutorialSteps.length
+  const activeCause = useSelector(state => state.causes.activeCause)
+  const maxSteps = activeCause.id ? activeCause.benchmark_media.length : ''
   const [expand, setExpand] = useState(false)
   const onClick = () => {
     setExpand(!expand)
@@ -158,46 +140,52 @@ export default function PostDetailCard (cause) {
     setActiveStep(prevActiveStep => prevActiveStep - 1)
   }
   const user = useSelector(state => state.auth.Loggedinuser)
-  const activeCause = cause.cause
+
   const percentage = (activeCause.raised / activeCause.goal) * 100
-  console.log(user)
   const dispatch = useDispatch()
   return (
     <Card className={classes.root}>
       <ThemeProvider theme={theme}>
-        <CardMedia
-          className={classes.img}
-          image={tutorialSteps[activeStep].imgPath}
-          alt={tutorialSteps[activeStep].label}
-        >
-          <div className={classes.steps}>
-            {activeStep + 1}/{maxSteps}
-          </div>
-          <div className={classes.stepper}>
-            <Button
-              size='small'
-              onClick={handleBack}
-              disabled={activeStep === 0}
-            >
-              {theme.direction === 'rtl' ? (
-                <KeyboardArrowRight className={classes.arrowIcon} />
-              ) : (
-                <KeyboardArrowLeft className={classes.arrowIcon} />
-              )}
-            </Button>
-            <Button
-              size='small'
-              onClick={handleNext}
-              disabled={activeStep === maxSteps - 1}
-            >
-              {theme.direction === 'rtl' ? (
-                <KeyboardArrowLeft className={classes.arrowIcon} />
-              ) : (
-                <KeyboardArrowRight className={classes.arrowIcon} />
-              )}
-            </Button>
-          </div>
-        </CardMedia>
+        <div className={classes.mediaDiv}>
+          <CardMedia
+            className={classes.img}
+            image={
+              activeCause.id
+                ? 'http://127.0.0.1:8000' +
+                  activeCause.benchmark_media[activeStep].media
+                : ''
+            }
+            alt='benchmark data'
+          >
+            <div className={classes.steps}>
+              {activeStep + 1}/{maxSteps}
+            </div>
+            <div className={classes.stepper}>
+              <Button
+                size='small'
+                onClick={handleBack}
+                disabled={activeStep === 0}
+              >
+                {theme.direction === 'rtl' ? (
+                  <KeyboardArrowRight className={classes.arrowIcon} />
+                ) : (
+                  <KeyboardArrowLeft className={classes.arrowIcon} />
+                )}
+              </Button>
+              <Button
+                size='small'
+                onClick={handleNext}
+                disabled={activeStep === maxSteps - 1}
+              >
+                {theme.direction === 'rtl' ? (
+                  <KeyboardArrowLeft className={classes.arrowIcon} />
+                ) : (
+                  <KeyboardArrowRight className={classes.arrowIcon} />
+                )}
+              </Button>
+            </div>
+          </CardMedia>
+        </div>
         <CardActions disableSpacing>
           <IconButton>
             <SvgIcon>
@@ -211,7 +199,10 @@ export default function PostDetailCard (cause) {
               dispatch(updateLikedUserOnActiveCause(activeCause.id))
             }}
           >
-            {user && user.id && activeCause.liked_by && activeCause.liked_by.includes(user.id) ? (
+            {user &&
+            user.id &&
+            activeCause.liked_by &&
+            activeCause.liked_by.includes(user.id) ? (
               <FavoriteIcon style={{ fill: '#FC747A' }} />
             ) : (
               <FavoriteBorderIcon />
