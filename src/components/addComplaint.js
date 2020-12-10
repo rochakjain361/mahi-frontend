@@ -34,6 +34,15 @@ import PostCard from './postCard'
 import PostDetailCard from './postDetailCard'
 import { useHistory } from 'react-router-dom'
 import { createCause } from '../actions/CauseActions'
+import {
+  validateEmail,
+  validateIFSC,
+  validateName,
+  validatePhoneNumber,
+  validateUPI,
+  validatePositiveNumber
+} from '../utils/validations'
+import getBankList from '../constants/bank'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -120,6 +129,11 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     padding: '1.2rem'
   },
+  uploadErrorContainer: {
+    fontSize: '0.75rem',
+    marginTop: '0.2rem',
+    color: '#f44336'
+  },
   selectCategory: {}
 }))
 
@@ -141,7 +155,7 @@ export default function AddComplaint () {
     needy_number: '',
     needy_email: '',
     needy_address: '',
-    account_name: '',
+    bank_name: '',
     account_no: '',
     ifsc_code: '',
     upi_id: '',
@@ -154,6 +168,27 @@ export default function AddComplaint () {
       additional_files: []
     }
   }
+
+  const [name_error, set_name_error] = React.useState(null)
+  const [phone_number_error, set_phone_number_error] = React.useState(null)
+  const [email_error, set_email_error] = React.useState(null)
+  const [description_error, set_description_error] = React.useState(null)
+  const [tag_error, set_tag_error] = React.useState(null)
+  const [goal_error, set_goal_error] = React.useState(null)
+  const [deadline_error, set_deadline_error] = React.useState(null)
+  const [address_error, set_address_error] = React.useState(null)
+  const [bank_name_error, set_bank_name_error] = React.useState(null)
+  const [bank_ifsc_error, set_bank_ifsc_error] = React.useState(null)
+  const [
+    bank_account_number_error,
+    set_bank_account_number_error
+  ] = React.useState(null)
+  const [bank_upi_error, set_bank_upi_error] = React.useState(null)
+  const [payment_error, set_payment_error] = React.useState(false)
+  const [needy_photo_error, set_needy_photo_error] = React.useState(null)
+  const [cover_photo_error, set_cover_photo_error] = React.useState(null)
+  const [benchmark_data_error, set_benchmark_data_error] = React.useState(null)
+
   const [cause, setCause] = React.useState({ ...initCause })
   const [bank, setBank] = React.useState(false)
   const [upi, setUpi] = React.useState(false)
@@ -170,7 +205,10 @@ export default function AddComplaint () {
   const handleMediaImageChange = e => {
     setCause({
       ...cause,
-      media: { ...cause.media, [e.target.name]: [...cause.media[e.target.name],...e.target.files] }
+      media: {
+        ...cause.media,
+        [e.target.name]: [...cause.media[e.target.name], ...e.target.files]
+      }
     })
   }
 
@@ -182,11 +220,163 @@ export default function AddComplaint () {
     var array = [...cause.media[name]] // make a separate copy of the array
     var index = array.indexOf(opt)
     array.splice(index, 1)
-    setCause({...cause,media:{...cause.media,[name]:array}})
+    setCause({ ...cause, media: { ...cause.media, [name]: array } })
+  }
+
+  const validateForm = () => {
+    var err = false
+
+    let name_err = validateName(cause.needy_name)
+    if (name_err.status === false) {
+      set_name_error(name_err.error)
+      err = true
+    } else {
+      set_name_error(null)
+    }
+
+    let phone_number_err = validatePhoneNumber(cause.needy_number)
+    if (phone_number_err.status === false) {
+      set_phone_number_error(phone_number_err.error)
+      err = true
+    } else {
+      set_phone_number_error(null)
+    }
+
+    let email_err = validateEmail(cause.needy_email, true)
+    if (email_err.status === false) {
+      set_email_error(email_err.error)
+      err = true
+    } else {
+      set_email_error(null)
+    }
+
+    if (bank) {
+      let bank_account_number_err = validatePositiveNumber(cause.account_no)
+      if (bank_account_number_err.status === false) {
+        set_bank_account_number_error(bank_account_number_err.error)
+        err = true
+      } else {
+        set_bank_account_number_error(null)
+      }
+
+      let bank_ifsc_code_err = validateIFSC(cause.ifsc_code)
+      if (bank_ifsc_code_err.status === false) {
+        set_bank_ifsc_error(bank_ifsc_code_err.error)
+        err = true
+      } else {
+        set_bank_ifsc_error(null)
+      }
+      if (!cause.bank_name) {
+        set_bank_name_error('Please select a bank')
+        err = true
+      }else{
+        set_bank_name_error(null)
+      }
+    }
+
+    if (upi) {
+      let bank_upi_err = validateUPI(cause.upi_id)
+      if (bank_upi_err.status === false) {
+        set_bank_upi_error(bank_upi_err.error)
+        err = true
+      } else {
+        set_bank_upi_error(null)
+      }
+    }
+
+    let goal_err = validatePositiveNumber(cause.goal)
+    if (goal_err.status === false) {
+      set_goal_error(goal_err.error)
+      err = true
+    } else {
+      set_goal_error(null)
+    }
+
+    if (!cause.description) {
+      set_description_error('Please add a brief description of the cause')
+      err = true
+    }
+    else{
+      set_description_error(null)
+    }
+
+    if (!cause.needy_address) {
+      set_address_error('Please add address of the needy person')
+      err = true
+    }else{
+      set_address_error(null)
+    }
+
+    if (!cause.deadline) {
+      set_deadline_error('Please add a deadline')
+      err = true
+    } else {
+      let today = new Date()
+      let deadline_date = new Date(cause.deadline)
+      if (deadline_date < today) {
+        set_deadline_error('Deadline cannot be in past')
+        err = true
+      }
+      else{
+        set_deadline_error(null)
+      }
+    }
+
+    if (!bank && !upi) {
+      set_payment_error(true)
+      err = true
+    } else {
+      set_payment_error(false)
+    }
+
+    return !err
+  }
+
+  const validateUpload = () => {
+    let err = false
+    if (!cause.needy_photo || cause.needy_photo.length === 0) {
+      set_needy_photo_error("Please upload needy person's photograph")
+      err = true
+    } else {
+      set_needy_photo_error(null)
+    }
+    console.log(cause.media.benchmark_data)
+    if (
+      !cause.media.benchmark_data ||
+      cause.media.benchmark_data.length === 0
+    ) {
+      set_benchmark_data_error('Please upload benchmark data files')
+      err = true
+    } else {
+      set_benchmark_data_error(null)
+    }
+    if (!cause.cover_photo || cause.cover_photo.length === 0) {
+      set_cover_photo_error('Please upload a cover photo for the cause')
+      err = true
+    } else {
+      set_cover_photo_error(null)
+    }
+    return !err
   }
 
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1)
+    switch (activeStep) {
+      case 0:
+        let isValid = validateForm()
+        if (isValid) {
+          setActiveStep(prevActiveStep => prevActiveStep + 1)
+        }
+        break
+      case 1:
+        let isValidUpload = validateUpload()
+        if (isValidUpload) {
+          setActiveStep(prevActiveStep => prevActiveStep + 1)
+        }
+        break
+      default:
+        return null
+    }
+    // setActiveStep(prevActiveStep => prevActiveStep + 1)
   }
 
   const handleBack = () => {
@@ -208,19 +398,28 @@ export default function AddComplaint () {
     for (let i = 0; i < cause.media.benchmark_data.length; i++) {
       formdata.append('benchmark_media', cause.media.benchmark_data[i])
     }
-    formdata.append('cover_photo',cause.cover_photo[0])
-    formdata.append('description',cause.description)
-    formdata.append('goal',cause.goal)
-    formdata.append('deadline',cause.deadline)
-    formdata.append('needy_name',cause.needy_name)
-    formdata.append('needy_phone_number',cause.needy_number)
-    formdata.append('needy_email',cause.needy_email)
-    formdata.append('needy_address',cause.needy_address)
-    formdata.append('needy_photo',cause.needy_photo[0])
-    formdata.append('bank_name',cause.account_name)
-    formdata.append('bank_ifsc_code',cause.ifsc_code)
-    formdata.append('bank_account_no',cause.account_no)
-    formdata.append('bank_upi_id',cause.upi_id)
+    let deadline = cause.deadline
+      .split('/')
+      .reverse()
+      .join('/')
+    formdata.append('cover_photo', cause.cover_photo[0])
+    formdata.append('description', cause.description)
+    formdata.append('goal', cause.goal)
+    formdata.append('deadline', deadline)
+    formdata.append('needy_name', cause.needy_name)
+    formdata.append('needy_phone_number', `+91${cause.needy_number}`)
+    formdata.append('needy_email', cause.needy_email)
+    formdata.append('needy_address', cause.needy_address)
+    formdata.append('needy_photo', cause.needy_photo[0])
+    if (bank) {
+      formdata.append('bank_name', cause.bank_name)
+      formdata.append('bank_ifsc_code', cause.ifsc_code)
+      formdata.append('bank_account_no', cause.account_no)
+    }
+    if (upi) {
+      formdata.append('bank_upi_id', cause.upi_id)
+    }
+
     dispatch(createCause(formdata, handleSuccess))
   }
 
@@ -240,6 +439,8 @@ export default function AddComplaint () {
       }
     }
   }
+
+  const bankList = getBankList()
 
   const getNavbarIcon = step => {
     switch (step) {
@@ -267,6 +468,8 @@ export default function AddComplaint () {
             <ArrowBackIosIcon />
           </IconButton>
         )
+      default:
+        return null
     }
   }
 
@@ -285,23 +488,41 @@ export default function AddComplaint () {
             Publish Complaint
           </div>
         )
+      default:
+        return null
     }
   }
 
   const getStepContent = step => {
-    const additional_files_names = cause.media.additional_files.map(additional_file => {
-          return <div onClick={() => removeMediaImage(additional_file,'additional_files')} >{additional_file.name}</div>
-      })
+    const additional_files_names = cause.media.additional_files.map(
+      additional_file => {
+        return (
+          <div
+            onClick={() =>
+              removeMediaImage(additional_file, 'additional_files')
+            }
+          >
+            {additional_file.name}
+          </div>
+        )
+      }
+    )
 
-      const benchmark_data_names = cause.media.benchmark_data.map(data => {
-        return <div onClick={() => removeMediaImage(data,'benchmark_data')}>{data.name}</div>
+    const benchmark_data_names = cause.media.benchmark_data.map(data => {
+      return (
+        <div onClick={() => removeMediaImage(data, 'benchmark_data')}>
+          {data.name}
+        </div>
+      )
     })
     switch (step) {
       case 0:
         return (
           <Card className={classes.Card}>
             <div className={classes.formInput}>
-              <FormLabel className={classes.formLabel}>Category</FormLabel>
+              <FormLabel required className={classes.formLabel}>
+                Category
+              </FormLabel>
               <FormControl className={classes.textfield}>
                 <InputLabel id='demo-mutiple-checkbox-label'>Tag</InputLabel>
                 <Select
@@ -309,7 +530,7 @@ export default function AddComplaint () {
                   labelId='demo-mutiple-checkbox-label'
                   id='demo-mutiple-checkbox'
                   multiple
-                  value={cause.tags}
+                  value={cause.tags ? cause.tags : ''}
                   name='tags'
                   onChange={handleChange}
                   input={<Input />}
@@ -319,9 +540,7 @@ export default function AddComplaint () {
                   {all_tags &&
                     all_tags.map(tag => (
                       <MenuItem key={tag.id} value={tag.id}>
-                        <Checkbox
-                          checked={cause.tags.indexOf(tag.id) > -1}
-                        />
+                        <Checkbox checked={cause.tags.indexOf(tag.id) > -1} />
                         <ListItemText primary={tag.tag_name} />
                       </MenuItem>
                     ))}
@@ -329,14 +548,17 @@ export default function AddComplaint () {
               </FormControl>
             </div>
             <div className={classes.formInput}>
-              <FormLabel className={classes.formLabel}>Description</FormLabel>
+              <FormLabel className={classes.formLabel} required>
+                Description
+              </FormLabel>
               <TextField
                 className={classes.textfield}
                 onChange={handleChange}
-                value={cause.description}
+                value={cause.description ? cause.description : ''}
                 name='description'
-                id='standard-basic'
                 label='Give brief details of your complaint'
+                error={description_error ? true : false}
+                helperText={description_error ? description_error : ''}
               />
             </div>
             <div className={classes.formInput}>
@@ -346,38 +568,49 @@ export default function AddComplaint () {
               <TextField
                 className={classes.textfield}
                 onChange={handleChange}
-                value={cause.needy_name}
+                value={cause.needy_name ? cause.needy_name : ''}
                 name='needy_name'
-                id='standard-basic'
                 label='Enter name of the neeedy'
+                required
+                error={name_error ? true : false}
+                helperText={name_error ? name_error : ''}
               />
               <TextField
                 className={classes.textfield}
                 onChange={handleChange}
-                value={cause.needy_number}
+                value={cause.needy_number ? cause.needy_number : ''}
                 name='needy_number'
-                id='standard-basic'
                 label='Enter contact number'
+                required
+                error={phone_number_error ? true : false}
+                helperText={phone_number_error ? phone_number_error : ''}
               />
               <TextField
                 className={classes.textfield}
                 onChange={handleChange}
                 name='needy_email'
-                value={cause.needy_email}
-                id='standard-basic'
+                value={cause.needy_email ? cause.needy_email : ''}
                 label='Enter email address(optional)'
+                error={email_error ? true : false}
+                helperText={email_error ? email_error : ''}
               />
               <TextField
                 className={classes.textfield}
                 onChange={handleChange}
-                value={cause.needy_address}
+                value={cause.needy_address ? cause.needy_address : ''}
                 name='needy_address'
-                id='standard-basic'
                 label='Address'
+                required
+                error={address_error ? true : false}
+                helperText={address_error ? address_error : ''}
               />
             </div>
             <div className={classes.formInput}>
-              <FormLabel className={classes.formLabel}>
+              <FormLabel
+                className={classes.formLabel}
+                required
+                error={payment_error}
+              >
                 Payment Details
               </FormLabel>
               <FormControlLabel
@@ -394,26 +627,38 @@ export default function AddComplaint () {
               <TextField
                 className={bank ? classes.textfield : classes.hiddentextfield}
                 onChange={handleChange}
-                value={cause.account_name}
-                name='account_name'
-                id='standard-basic'
-                label='Account Name'
-              />
+                value={cause.bank_name ? cause.bank_name : ''}
+                select
+                name='bank_name'
+                label='Bank Name'
+                error={bank_name_error ? true : false}
+                helperText={bank_name_error ? bank_name_error : ''}
+              >
+                {bankList.map(bank => (
+                  <MenuItem key={bank.value} value={bank.value}>
+                    {bank.displayName}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 className={bank ? classes.textfield : classes.hiddentextfield}
                 onChange={handleChange}
-                value={cause.account_no}
+                value={cause.account_no ? cause.account_no : ''}
                 name='account_no'
-                id='standard-basic'
                 label='Account Number'
+                error={bank_account_number_error ? true : false}
+                helperText={
+                  bank_account_number_error ? bank_account_number_error : ''
+                }
               />
               <TextField
                 className={bank ? classes.textfield : classes.hiddentextfield}
                 onChange={handleChange}
-                value={cause.ifsc_code}
+                value={cause.ifsc_code ? cause.ifsc_code : ''}
                 name='ifsc_code'
-                id='standard-basic'
                 label='IFSC Code'
+                error={bank_ifsc_error ? true : false}
+                helperText={bank_ifsc_error ? bank_ifsc_error : ''}
               />
             </div>
             <div className={classes.formInput}>
@@ -431,34 +676,39 @@ export default function AddComplaint () {
               <TextField
                 className={upi ? classes.textfield : classes.hiddentextfield}
                 onChange={handleChange}
-                value={cause.upi_id}
+                value={cause.upi_id ? cause.upi_id : ''}
                 name='upi_id'
-                id='standard-basic'
                 label='UPI ID'
+                error={bank_upi_error ? true : false}
+                helperText={bank_upi_error ? bank_upi_error : ''}
               />
             </div>
             <div className={classes.formInput}>
-              <FormLabel className={classes.formLabel}>
+              <FormLabel className={classes.formLabel} required>
                 Estimated Donation Goal
               </FormLabel>
               <TextField
                 className={classes.textfield}
                 onChange={handleChange}
-                value={cause.goal}
+                value={cause.goal ? cause.goal : ''}
                 name='goal'
-                id='standard-basic'
                 label='Enter the amount in Rs'
+                error={goal_error ? true : false}
+                helperText={goal_error ? goal_error : ''}
               />
             </div>
             <div className={classes.formInput}>
-              <FormLabel className={classes.formLabel}>Deadline</FormLabel>
+              <FormLabel className={classes.formLabel} required>
+                Deadline
+              </FormLabel>
               <TextField
                 className={classes.textfield}
                 onChange={handleChange}
-                value={cause.deadline}
                 name='deadline'
-                id='standard-basic'
-                label='dd/mm/yyyy'
+                type='date'
+                defaultValue={cause.deadline ? cause.deadline : ''}
+                error={deadline_error ? true : false}
+                helperText={deadline_error ? deadline_error : ''}
               />
             </div>
           </Card>
@@ -486,6 +736,9 @@ export default function AddComplaint () {
                   {cause.needy_photo[0] ? 'Update' : 'Upload'}
                 </Button>
               </label>
+              <div className={classes.uploadErrorContainer}>
+                {needy_photo_error}
+              </div>
             </Card>
             <Card className={classes.inputCard}>
               <FormLabel className={classes.formLabel}>
@@ -503,9 +756,12 @@ export default function AddComplaint () {
               />
               <label htmlFor='contained-button-file-benchmark_data'>
                 <Button variant='contained' color='primary' component='span'>
-                {cause.media.benchmark_data[0] ? 'Upload More' : 'Upload'}
+                  {cause.media.benchmark_data[0] ? 'Upload More' : 'Upload'}
                 </Button>
               </label>
+              <div className={classes.uploadErrorContainer}>
+                {benchmark_data_error}
+              </div>
             </Card>
             <Card className={classes.inputCard}>
               <FormLabel className={classes.formLabel}>Cover Photo</FormLabel>
@@ -525,6 +781,9 @@ export default function AddComplaint () {
                   {cause.cover_photo[0] ? 'Update' : 'Upload'}
                 </Button>
               </label>
+              <div className={classes.uploadErrorContainer}>
+                {cover_photo_error}
+              </div>
             </Card>
             <Card className={classes.inputCard}>
               <FormLabel className={classes.formLabel}>
@@ -542,7 +801,7 @@ export default function AddComplaint () {
               />
               <label htmlFor='contained-button-file-additional_files'>
                 <Button variant='contained' color='primary' component='span'>
-                {cause.media.additional_files[0] ? 'Upload More' : 'Upload'}
+                  {cause.media.additional_files[0] ? 'Upload More' : 'Upload'}
                 </Button>
               </label>
             </Card>
