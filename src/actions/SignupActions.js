@@ -103,6 +103,7 @@ export const VerifyOTP = (confirmationResult, code, name) => {
                 dispatch(apiDispatch(CREATING_ACCOUNT, false))
                 dispatch(apiDispatch(GET_AUTHENTICATION_STATUS, true))
                 dispatch(apiDispatch(GET_LOGGEDINUSER, logged_in_user))
+                window.location.href = '/'
               })
               .catch(error => {
                 dispatch(apiDispatch(CREATING_ACCOUNT, false))

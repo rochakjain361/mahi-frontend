@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch, useActions } from 'react-redux'
-import PropTypes from 'prop-types'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -17,12 +16,10 @@ import {
   InputLabel,
   ListItemText,
   MenuItem,
-  Modal,
   Select,
   TextField,
   ThemeProvider
 } from '@material-ui/core'
-import { SvgIcon } from '@material-ui/core'
 
 import CloseIcon from '@material-ui/icons/Close'
 import { theme } from '../theme'
@@ -31,7 +28,6 @@ import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
 import Button from '@material-ui/core/Button'
 import PostCard from './postCard'
-import PostDetailCard from './postDetailCard'
 import { useHistory } from 'react-router-dom'
 import { createCause } from '../actions/CauseActions'
 import {
@@ -145,8 +141,7 @@ export default function AddComplaint () {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
-  const [activeStep, setActiveStep] = React.useState(0)
-  const [personName, setPersonName] = React.useState([])
+  const [activeStep, setActiveStep] = useState(0)
   const all_tags = useSelector(state => state.extras.Tags)
   const initCause = {
     tags: [],
@@ -169,29 +164,29 @@ export default function AddComplaint () {
     }
   }
 
-  const [name_error, set_name_error] = React.useState(null)
-  const [phone_number_error, set_phone_number_error] = React.useState(null)
-  const [email_error, set_email_error] = React.useState(null)
-  const [description_error, set_description_error] = React.useState(null)
-  const [tag_error, set_tag_error] = React.useState(null)
-  const [goal_error, set_goal_error] = React.useState(null)
-  const [deadline_error, set_deadline_error] = React.useState(null)
-  const [address_error, set_address_error] = React.useState(null)
-  const [bank_name_error, set_bank_name_error] = React.useState(null)
-  const [bank_ifsc_error, set_bank_ifsc_error] = React.useState(null)
+  const [name_error, set_name_error] = useState(null)
+  const [phone_number_error, set_phone_number_error] = useState(null)
+  const [email_error, set_email_error] = useState(null)
+  const [description_error, set_description_error] = useState(null)
+  const [tag_error, set_tag_error] = useState(null)
+  const [goal_error, set_goal_error] = useState(null)
+  const [deadline_error, set_deadline_error] = useState(null)
+  const [address_error, set_address_error] = useState(null)
+  const [bank_name_error, set_bank_name_error] = useState(null)
+  const [bank_ifsc_error, set_bank_ifsc_error] = useState(null)
   const [
     bank_account_number_error,
     set_bank_account_number_error
-  ] = React.useState(null)
-  const [bank_upi_error, set_bank_upi_error] = React.useState(null)
-  const [payment_error, set_payment_error] = React.useState(false)
-  const [needy_photo_error, set_needy_photo_error] = React.useState(null)
-  const [cover_photo_error, set_cover_photo_error] = React.useState(null)
-  const [benchmark_data_error, set_benchmark_data_error] = React.useState(null)
+  ] = useState(null)
+  const [bank_upi_error, set_bank_upi_error] = useState(null)
+  const [payment_error, set_payment_error] = useState(false)
+  const [needy_photo_error, set_needy_photo_error] = useState(null)
+  const [cover_photo_error, set_cover_photo_error] = useState(null)
+  const [benchmark_data_error, set_benchmark_data_error] = useState(null)
 
-  const [cause, setCause] = React.useState({ ...initCause })
-  const [bank, setBank] = React.useState(false)
-  const [upi, setUpi] = React.useState(false)
+  const [cause, setCause] = useState({ ...initCause })
+  const [bank, setBank] = useState(false)
+  const [upi, setUpi] = useState(false)
   const steps = getSteps()
 
   const handleChange = event => {
@@ -620,6 +615,7 @@ export default function AddComplaint () {
                     onChange={() => setBank(!bank)}
                     name='bank'
                     value={bank}
+                    checked={bank}
                   />
                 }
                 label='Bank'
@@ -669,6 +665,7 @@ export default function AddComplaint () {
                     onChange={() => setUpi(!upi)}
                     name='upi'
                     value={upi}
+                    checked={upi}
                   />
                 }
                 label='UPI ID'

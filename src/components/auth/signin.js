@@ -22,7 +22,7 @@ import {
 } from '../../actions/AuthActions'
 import FacebookIcon from '../../icons/fb'
 import GoogleIcon from '../../icons/google'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import { validatePhoneNumber } from '../../utils/validations'
 
 const useStyles = makeStyles(theme => ({
@@ -100,6 +100,17 @@ const useStyles = makeStyles(theme => ({
   },
   hiddenDiv: {
     visibility: 'hidden'
+  },
+  registerContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '1.5rem',
+    fontSize: '0.875rem'
+  },
+  registerLink: {
+    color: '#0000EE ',
+    cursor: 'pointer',
+    marginLeft: '0.3rem'
   }
 }))
 
@@ -110,6 +121,7 @@ export default function SignIn () {
   const [otp, setOTP] = useState(null)
 
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const confirmationResult = useSelector(state => state.OTP.confirmationResult)
   const otpSending = useSelector(state => state.OTP.otpSending)
@@ -161,6 +173,14 @@ export default function SignIn () {
     dispatch(facebookLogin())
   }
 
+  const returnHome = () => {
+    history.push('/')
+  }
+
+  const register = () => {
+    history.push('/register')
+  }
+
   return (
     <React.Fragment>
       {signingIn ? (
@@ -174,7 +194,7 @@ export default function SignIn () {
         <Paper className={classes.root} elevation={0}>
           {isAuthenticated && <Redirect to='/' />}
           <div className={classes.closeButtonContainer}>
-            <IconButton>
+            <IconButton onClick={returnHome}>
               <CloseIcon />
             </IconButton>
           </div>
@@ -241,6 +261,10 @@ export default function SignIn () {
             >
               Google
             </Button>
+          </div>
+          <div className={classes.registerContainer}>
+            Don't have an account? 
+            <span className={classes.registerLink} onClick={register}>Register here</span>
           </div>
         </Paper>
       )}

@@ -4,12 +4,14 @@ import {
   GET_LOGGEDINUSER,
   GET_LOGGEDINUSER_PENDING,
   SIGNING_IN,
+  SIGNING_OUT,
+  CLEAR_USER,
   AUTH_ERROR
 } from '../actions/AuthActionTypes'
 
 const initialCreatingStatus = { creatingAccount: false }
 
-const initialSigningStatus = { signingIn: false }
+const initialSigningStatus = { signingIn: false, signingOut: false }
 
 const initialAuthenticationStatus = { isAuthenticated: false }
 
@@ -38,6 +40,10 @@ const AuthReducer = (state = initialState, action) => {
       return { ...state, Loggedinuser: payload }
     case GET_LOGGEDINUSER_PENDING:
       return { ...state, getLoggedinuserPending: payload }
+    case SIGNING_OUT:
+      return { ...state, signingOut: payload }
+    case CLEAR_USER:
+      return { ...initialState }
     case AUTH_ERROR:
       return { ...state, error: error }
     default:

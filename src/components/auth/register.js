@@ -17,7 +17,7 @@ import { sendOTP, VerifyOTP, cleanOTP } from '../../actions/SignupActions'
 import { googleLogin, facebookLogin } from '../../actions/AuthActions'
 import FacebookIcon from '../../icons/fb'
 import GoogleIcon from '../../icons/google'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import { validatePhoneNumber, validateName } from '../../utils/validations'
 
 const useStyles = makeStyles(theme => ({
@@ -95,6 +95,17 @@ const useStyles = makeStyles(theme => ({
   },
   hiddenDiv: {
     visibility: 'hidden'
+  },
+  signInContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '1.5rem',
+    fontSize: '0.875rem'
+  },
+  signInLink: {
+    color: '#0000EE ',
+    cursor: 'pointer',
+    marginLeft: '0.3rem'
   }
 }))
 
@@ -107,6 +118,7 @@ export default function Register () {
   const [otp, setOTP] = useState(null)
 
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const confirmationResult = useSelector(state => state.OTP.confirmationResult)
   const otpSending = useSelector(state => state.OTP.otpSending)
@@ -171,6 +183,14 @@ export default function Register () {
     dispatch(facebookLogin())
   }
 
+  const returnHome = () => {
+    history.push('/')
+  }
+
+  const signIn = () => {
+    history.push('/sign_in')
+  }
+
   return (
     <React.Fragment>
       {creatingAccount ? (
@@ -184,7 +204,7 @@ export default function Register () {
         <Paper className={classes.root} elevation={0}>
           {isAuthenticated && <Redirect to='/' />}
           <div className={classes.closeButtonContainer}>
-            <IconButton>
+            <IconButton onClick={returnHome}>
               <CloseIcon />
             </IconButton>
           </div>
@@ -260,6 +280,10 @@ export default function Register () {
             >
               Google
             </Button>
+          </div>
+          <div className={classes.signInContainer}>
+            Already have an account? 
+            <span className={classes.signInLink} onClick={signIn}>Sign in here</span>
           </div>
         </Paper>
       )}

@@ -194,12 +194,12 @@ export default function PostCard ({ cause }) {
             </div>
             <div className={classes.PostCardBottom}>
               <div className={classes.PostCardBottomDetailLeft}>
-                <div>₹{cause.raised}</div>
+                <div>₹{cause && cause.raised}</div>
                 <div>RAISED</div>
               </div>
               <BorderLinearProgress variant='determinate' value={percentage} />
               <div className={classes.PostCardBottomDetailRight}>
-                <div>₹{cause.goal}</div>
+                <div>₹{cause && cause.goal}</div>
                 <div>GOAL</div>
               </div>
             </div>
@@ -215,10 +215,10 @@ export default function PostCard ({ cause }) {
           <IconButton
             className={classes.LikeIcon}
             onClick={() => {
-              dispatch(updateLikedUser(cause.id))
+              dispatch(updateLikedUser(cause && cause.id))
             }}
           >
-            {cause && cause.id && cause.liked_by.includes(user.id) ? (
+            {cause && cause.id && user && cause.liked_by.includes(user.id) ? (
               <FavoriteIcon style={{ fill: '#FC747A' }} />
             ) : (
               <FavoriteBorderIcon />

@@ -283,7 +283,7 @@ function LogTabs () {
   )
 }
 
-export default function Volunteer () {
+export default function Log () {
   const classes = useCardStyles()
 
   return (

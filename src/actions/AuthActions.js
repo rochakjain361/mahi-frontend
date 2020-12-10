@@ -13,7 +13,9 @@ import {
   GET_LOGGEDINUSER,
   GET_LOGGEDINUSER_PENDING,
   AUTH_ERROR,
-  OTP_ERROR
+  OTP_ERROR,
+  SIGNING_OUT,
+  CLEAR_USER
 } from './AuthActionTypes'
 
 const apiDispatch = (actionType = '', data) => {
@@ -102,6 +104,7 @@ export const VerifyOTP = (confirmationResult, code) => {
                 dispatch(apiDispatch(SIGNING_IN, false))
                 dispatch(apiDispatch(GET_LOGGEDINUSER, logged_in_user))
                 dispatch(apiDispatch(GET_AUTHENTICATION_STATUS, true))
+                window.location.href = '/'
               })
               .catch(error => {
                 dispatch(apiDispatch(SIGNING_IN, false))
@@ -146,6 +149,7 @@ export const googleLogin = () => {
                 dispatch(apiDispatch(SIGNING_IN, false))
                 dispatch(apiDispatch(GET_LOGGEDINUSER, logged_in_user))
                 dispatch(apiDispatch(GET_AUTHENTICATION_STATUS, true))
+                window.location.href = '/'
               })
               .catch(error => {
                 dispatch(apiDispatch(SIGNING_IN, false))
@@ -197,6 +201,7 @@ export const facebookLogin = () => {
                 dispatch(apiDispatch(SIGNING_IN, false))
                 dispatch(apiDispatch(GET_LOGGEDINUSER, logged_in_user))
                 dispatch(apiDispatch(GET_AUTHENTICATION_STATUS, true))
+                window.location.href = '/'
               })
               .catch(error => {
                 dispatch(apiDispatch(SIGNING_IN, false))
@@ -237,6 +242,44 @@ export const getLoggedInUserInfo = () => {
         dispatch(apiError(error))
         dispatch(apiDispatch(GET_LOGGEDINUSER_PENDING, false))
         dispatch(apiDispatch(GET_AUTHENTICATION_STATUS, false))
+      })
+  }
+}
+
+export const logout = () => {
+  const url = `${USER_APIS.logout}`
+  return dispatch => {
+    dispatch(apiDispatch(SIGNING_OUT, true))
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        apiAuthClient
+          .post(url)
+          .then(response => {
+            dispatch(apiDispatch(SIGNING_OUT, false))
+            dispatch(apiDispatch(CLEAR_USER, {}))
+            window.location.href = '/'
+          })
+          .catch(error => {
+            dispatch(apiDispatch(SIGNING_OUT, false))
+            dispatch(apiDispatch(CLEAR_USER, {}))
+            window.location.href = '/'
+          })
+      })
+      .catch(error => {
+        apiAuthClient
+          .post(url)
+          .then(response => {
+            dispatch(apiDispatch(SIGNING_OUT, false))
+            dispatch(apiDispatch(CLEAR_USER, {}))
+            window.location.href = '/'
+          })
+          .catch(error => {
+            dispatch(apiDispatch(SIGNING_OUT, false))
+            dispatch(apiDispatch(CLEAR_USER, {}))
+            window.location.href = '/'
+          })
       })
   }
 }

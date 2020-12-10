@@ -12,5 +12,6 @@ export const EXTRA_APIS = {
 export const USER_APIS = {
     whoami : '/who_am_i',
     login: '/login/',
+    logout: '/logout/',
     phone_number_exists: '/phone_number_exists/'
 }

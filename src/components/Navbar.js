@@ -6,16 +6,27 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Chip from '@material-ui/core/Chip'
-import { ClickAwayListener, Divider, Drawer, List, ListItem, ListItemText, SwipeableDrawer, ThemeProvider } from '@material-ui/core'
+import {
+  ClickAwayListener,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  SwipeableDrawer,
+  ThemeProvider
+} from '@material-ui/core'
 import { SvgIcon } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Avatar from '@material-ui/core/Avatar'
-import CallIcon from '@material-ui/icons/Call';
+import CallIcon from '@material-ui/icons/Call'
 import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
 import { getAllTags, setTag } from '../actions/extraActions'
+import { useHistory } from 'react-router-dom'
+import {logout} from '../actions/AuthActions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,16 +47,16 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500
   },
   sideBar: {
-    width: 250, 
+    width: 250
   },
   list: {
     padding: '1.75rem 0.25rem'
   },
-  sideBarFooter:{
+  sideBarFooter: {
     position: 'fixed',
     bottom: 0,
     padding: '1rem 1.25rem',
-    lineHeight: '2.25rem',
+    lineHeight: '2.25rem'
   }
 }))
 
@@ -90,7 +101,7 @@ const useChipStyles = makeStyles(theme => ({
   selectedTag: {
     background: 'black !important',
     color: 'white'
-  },
+  }
 }))
 
 function SimpleSelect () {
@@ -135,7 +146,7 @@ function Chips () {
   const chipList = all_tags.map(tag => {
     return (
       <Chip
-        className={selected_tag==tag.id ? classes.selectedTag : ''}
+        className={selected_tag == tag.id ? classes.selectedTag : ''}
         onClick={() => dispatch(setTag(tag.id))}
         label={tag.tag_name}
         key={tag.id}
@@ -146,7 +157,7 @@ function Chips () {
   return (
     <div className={classes.root}>
       <Chip
-        className={selected_tag=='0' ? classes.selectedTag : ''}
+        className={selected_tag == '0' ? classes.selectedTag : ''}
         onClick={() => dispatch(setTag(0))}
         label='all'
         key='0'
@@ -159,37 +170,72 @@ function Chips () {
 
 export default function Navbar (props) {
   const classes = useStyles()
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const [state, setState] = React.useState({
-    left: false,
-  });
+    left: false
+  })
 
-  const toggleDrawer = (open) => (event) => {
-    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
+  const toggleDrawer = open => event => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return
     }
 
-    setState({ ...state, left: open });
+    setState({ ...state, left: open })
+  }
+
+  const returnHome = () => {
+    history.push('/')
+  }
+
+  const addComplain = () => {
+    history.push('/add')
+  }
+
+  const showAboutUs = () => {
+    history.push('/about_us')
+  }
+
+  const signIn = () => {
+    history.push('/sign_in')
+  }
+
+  const logOut = () => {
+    dispatch(logout())
   }
 
   const list = () => (
     <div
-    className={classes.sideBar}
-    role="presentation"
-    onClick={toggleDrawer(false)}
-    onKeyDown={toggleDrawer(false)}
+      className={classes.sideBar}
+      role='presentation'
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
     >
       <h3 className={classes.motto}>Mahi Care</h3>
-      <Divider/>
+      <Divider />
       <List className={classes.list}>
-        {['Pulse Feed', 'Become a Volunteer', 'Add Complaint', 'About Us'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemText primary={text}/>
+        {[
+          { text: 'Pulse Feed', handleClick: returnHome },
+          { text: 'Add complaint', handleClick: addComplain },
+          { text: 'About us', handleClick: showAboutUs },
+          {
+            text: isAuthenticated ? 'Log out' : 'Sign in',
+            handleClick: isAuthenticated ? logOut : signIn
+          }
+        ].map((item, index) => (
+          <ListItem button key={item.text} onClick={item.handleClick}>
+            <ListItemText primary={item.text} />
           </ListItem>
         ))}
       </List>
       <div className={classes.sideBarFooter}>
-      Reach us @ +91 9077339077 <br/>
-      © Copy right 2020 <br/>
+        Reach us @ +91 9077339077 <br />
+        © Copy right 2020 <br />
       </div>
     </div>
   )
@@ -202,22 +248,31 @@ export default function Navbar (props) {
       <ThemeProvider theme={theme}>
         <AppBar position='static' elevation={0}>
           <Toolbar className={classes.toolBar}>
-            <IconButton edge='start' color='inherit' aria-label='menu' onClick={toggleDrawer(true)}>
+            <IconButton
+              edge='start'
+              color='inherit'
+              aria-label='menu'
+              onClick={toggleDrawer(true)}
+            >
               <SvgIcon>
                 <MenuIcon />
               </SvgIcon>
               <SwipeableDrawer
-              open={state.left}
-              onClose={toggleDrawer(false)}
-              onOpen={toggleDrawer(true)}
-              onBackdropClick={toggleDrawer(false)}
-              onEscapeKeyDown={toggleDrawer(false)}
+                open={state.left}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+                onBackdropClick={toggleDrawer(false)}
+                onEscapeKeyDown={toggleDrawer(false)}
               >
                 {list()}
               </SwipeableDrawer>
             </IconButton>
-            <Typography variant='h6' className={classes.title}>
-              Mahi Care
+            <Typography
+              variant='h6'
+              className={classes.title}
+              onClick={returnHome}
+            >
+              Mahi.
             </Typography>
             <Avatar
               src={
