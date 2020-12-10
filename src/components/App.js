@@ -11,6 +11,7 @@ import { getLoggedInUserInfo } from '../actions/AuthActions'
 import AddComplaint from './addComplaint'
 import Register from './auth/register'
 import SignIn from './auth/signin'
+import AboutUs from './aboutUs'
 
 function App () {
   const dispatch = useDispatch()
@@ -31,6 +32,7 @@ function App () {
           <Route exact path={'/update_user'} component={UpdateUser} />
           <Route exact path={'/register'} component={Register} />
           <Route exact path={'/sign_in'} component={SignIn} />
+          <Route exact path={'/about_us'} component={AboutUs}/>
           <Route exact path={'/:id'} component={MainDetail} />
         </Switch>
       </div>

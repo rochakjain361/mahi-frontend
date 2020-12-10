@@ -6,13 +6,13 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Chip from '@material-ui/core/Chip'
-import { ThemeProvider } from '@material-ui/core'
+import { ClickAwayListener, Divider, Drawer, List, ListItem, ListItemText, SwipeableDrawer, ThemeProvider } from '@material-ui/core'
 import { SvgIcon } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Avatar from '@material-ui/core/Avatar'
-
+import CallIcon from '@material-ui/icons/Call';
 import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
 import { getAllTags, setTag } from '../actions/extraActions'
@@ -35,6 +35,18 @@ const useStyles = makeStyles(theme => ({
     fontSize: '1.5rem',
     fontWeight: 500
   },
+  sideBar: {
+    width: 250, 
+  },
+  list: {
+    padding: '1.75rem 0.25rem'
+  },
+  sideBarFooter:{
+    position: 'fixed',
+    bottom: 0,
+    padding: '1rem 1.25rem',
+    lineHeight: '2.25rem',
+  }
 }))
 
 const useSelectStyles = makeStyles(theme => ({
@@ -147,6 +159,41 @@ function Chips () {
 
 export default function Navbar (props) {
   const classes = useStyles()
+  const [state, setState] = React.useState({
+    left: false,
+  });
+
+  const toggleDrawer = (open) => (event) => {
+    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    setState({ ...state, left: open });
+  }
+
+  const list = () => (
+    <div
+    className={classes.sideBar}
+    role="presentation"
+    onClick={toggleDrawer(false)}
+    onKeyDown={toggleDrawer(false)}
+    >
+      <h3 className={classes.motto}>Mahi Care</h3>
+      <Divider/>
+      <List className={classes.list}>
+        {['Pulse Feed', 'Become a Volunteer', 'Add Complaint', 'About Us'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemText primary={text}/>
+          </ListItem>
+        ))}
+      </List>
+      <div className={classes.sideBarFooter}>
+      Reach us @ +91 9077339077 <br/>
+      © Copy right 2020 <br/>
+      </div>
+    </div>
+  )
+
   const LoggedInUser = useSelector(state => state.auth.Loggedinuser)
   console.log(LoggedInUser)
 
@@ -155,10 +202,19 @@ export default function Navbar (props) {
       <ThemeProvider theme={theme}>
         <AppBar position='static' elevation={0}>
           <Toolbar className={classes.toolBar}>
-            <IconButton edge='start' color='inherit' aria-label='menu'>
+            <IconButton edge='start' color='inherit' aria-label='menu' onClick={toggleDrawer(true)}>
               <SvgIcon>
                 <MenuIcon />
               </SvgIcon>
+              <SwipeableDrawer
+              open={state.left}
+              onClose={toggleDrawer(false)}
+              onOpen={toggleDrawer(true)}
+              onBackdropClick={toggleDrawer(false)}
+              onEscapeKeyDown={toggleDrawer(false)}
+              >
+                {list()}
+              </SwipeableDrawer>
             </IconButton>
             <Typography variant='h6' className={classes.title}>
               Mahi Care
