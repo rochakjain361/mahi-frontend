@@ -3,7 +3,10 @@ export const CAUSE_APIS = {
 }
 
 export const EXTRA_APIS = {
-    tags: '/tags'
+    tags: '/tags',
+    suggestion: '/suggestions',
+    donation: '/donations',
+    activity: '/activities'
 }
 
 export const USER_APIS = {
