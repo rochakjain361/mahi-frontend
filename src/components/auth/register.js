@@ -18,6 +18,7 @@ import { googleLogin, facebookLogin } from '../../actions/AuthActions'
 import FacebookIcon from '../../icons/fb'
 import GoogleIcon from '../../icons/google'
 import { Redirect } from 'react-router-dom'
+import { validatePhoneNumber, validateName } from '../../utils/validations'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -101,6 +102,8 @@ export default function Register () {
   const classes = useStyles()
   const [name, setName] = useState(null)
   const [phone_number, setPhoneNumber] = useState(null)
+  const [phone_error, setPhoneError] = useState(null)
+  const [name_error, setNameError] = useState(null)
   const [otp, setOTP] = useState(null)
 
   const dispatch = useDispatch()
@@ -137,8 +140,23 @@ export default function Register () {
   }
 
   const send_OTP = () => {
+    let err = false
     var appVerifier = window.recaptchaVerifier
-    dispatch(sendOTP(phone_number, appVerifier))
+    let phone_validation = validatePhoneNumber(phone_number)
+    if (phone_validation.status === false) {
+      setPhoneError(phone_validation.error)
+      err = true
+    } else {
+      setPhoneError(null)
+    }
+    let name_validation = validateName(name)
+    if (name_validation.status === false) {
+      setNameError(name_validation.error)
+      err = true
+    } else {
+      setNameError(null)
+    }
+    if (!err) dispatch(sendOTP(phone_number, appVerifier))
   }
 
   const verify_OTP = () => {
@@ -177,6 +195,9 @@ export default function Register () {
               className={classes.wide_input}
               label='Name'
               InputLabelProps={{ className: classes.custom_label }}
+              disabled={otpSending || otpPending}
+              error={name_error ? true : false}
+              helperText={name_error ? name_error : ''}
             />
             <div className={classes.phone_number_container}>
               <span className={classes.phone_code}>+91</span>
@@ -185,6 +206,9 @@ export default function Register () {
                 className={classes.wide_input}
                 label='Phone Number'
                 InputLabelProps={{ className: classes.custom_label }}
+                disabled={otpSending || otpPending}
+                error={phone_error ? true : false}
+                helperText={phone_error ? phone_error : ''}
               />
             </div>
             <div id='reCaptcha' style={{ marginTop: '2.25rem' }} />

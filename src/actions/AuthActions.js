@@ -124,6 +124,7 @@ export const googleLogin = () => {
   return dispatch => {
     let login_url = USER_APIS.login
     let provider = new firebase.auth.GoogleAuthProvider()
+    dispatch(apiDispatch(SIGNING_IN, true))
     firebase
       .auth()
       .signInWithPopup(provider)
@@ -174,6 +175,7 @@ export const facebookLogin = () => {
   return dispatch => {
     let login_url = USER_APIS.login
     let provider = new firebase.auth.FacebookAuthProvider()
+    dispatch(apiDispatch(SIGNING_IN, true))
     firebase
       .auth()
       .signInWithPopup(provider)

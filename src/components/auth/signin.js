@@ -23,6 +23,7 @@ import {
 import FacebookIcon from '../../icons/fb'
 import GoogleIcon from '../../icons/google'
 import { Redirect } from 'react-router-dom'
+import { validatePhoneNumber } from '../../utils/validations'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -105,6 +106,7 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn () {
   const classes = useStyles()
   const [phone_number, setPhoneNumber] = useState(null)
+  const [phone_error, setPhoneError] = useState(null)
   const [otp, setOTP] = useState(null)
 
   const dispatch = useDispatch()
@@ -138,7 +140,13 @@ export default function SignIn () {
 
   const send_OTP = () => {
     var appVerifier = window.recaptchaVerifier
-    dispatch(sendOTP(phone_number, appVerifier))
+    let phone_validation = validatePhoneNumber(phone_number)
+    if (phone_validation.status === false) {
+      setPhoneError(phone_validation.error)
+    } else {
+      setPhoneError(null)
+      dispatch(sendOTP(phone_number, appVerifier))
+    }
   }
 
   const verify_OTP = () => {
@@ -179,6 +187,9 @@ export default function SignIn () {
                 className={classes.wide_input}
                 label='Phone Number'
                 InputLabelProps={{ className: classes.custom_label }}
+                disabled={otpSending || otpPending}
+                error={phone_error ? true : false}
+                helperText={phone_error ? phone_error : ''}
               />
             </div>
             <div id='reCaptcha' style={{ marginTop: '2.25rem' }} />
