@@ -217,7 +217,7 @@ export default function PostCard ({ cause }) {
               cause && dispatch(updateLikedUser(cause.id))
             }}
           >
-            {cause && user && (cause.liked_by).includes(user.id) ? (
+            {cause && cause.id && user && (cause.liked_by).includes(user.id) ? (
               <FavoriteIcon style={{ fill: '#FC747A' }} />
             ) : (
               <FavoriteBorderIcon />
