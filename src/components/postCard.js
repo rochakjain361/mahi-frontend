@@ -214,8 +214,6 @@ export default function PostCard ({ cause }) {
           <IconButton
             className={classes.LikeIcon}
             onClick={() => {
-              console.log(cause.liked_by)
-              console.log(user.id)
               cause && dispatch(updateLikedUser(cause.id))
             }}
           >
