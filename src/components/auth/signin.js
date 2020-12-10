@@ -6,6 +6,7 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  InputAdornment,
   TextField,
   Typography
 } from '@material-ui/core'
@@ -44,12 +45,6 @@ const useStyles = makeStyles(theme => ({
   wide_input: {
     width: '100%',
     marginTop: '2.25rem'
-  },
-  phone_number_container: {
-    display: 'flex'
-  },
-  phone_code: {
-    margin: '3.65rem 0.3rem 0 0'
   },
   custom_button: {
     color: '#fff',
@@ -200,18 +195,20 @@ export default function SignIn () {
           </div>
           <Typography className={classes.header}>Sign in</Typography>
           <form>
-            <div className={classes.phone_number_container}>
-              <span className={classes.phone_code}>+91</span>
-              <TextField
-                onChange={handlePhoneChange}
-                className={classes.wide_input}
-                label='Phone Number'
-                InputLabelProps={{ className: classes.custom_label }}
-                disabled={otpSending || otpPending}
-                error={phone_error ? true : false}
-                helperText={phone_error ? phone_error : ''}
-              />
-            </div>
+            <TextField
+              onChange={handlePhoneChange}
+              className={classes.wide_input}
+              label='Phone Number'
+              InputLabelProps={{ className: classes.custom_label }}
+              disabled={otpSending || otpPending}
+              error={phone_error ? true : false}
+              helperText={phone_error ? phone_error : ''}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>+91</InputAdornment>
+                )
+              }}
+            />
             <div id='reCaptcha' style={{ marginTop: '2.25rem' }} />
             <TextField
               onChange={handleOTPChange}
@@ -263,8 +260,10 @@ export default function SignIn () {
             </Button>
           </div>
           <div className={classes.registerContainer}>
-            Don't have an account? 
-            <span className={classes.registerLink} onClick={register}>Register here</span>
+            Don't have an account?
+            <span className={classes.registerLink} onClick={register}>
+              Register here
+            </span>
           </div>
         </Paper>
       )}

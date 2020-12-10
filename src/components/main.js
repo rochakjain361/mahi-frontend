@@ -50,7 +50,7 @@ export default function Main () {
 
   return (
     <ThemeProvider theme={theme}>
-    <div className={classes.root} onClick={() => dispatch(getAllCauses())}>
+    <div className={classes.root}>
       {PostCards}
       <Fab variant="extended" color='secondary' className={classes.fab} onClick={addComplain}>
         <AddIcon className={classes.extendedIcon} />

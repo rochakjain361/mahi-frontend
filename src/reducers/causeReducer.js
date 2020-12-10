@@ -44,7 +44,7 @@ const causeReducer = (state = initialState, action) => {
           el.id === payload.id
             ? {
                 ...el,
-                liked_users: payload.liked_users,
+                liked_by: payload.liked_by,
                 supporter_count: payload.supporter_count
               }
             : el

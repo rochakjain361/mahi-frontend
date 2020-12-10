@@ -135,7 +135,6 @@ export default function PostCard ({ cause }) {
   const daysLeft = findDaysLeft(cause.deadline)
   const history = useHistory()
   const user = useSelector(state => state.auth.Loggedinuser)
-  console.log(cause)
   const [expand, setExpand] = useState(false)
   const setExpandDetail = () => {
     setExpand(!expand)
@@ -215,10 +214,10 @@ export default function PostCard ({ cause }) {
           <IconButton
             className={classes.LikeIcon}
             onClick={() => {
-              dispatch(updateLikedUser(cause && cause.id))
+              cause && dispatch(updateLikedUser(cause.id))
             }}
           >
-            {cause && cause.id && user && cause.liked_by.includes(user.id) ? (
+            {cause && user && (cause.liked_by).includes(user.id) ? (
               <FavoriteIcon style={{ fill: '#FC747A' }} />
             ) : (
               <FavoriteBorderIcon />
