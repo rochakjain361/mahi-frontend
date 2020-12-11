@@ -102,8 +102,12 @@ const useStyles = makeStyles(theme => ({
     backgroundSize: 'contain'
   },
   mediaDiv: {
-    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);'
-  }
+    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);',
+    height: '-webkit-fill-available',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+  },
 }))
 
 const BorderLinearProgress = withStyles(theme => ({
@@ -146,7 +150,6 @@ export default function PostDetailCard (cause) {
   return (
     <Card className={classes.root}>
       <ThemeProvider theme={theme}>
-        <div className={classes.mediaDiv}>
           <CardMedia
             className={classes.img}
             image={
@@ -157,6 +160,7 @@ export default function PostDetailCard (cause) {
             }
             alt='benchmark data'
           >
+          <div className={classes.mediaDiv}>
             <div className={classes.steps}>
               {activeStep + 1}/{maxSteps}
             </div>
@@ -184,8 +188,8 @@ export default function PostDetailCard (cause) {
                 )}
               </Button>
             </div>
+            </div>
           </CardMedia>
-        </div>
         <CardActions disableSpacing>
           <IconButton>
             <SvgIcon>

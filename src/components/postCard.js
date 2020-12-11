@@ -88,7 +88,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 'auto'
   },
   mediaDiv: {
-    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);'
+    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);',
+    height: '-webkit-fill-available',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
   },
   media: {
     height: 0,
@@ -178,14 +182,15 @@ export default function PostCard ({ cause }) {
             </ShowMoreText>
           </Typography>
         </CardContent>
-        <div
-          className={classes.mediaDiv}
-          onClick={() => history.push(`/${cause.id}`)}
+        <CardMedia
+          className={classes.media}
+          image={cause.cover_photo}
+          // style={{'backgroundImage':cause.cover_photo}}
+          title='cover photo'
         >
-          <CardMedia
-            className={classes.media}
-            image={cause.cover_photo}
-            title='cover photo'
+          <div
+            className={classes.mediaDiv}
+            onClick={() => history.push(`/${cause.id}`)}
           >
             <div className={classes.daysLeft}>
               <AccessTimeIcon className={classes.timeIcon} />
@@ -202,8 +207,8 @@ export default function PostCard ({ cause }) {
                 <div>GOAL</div>
               </div>
             </div>
-          </CardMedia>
-        </div>
+          </div>
+        </CardMedia>
         <CardActions disableSpacing>
           <IconButton>
             <SvgIcon>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{ useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
@@ -11,6 +11,7 @@ import {
   Button,
   CardActions,
   Collapse,
+  FormLabel,
   GridList,
   GridListTile,
   GridListTileBar,
@@ -26,7 +27,7 @@ import SendIcon from '@material-ui/icons/Send'
 import { theme } from '../theme'
 import Comment from './comment'
 import TimeAgo from 'react-timeago'
-import { addActivity } from '../actions/extraActions'
+import { addActivity, addDonation } from '../actions/extraActions'
 
 function TabPanel (props) {
   const { children, value, index, ...other } = props
@@ -68,6 +69,19 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper
   },
+  inputHidden: {
+    display: 'none'
+  },
+  inputCard: {
+    padding: '1.5rem',
+    borderRadius: '0.75rem',
+    marginBottom: '1rem',
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: '-webkit-center',
+    justifyContent: 'space-between',
+    minHeight: '5rem'
+  },
   gridList: {
     flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
@@ -79,6 +93,11 @@ const useStyles = makeStyles(theme => ({
   },
   tab: {
     textTransform: 'none'
+  },
+  uploadErrorContainer: {
+    fontSize: '0.75rem',
+    marginTop: '0.2rem',
+    color: '#f44336'
   },
   cards: {
     border: 'none',
@@ -112,8 +131,42 @@ function LogTabs () {
   const [activity_expanded, setActivityExpanded] = React.useState(false)
   const [donation_expanded, setDonationExpanded] = React.useState(false)
   const activeCause = useSelector(state => state.causes.activeCause)
+  const [donation_media, setDonationMedia] = React.useState('')
+  const [donation_description, setDonationDescription] = React.useState('')
   const causeDonations = activeCause.cause_donations
+  const [donation_description_error, set_donation_description_error] = useState(null)
+  const [donation_photo_error, set_donation_photo_error] = useState(null)
   const [activity, setActivity] = React.useState('')
+
+  const validateUpload = () => {
+    let err = false
+    if (!donation_media || donation_media.length === 0) {
+      set_donation_photo_error("Please upload proof of donation")
+      err = true
+    } else {
+      set_donation_photo_error(null)
+    }
+
+    if (!donation_description) {
+      set_donation_description_error('Describe in 3-4 words')
+      err = true
+    }else{
+      set_donation_description_error(null)
+    }
+    
+    return !err
+  }
+
+  const handleDonationSubmit = () => {
+    if(validateUpload()){
+      let formdata = new FormData()
+      formdata.append('description', donation_description)
+      formdata.append('cause', activeCause.id)
+      formdata.append('media',donation_media[0])
+      dispatch(addDonation(formdata, handleSuccess))
+    }
+  }
+
   const handleSubmit = () => {
     let formdata = new FormData()
     formdata.append('description', activity)
@@ -121,8 +174,18 @@ function LogTabs () {
     dispatch(addActivity(formdata, handleSuccess))
   }
 
+  console.log(donation_media)
+  const handleSingleImageChange = e => {
+    setDonationMedia(e.target.files)
+  }
+  const removeImage = name => {
+    setDonationMedia([])
+  }
+
   const handleSuccess = () => {
     setActivity('')
+    setDonationDescription('')
+    setDonationMedia('')
   }
   const handleActivityChange = e => {
     setActivity(e.target.value)
@@ -228,7 +291,55 @@ function LogTabs () {
           onChangeIndex={handleChangeIndex}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            <GridList className={classes.gridList} cols={1.2}>
+            <GridList className={classes.gridList} cols={1}>
+              <GridListTile key='0'>
+              <Card className={classes.inputCard}>
+                <FormLabel className={classes.formLabel}>                  
+                  <div onClick={() => removeImage('needy_photo')}>
+                  {donation_media[0] ? donation_media[0].name : 'Add Donation'}
+                </div>
+                </FormLabel>
+                <input
+                  accept='image/*'
+                  onChange={handleSingleImageChange}
+                  name='donation_media'
+                  className={classes.inputHidden}
+                  id='contained-button-file-donation_media'
+                  type='file'
+                />
+                <label htmlFor='contained-button-file-donation_media'>
+                  <Button variant='contained' color='primary' component='span'>
+                    {donation_media ? 'Update' : 'Upload'}
+                  </Button>
+                  <div className={classes.uploadErrorContainer}>
+                  {donation_photo_error}
+                </div>
+                </label>
+                <div className={classes.input}>
+              <TextField
+                className={classes.textfield}
+                onChange={(e) => setDonationDescription(e.target.value)}
+                value={donation_description}
+                name='donation'
+                id='standard-basic'
+                label='Write something'
+                error={donation_description_error ? true : false}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <SvgIcon onClick={handleDonationSubmit}>
+                        <SendIcon />
+                      </SvgIcon>
+                    </InputAdornment>
+                  )
+                }}
+              />
+            </div>
+                <div className={classes.uploadErrorContainer}>
+                  {donation_description_error}
+                </div>
+              </Card>
+              </GridListTile>
               {donationsMedia}
             </GridList>
           </TabPanel>
