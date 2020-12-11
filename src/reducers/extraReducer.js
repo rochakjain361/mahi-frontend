@@ -3,6 +3,7 @@ import {
   EXTRA_API_ERROR,
   GET_TAGS_PENDING,
   SET_TAG,
+  SET_ORDERING,
   ADD_SUGGESTION_PENDING,
   ADD_DONATION_PENDING,
   ADD_ACTIVITY_PENDING
@@ -18,7 +19,8 @@ const initialPendingState = {
 const initialState = {
   ...initialPendingState,
   Tags: [],
-  tag: 0
+  tag: 0,
+  ordering: '-created_on'
 }
 const extraReducer = (state = initialState, action) => {
   const { type, payload, error } = action
@@ -35,6 +37,8 @@ const extraReducer = (state = initialState, action) => {
       return { ...state, addActivityPending: payload }
     case SET_TAG:
       return { ...state, tag: payload }
+    case SET_ORDERING:
+      return { ...state, ordering: payload }
     case EXTRA_API_ERROR:
       return { ...state, error: error }
     default:

@@ -28,10 +28,10 @@ const apiError = error => {
   }
 }
 
-export const getAllCauses = tag => {
+export const getAllCauses = (tag, ordering) => {
   const url = tag
-    ? `${CAUSE_APIS.CauseItems}?tag=${tag}`
-    : `${CAUSE_APIS.CauseItems}`
+    ? `${CAUSE_APIS.CauseItems}?tag=${tag}&ordering=${ordering}`
+    : `${CAUSE_APIS.CauseItems}?ordering=${ordering}`
   return dispatch => {
     dispatch(apiDispatch(GET_CAUSES_PENDING, true))
     apiClient

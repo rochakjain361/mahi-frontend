@@ -35,9 +35,10 @@ export default function Main () {
   const dispatch = useDispatch()
   const history = useHistory()
   const tag = useSelector(state => state.extras.tag)
+  const ordering = useSelector(state => state.extras.ordering)
   useEffect(() => {
-    dispatch(getAllCauses(tag))
-  }, [tag, dispatch])
+    dispatch(getAllCauses(tag, ordering))
+  }, [tag, ordering, dispatch])
 
   const more_causes_url = useSelector(state => state.causes.Causes.next)
   const pending_causes = useSelector(

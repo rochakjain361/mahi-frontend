@@ -24,7 +24,7 @@ import Avatar from '@material-ui/core/Avatar'
 import CallIcon from '@material-ui/icons/Call'
 import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
-import { getAllTags, setTag } from '../actions/extraActions'
+import { getAllTags, setTag, setOrdering } from '../actions/extraActions'
 import { useHistory } from 'react-router-dom'
 import {logout} from '../actions/AuthActions'
 
@@ -106,10 +106,12 @@ const useChipStyles = makeStyles(theme => ({
 
 function SimpleSelect () {
   const classes = useSelectStyles()
-  const [sort_by, changeSort] = React.useState('n')
+  const dispatch = useDispatch()
+  const [sort_by, changeSort] = React.useState('-created_on')
 
   const handleChange = event => {
     changeSort(event.target.value)
+    dispatch(setOrdering(event.target.value))
   }
   return (
     <div className={classes.root}>
@@ -125,9 +127,8 @@ function SimpleSelect () {
           onChange={handleChange}
           disableUnderline
         >
-          <MenuItem value={'n'}>New</MenuItem>
-          <MenuItem value={'s'}>Supports</MenuItem>
-          <MenuItem value={'r'}>Reach</MenuItem>
+          <MenuItem value={'-created_on'}>New</MenuItem>
+          <MenuItem value={'-supporter_count'}>Supports</MenuItem>
         </Select>
       </FormControl>
     </div>

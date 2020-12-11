@@ -6,6 +6,7 @@ import {
   GET_TAGS_PENDING,
   EXTRA_API_ERROR,
   SET_TAG,
+  SET_ORDERING,
   ADD_SUGGESTION_PENDING,
   ADD_ACTIVITY_PENDING,
   ADD_DONATION_PENDING
@@ -96,5 +97,11 @@ export const addActivity = (formdata,callback = () => {}) => {
 export const setTag = tag => {
   return dispatch => {
     dispatch(apiDispatch(SET_TAG, tag))
+  }
+}
+
+export const setOrdering = order => {
+  return dispatch => {
+    dispatch(apiDispatch(SET_ORDERING, order))
   }
 }
