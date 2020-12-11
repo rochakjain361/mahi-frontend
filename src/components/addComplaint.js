@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {
   Card,
   Checkbox,
@@ -16,12 +17,14 @@ import {
   InputLabel,
   ListItemText,
   MenuItem,
+  Modal,
   Select,
   TextField,
   ThemeProvider
 } from '@material-ui/core'
 
 import CloseIcon from '@material-ui/icons/Close'
+import publish from '../media/postCard/publish.png'
 import { theme } from '../theme'
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
@@ -53,6 +56,19 @@ const useStyles = makeStyles(theme => ({
   },
   mainDiv: {
     padding: '1rem'
+  },
+  modal: {
+    display: 'flex',
+    flexDirection: 'column',
+    textAlignLast: 'center',
+    marginTop: '47%',
+    backgroundColor: '#FFFFFF',
+    width: '60%',
+    height: '40%',
+    marginLeft: '12%',
+    position: 'absolute',
+    borderRadius: '1.2rem',
+    padding: '1.2rem'
   },
   instructionDiv: {
     padding: '1rem',
@@ -125,6 +141,16 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     padding: '1.2rem'
   },
+  returnFeedDiv: {
+    display : 'flex',
+    alignItems: 'center',
+    backgroundColor: '#6552FF',
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '1.2rem',
+    borderRadius: '0.4rem'
+  },
   uploadErrorContainer: {
     fontSize: '0.75rem',
     marginTop: '0.2rem',
@@ -174,10 +200,9 @@ export default function AddComplaint () {
   const [address_error, set_address_error] = useState(null)
   const [bank_name_error, set_bank_name_error] = useState(null)
   const [bank_ifsc_error, set_bank_ifsc_error] = useState(null)
-  const [
-    bank_account_number_error,
-    set_bank_account_number_error
-  ] = useState(null)
+  const [bank_account_number_error, set_bank_account_number_error] = useState(
+    null
+  )
   const [bank_upi_error, set_bank_upi_error] = useState(null)
   const [payment_error, set_payment_error] = useState(false)
   const [needy_photo_error, set_needy_photo_error] = useState(null)
@@ -264,7 +289,7 @@ export default function AddComplaint () {
       if (!cause.bank_name) {
         set_bank_name_error('Please select a bank')
         err = true
-      }else{
+      } else {
         set_bank_name_error(null)
       }
     }
@@ -290,15 +315,14 @@ export default function AddComplaint () {
     if (!cause.description) {
       set_description_error('Please add a brief description of the cause')
       err = true
-    }
-    else{
+    } else {
       set_description_error(null)
     }
 
     if (!cause.needy_address) {
       set_address_error('Please add address of the needy person')
       err = true
-    }else{
+    } else {
       set_address_error(null)
     }
 
@@ -311,8 +335,7 @@ export default function AddComplaint () {
       if (deadline_date < today) {
         set_deadline_error('Deadline cannot be in past')
         err = true
-      }
-      else{
+      } else {
         set_deadline_error(null)
       }
     }
@@ -367,6 +390,9 @@ export default function AddComplaint () {
         if (isValidUpload) {
           setActiveStep(prevActiveStep => prevActiveStep + 1)
         }
+        break
+      case 2:
+        setActiveStep(prevActiveStep => prevActiveStep + 1)
         break
       default:
         return null
@@ -847,12 +873,37 @@ export default function AddComplaint () {
           </Card>
           {activeStep === steps.length ? (
             <div>
-              <Typography className={classes.instructions}>
+              {/* <Typography className={classes.instructions}>
                 Complaint Registered! We will contact you via mail or phone.
               </Typography>
               <Button onClick={handleReset} className={classes.button}>
                 More complaints ?
-              </Button>
+              </Button> */}
+              <Modal
+                disablePortal
+                disableEnforceFocus
+                disableAutoFocus
+                open
+                aria-labelledby='server-modal-title'
+                aria-describedby='server-modal-description'
+                className={classes.modal}
+                // container={() => rootRef.current}
+              >
+                <div className={classes.paper}>
+                  <img src={publish}></img>
+                  <h2 id='Registered'>Registered</h2>
+                  <p id='server-modal-description'>
+                    Your complaint is under review. A Volunteer will reach out
+                    to you via email/phone.
+                  </p>
+                  <div
+                    onClick={() => history.push('/')}
+                    className={classes.returnFeedDiv}
+                  >
+                    Return to Feed <ArrowForwardIcon />
+                  </div>
+                </div>
+              </Modal>
             </div>
           ) : (
             <div className={classes.formDiv}>
