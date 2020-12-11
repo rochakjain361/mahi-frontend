@@ -1,5 +1,6 @@
 import {
   GET_ALL_CAUSES,
+  GET_MORE_CAUSES,
   CAUSE_API_ERROR,
   GET_CAUSES_PENDING,
   GET_CAUSE_PENDING,
@@ -17,9 +18,16 @@ const initialPendingState = {
   updateLikeUserPending: false
 }
 
+const initialCauses = {
+  count: 0,
+  next: null,
+  previous: null,
+  results: []
+}
+
 const initialState = {
   ...initialPendingState,
-  Causes: [],
+  Causes: { ...initialCauses },
   activeCause: {}
 }
 const causeReducer = (state = initialState, action) => {
@@ -27,6 +35,14 @@ const causeReducer = (state = initialState, action) => {
   switch (type) {
     case GET_ALL_CAUSES:
       return { ...state, Causes: payload }
+    case GET_MORE_CAUSES:
+      return {
+        ...state,
+        Causes: {
+          ...payload,
+          results: [...state.Causes.results, ...payload.results]
+        }
+      }
     case GET_CAUSE:
       return { ...state, activeCause: payload }
     case GET_CAUSES_PENDING:
@@ -40,15 +56,18 @@ const causeReducer = (state = initialState, action) => {
     case UPDATE_LIKE_USER:
       return {
         ...state,
-        Causes: state.Causes.map(el =>
-          el.id === payload.id
-            ? {
-                ...el,
-                liked_by: payload.liked_by,
-                supporter_count: payload.supporter_count
-              }
-            : el
-        )
+        Causes: {
+          ...state.Causes,
+          results: state.Causes.results.map(el =>
+            el.id === payload.id
+              ? {
+                  ...el,
+                  liked_by: payload.liked_by,
+                  supporter_count: payload.supporter_count
+                }
+              : el
+          )
+        }
       }
     case UPDATE_LIKE_USER_ON_ACTIVE_CAUSE:
       return {

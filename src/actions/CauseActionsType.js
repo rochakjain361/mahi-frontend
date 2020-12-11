@@ -1,4 +1,5 @@
 export const GET_ALL_CAUSES = 'GET_ALL_CAUSES'
+export const GET_MORE_CAUSES = 'GET_MORE_CAUSES'
 export const GET_CAUSE = 'GET_CAUSE'
 export const CAUSE_API_ERROR = 'CAUSE_API_ERROR'
 export const UPDATE_LIKE_USER = 'UPDATE_LIKE_USER'

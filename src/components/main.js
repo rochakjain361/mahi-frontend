@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Fab, ThemeProvider } from '@material-ui/core'
+import { CircularProgress, Fab, ThemeProvider } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { makeStyles } from '@material-ui/core/styles'
+import { useHistory } from 'react-router-dom'
 
 import PostCard from './postCard'
-import { getAllCauses } from '../actions/CauseActions'
+import { getAllCauses, getMoreCauses } from '../actions/CauseActions'
 import { theme } from '../theme'
-import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,24 +39,53 @@ export default function Main () {
     dispatch(getAllCauses(tag))
   }, [tag, dispatch])
 
+  const more_causes_url = useSelector(state => state.causes.Causes.next)
+  const pending_causes = useSelector(
+    state => state.causes.getCausesPending
+  )
+
+  const load_more_causes = useCallback(() => {
+    const list = document.getElementById('mahi_causes_container')
+    if (
+      !pending_causes &&
+      more_causes_url &&
+      window.scrollY + window.innerHeight === list.clientHeight + list.offsetTop
+    ) {
+      dispatch(getMoreCauses(more_causes_url))
+    }
+  }, [more_causes_url, pending_causes, dispatch])
+
+  useEffect(() => {
+    window.addEventListener('scroll', load_more_causes)
+    return () => {
+      window.removeEventListener('scroll', load_more_causes)
+    }
+  }, [more_causes_url, dispatch, load_more_causes])
+
   const addComplain = () => {
     history.push('/add')
   }
 
   const all_causes = useSelector(state => state.causes.Causes)
-  const PostCards = all_causes.map(cause => {
+  const PostCards = all_causes.results.map(cause => {
     return <PostCard cause={cause} key={cause.id} />
   })
 
   return (
     <ThemeProvider theme={theme}>
-    <div className={classes.root}>
-      {PostCards}
-      <Fab variant="extended" color='secondary' className={classes.fab} onClick={addComplain}>
-        <AddIcon className={classes.extendedIcon} />
-        Add your complaint
-      </Fab>
-    </div>
+      <div className={classes.root} id='mahi_causes_container'>
+        {PostCards}
+        {pending_causes && <div><CircularProgress color='secondary'/></div>}
+        <Fab
+          variant='extended'
+          color='secondary'
+          className={classes.fab}
+          onClick={addComplain}
+        >
+          <AddIcon className={classes.extendedIcon} />
+          Add your complaint
+        </Fab>
+      </div>
     </ThemeProvider>
   )
 }
