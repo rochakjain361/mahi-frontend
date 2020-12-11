@@ -3,6 +3,7 @@ import { CAUSE_APIS } from '../urls'
 
 import {
   GET_ALL_CAUSES,
+  GET_MORE_CAUSES,
   GET_CAUSES_PENDING,
   CAUSE_API_ERROR,
   GET_CAUSE_PENDING,
@@ -10,7 +11,7 @@ import {
   CREATE_CAUSE_PENDING,
   UPDATE_LIKE_USER,
   UPDATE_LIKE_USER_ON_ACTIVE_CAUSE,
-  UPDATE_LIKE_USER_PENDING,
+  UPDATE_LIKE_USER_PENDING
 } from './CauseActionsType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -38,6 +39,22 @@ export const getAllCauses = tag => {
       .then(res => {
         dispatch(apiDispatch(GET_CAUSES_PENDING, false))
         dispatch(apiDispatch(GET_ALL_CAUSES, res.data))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(GET_CAUSES_PENDING, false))
+      })
+  }
+}
+
+export const getMoreCauses = next_url => {
+  return dispatch => {
+    dispatch(apiDispatch(GET_CAUSES_PENDING, true))
+    apiClient
+      .get(next_url)
+      .then(res => {
+        dispatch(apiDispatch(GET_CAUSES_PENDING, false))
+        dispatch(apiDispatch(GET_MORE_CAUSES, res.data))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -102,14 +119,14 @@ export const updateLikedUserOnActiveCause = causeId => {
   return dispatch => {
     dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, true))
     apiClient
-    .patch(url)
-    .then(res => {
-      dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
-      dispatch(apiDispatch(UPDATE_LIKE_USER_ON_ACTIVE_CAUSE, res.data))
-    })
-    .catch(error => {
-      dispatch(apiError(error))
-      dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
-    })
+      .patch(url)
+      .then(res => {
+        dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
+        dispatch(apiDispatch(UPDATE_LIKE_USER_ON_ACTIVE_CAUSE, res.data))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
+      })
   }
 }
