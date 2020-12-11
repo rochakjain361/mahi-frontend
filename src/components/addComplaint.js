@@ -7,11 +7,8 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
-<<<<<<< HEAD
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-=======
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
->>>>>>> Implement list for file uploads in add complaint form
 import {
   Card,
   Checkbox,
