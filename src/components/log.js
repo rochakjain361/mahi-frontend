@@ -173,8 +173,6 @@ function LogTabs () {
     formdata.append('cause', activeCause.id)
     dispatch(addActivity(formdata, handleSuccess))
   }
-
-  console.log(donation_media)
   const handleSingleImageChange = e => {
     setDonationMedia(e.target.files)
   }

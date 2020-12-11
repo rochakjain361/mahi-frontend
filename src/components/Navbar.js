@@ -6,7 +6,9 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Chip from '@material-ui/core/Chip'
+import { red } from '@material-ui/core/colors'
 import {
+  CardHeader,
   ClickAwayListener,
   Divider,
   Drawer,
@@ -26,12 +28,16 @@ import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
 import { getAllTags, setTag, setOrdering } from '../actions/extraActions'
 import { useHistory } from 'react-router-dom'
-import {logout} from '../actions/AuthActions'
+import { logout } from '../actions/AuthActions'
+import MahiIcon from '../icons/mahi'
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)'
+    boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)',
+    width: '100%',
+    position: 'fixed',
+    zIndex: 1100,
   },
   toolBar: {
     padding: '1.25rem 1.25rem 0 1.25rem'
@@ -42,6 +48,12 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500
   },
   motto: {
+    padding: '0 1.25rem',
+    fontSize: '1.5rem',
+    fontWeight: 500,
+    textAlign: 'center'
+  },
+  sideBarHeading: {
     padding: '0 1.25rem',
     fontSize: '1.5rem',
     fontWeight: 500
@@ -57,7 +69,18 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     padding: '1rem 1.25rem',
     lineHeight: '2.25rem'
-  }
+  },
+  avatar: {
+    backgroundColor: red[500]
+  },
+  subheader: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  subheader_text: {
+    display: 'flex',
+    alignItems: 'start'
+  },
 }))
 
 const useSelectStyles = makeStyles(theme => ({
@@ -169,7 +192,7 @@ function Chips () {
   )
 }
 
-export default function Navbar (props) {
+function NavbarContent (props) {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
@@ -217,7 +240,7 @@ export default function Navbar (props) {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <h3 className={classes.motto}>Mahi Care</h3>
+      <h3 className={classes.sideBarHeading}>Mahi Care</h3>
       <Divider />
       <List className={classes.list}>
         {[
@@ -245,54 +268,110 @@ export default function Navbar (props) {
   console.log(LoggedInUser)
 
   return (
+    <Toolbar className={classes.toolBar}>
+      <IconButton
+        edge='start'
+        color='inherit'
+        aria-label='menu'
+        onClick={toggleDrawer(true)}
+      >
+        <SvgIcon>
+          <MenuIcon />
+        </SvgIcon>
+        <SwipeableDrawer
+          open={state.left}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}
+          onBackdropClick={toggleDrawer(false)}
+          onEscapeKeyDown={toggleDrawer(false)}
+        >
+          {list()}
+        </SwipeableDrawer>
+      </IconButton>
+      <Typography variant='h6' className={classes.title} onClick={returnHome}>
+        <MahiIcon />
+      </Typography>
+      <Avatar
+        src={
+          LoggedInUser && LoggedInUser.display_picture
+            ? `${LoggedInUser.display_picture}`
+            : ''
+        }
+        className={classes.avatar}
+      >
+        {LoggedInUser && LoggedInUser.first_name
+          ? LoggedInUser.first_name[0]
+          : 'Mahi'}
+      </Avatar>
+    </Toolbar>
+  )
+}
+
+export default function Navbar (props) {
+  const classes = useStyles()
+  return (
+    <div>
     <div className={classes.root}>
       <ThemeProvider theme={theme}>
         <AppBar position='static' elevation={0}>
-          <Toolbar className={classes.toolBar}>
-            <IconButton
-              edge='start'
-              color='inherit'
-              aria-label='menu'
-              onClick={toggleDrawer(true)}
-            >
-              <SvgIcon>
-                <MenuIcon />
-              </SvgIcon>
-              <SwipeableDrawer
-                open={state.left}
-                onClose={toggleDrawer(false)}
-                onOpen={toggleDrawer(true)}
-                onBackdropClick={toggleDrawer(false)}
-                onEscapeKeyDown={toggleDrawer(false)}
-              >
-                {list()}
-              </SwipeableDrawer>
-            </IconButton>
-            <Typography
-              variant='h6'
-              className={classes.title}
-              onClick={returnHome}
-            >
-              Mahi.
-            </Typography>
-            <Avatar
-              src={
-                LoggedInUser && LoggedInUser.display_picture
-                  ? `${LoggedInUser.display_picture}`
-                  : ''
-              }
-              className={classes.avatar}
-            >
-              {LoggedInUser && LoggedInUser.first_name
-                ? LoggedInUser.first_name[0]
-                : 'Mahi'}
-            </Avatar>
-          </Toolbar>
-          <h3 className={classes.motto}>Be the Change</h3>
-          <Chips />
-          <SimpleSelect />
+          <NavbarContent />
         </AppBar>
       </ThemeProvider>
+    </div>
+    <div style={{paddingBottom: "4.75rem"}}/>
+    </div>
+  )
+}
+
+export function NavbarForLandingPage (props) {
+  const classes = useStyles()
+  return (
+    <div>
+      <div className={classes.root}>
+    <ThemeProvider theme={theme}>
+      <AppBar position='static' elevation={0}>
+        <NavbarContent />
+        <h3 className={classes.motto}>Be the Change</h3>
+        <Chips />
+        <SimpleSelect />
+      </AppBar>
+    </ThemeProvider>
+  </div>
+  <div style={{paddingBottom: "15.47rem"}}/>
+  </div>
+  )
+}
+
+export function NavbarForDetailsPage ({ cause }) {
+  const classes = useStyles()
+  return (
+    <div>
+      <div className={classes.root}>
+      <ThemeProvider theme={theme}>
+        <AppBar position='static' elevation={0}>
+          <NavbarContent />
+          {console.log(cause.needy_name)}
+          <CardHeader
+            avatar={
+              <Avatar
+                src={cause && cause.needy_photo ? cause.needy_photo : ''}
+                className={classes.avatar}
+              >
+              </Avatar>
+            }
+            title={cause.needy_name}
+            subheader={
+              <div className={classes.subheader}>
+                <div className={classes.subheader_text}>
+                  {cause.needy_address}
+                </div>
+              </div>
+            }
+          />
+        </AppBar>
+      </ThemeProvider>
+    </div>
+    <div style={{paddingBottom: '10.5rem'}}></div>
     </div>
   )
 }

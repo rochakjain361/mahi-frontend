@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom'
 import PostCard from './postCard'
 import { getAllCauses, getMoreCauses } from '../actions/CauseActions'
 import { theme } from '../theme'
+import { NavbarForLandingPage } from './Navbar'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,6 +75,7 @@ export default function Main () {
 
   return (
     <ThemeProvider theme={theme}>
+      <NavbarForLandingPage/>
       <div className={classes.root} id='mahi_causes_container'>
         {PostCards}
         {pending_causes && <div><CircularProgress color='secondary'/></div>}
