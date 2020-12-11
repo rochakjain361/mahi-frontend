@@ -5,8 +5,13 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
+import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+<<<<<<< HEAD
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+=======
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
+>>>>>>> Implement list for file uploads in add complaint form
 import {
   Card,
   Checkbox,
@@ -15,6 +20,10 @@ import {
   FormLabel,
   Input,
   InputLabel,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
   ListItemText,
   MenuItem,
   Modal,
@@ -167,6 +176,7 @@ export default function AddComplaint () {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
+  const [dense, setDense] = React.useState(false)
   const [activeStep, setActiveStep] = useState(0)
   const all_tags = useSelector(state => state.extras.Tags)
   const initCause = {
@@ -518,12 +528,26 @@ export default function AddComplaint () {
     const additional_files_names = cause.media.additional_files.map(
       additional_file => {
         return (
-          <div
-            onClick={() =>
-              removeMediaImage(additional_file, 'additional_files')
-            }
-          >
-            {additional_file.name}
+          <div>
+            <ListItem>
+            <ListItemAvatar>
+              <InsertDriveFileOutlinedIcon />
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                additional_file.name.length > 15
+                  ?additional_file.name.slice(0, 15) + '...'
+                  : additional_file.name
+              }
+            />
+            <ListItemSecondaryAction>
+              <IconButton edge='end' aria-label='delete'>
+                <CancelOutlinedIcon
+                  onClick={() => removeMediaImage(additional_file, 'additional_files')}
+                />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
           </div>
         )
       }
@@ -531,8 +555,26 @@ export default function AddComplaint () {
 
     const benchmark_data_names = cause.media.benchmark_data.map(data => {
       return (
-        <div onClick={() => removeMediaImage(data, 'benchmark_data')}>
-          {data.name}
+        <div>
+          <ListItem>
+            <ListItemAvatar>
+              <InsertDriveFileOutlinedIcon />
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                data.name.length > 15
+                  ? data.name.slice(0, 15) + '...'
+                  : data.name
+              }
+            />
+            <ListItemSecondaryAction>
+              <IconButton edge='end' aria-label='delete'>
+                <CancelOutlinedIcon
+                  onClick={() => removeMediaImage(data, 'benchmark_data')}
+                />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
         </div>
       )
     })
@@ -743,9 +785,33 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>
                 Needy photograph
               </FormLabel>
-              <div onClick={() => removeImage('needy_photo')}>
-                {cause.needy_photo[0] ? cause.needy_photo[0].name : ''}
-              </div>
+              {cause.needy_photo[0] ? (
+                <div>
+                  <List dense={dense}>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <InsertDriveFileOutlinedIcon />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          cause.needy_photo[0].name.length > 15
+                            ? cause.needy_photo[0].name.slice(0, 15) + '...'
+                            : cause.needy_photo[0].name
+                        }
+                      />
+                      <ListItemSecondaryAction>
+                        <IconButton edge='end' aria-label='delete'>
+                          <CancelOutlinedIcon
+                            onClick={() => removeImage('needy_photo')}
+                          />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </List>
+                </div>
+              ) : (
+                ''
+              )}
               <input
                 accept='image/*'
                 onChange={handleSingleImageChange}
@@ -767,7 +833,9 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>
                 BenchMark Data
               </FormLabel>
-              {cause.media.benchmark_data[0] ? benchmark_data_names : ''}
+              <List>
+                {cause.media.benchmark_data[0] ? benchmark_data_names : ''}
+              </List>
               <input
                 accept='image/*'
                 className={classes.input}
@@ -788,9 +856,33 @@ export default function AddComplaint () {
             </Card>
             <Card className={classes.inputCard}>
               <FormLabel className={classes.formLabel}>Cover Photo</FormLabel>
-              <div onClick={() => removeImage('cover_photo')}>
-                {cause.cover_photo[0] ? cause.cover_photo[0].name : ''}
-              </div>
+              {cause.cover_photo[0] ? (
+                <div>
+                  <List dense={dense}>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <InsertDriveFileOutlinedIcon />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          cause.cover_photo[0].name.length > 15
+                            ? cause.cover_photo[0].name.slice(0, 15) + '...'
+                            : cause.cover_photo[0].name
+                        }
+                      />
+                      <ListItemSecondaryAction>
+                        <IconButton edge='end' aria-label='delete'>
+                          <CancelOutlinedIcon
+                            onClick={() => removeImage('cover_photo')}
+                          />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </List>
+                </div>
+              ) : (
+                ''
+              )}
               <input
                 accept='image/*'
                 onChange={handleSingleImageChange}
@@ -812,7 +904,9 @@ export default function AddComplaint () {
               <FormLabel className={classes.formLabel}>
                 Additional Files
               </FormLabel>
+              <List>
               {cause.media.additional_files[0] ? additional_files_names : ''}
+              </List>
               <input
                 accept='image/*'
                 className={classes.input}
