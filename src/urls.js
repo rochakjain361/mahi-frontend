@@ -1,3 +1,5 @@
+export const api_base_url = 'http://127.0.0.1:8000'
+
 export const CAUSE_APIS = {
     CauseItems: '/causes',
 }

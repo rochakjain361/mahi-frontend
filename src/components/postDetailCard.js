@@ -27,6 +27,8 @@ import {
   PostCardFooterShareIcon
 } from '../icons/menu'
 import { useParams } from 'react-router-dom'
+
+import {api_base_url} from '../urls'
 import { getCause } from '../actions/CauseActions'
 
 const useStyles = makeStyles(theme => ({
@@ -154,7 +156,7 @@ export default function PostDetailCard (cause) {
             className={classes.img}
             image={
               activeCause.id
-                ? 'http://127.0.0.1:8000' +
+                ? api_base_url +
                   activeCause.benchmark_media[activeStep].media
                 : ''
             }

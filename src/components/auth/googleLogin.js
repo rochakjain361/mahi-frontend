@@ -3,6 +3,7 @@ import 'firebase/auth'
 import axios from 'axios'
 
 import getCookie from '../../utils/get_cookie'
+import {api_base_url} from '../../urls'
 
 export const google_sign_in = () => {
   var provider = new firebase.auth.GoogleAuthProvider()
@@ -20,7 +21,7 @@ export const google_sign_in = () => {
         .then(function (idToken) {
           axios
             .post(
-              'http://127.0.0.1:8000/auth/login/',
+              `${api_base_url}/auth/login/`,
               { token: idToken },
               {
                 withCredentials: true,

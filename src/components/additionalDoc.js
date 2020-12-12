@@ -8,6 +8,8 @@ import IconButton from '@material-ui/core/IconButton'
 import StarBorderIcon from '@material-ui/icons/StarBorder'
 import { Typography } from '@material-ui/core'
 
+import {api_base_url} from '../urls'
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -45,7 +47,7 @@ export default function AdditionalDoc () {
     activeCause.media_files.map(file => {
       return (
         <GridListTile key={file.id}>
-          <img src={'http://127.0.0.1:8000' + file.media} alt='Media' />
+          <img src={api_base_url + file.media} alt='Media' />
           <GridListTileBar
             title='additional doc'
             classes={{

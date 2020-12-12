@@ -5,6 +5,7 @@ import {
   GET_ALL_CAUSES,
   GET_MORE_CAUSES,
   GET_CAUSES_PENDING,
+  GET_MORE_CAUSES_PENDING,
   CAUSE_API_ERROR,
   GET_CAUSE_PENDING,
   GET_CAUSE,
@@ -49,16 +50,16 @@ export const getAllCauses = (tag, ordering) => {
 
 export const getMoreCauses = next_url => {
   return dispatch => {
-    dispatch(apiDispatch(GET_CAUSES_PENDING, true))
+    dispatch(apiDispatch(GET_MORE_CAUSES_PENDING, true))
     apiClient
       .get(next_url)
       .then(res => {
-        dispatch(apiDispatch(GET_CAUSES_PENDING, false))
+        dispatch(apiDispatch(GET_MORE_CAUSES_PENDING, false))
         dispatch(apiDispatch(GET_MORE_CAUSES, res.data))
       })
       .catch(error => {
         dispatch(apiError(error))
-        dispatch(apiDispatch(GET_CAUSES_PENDING, false))
+        dispatch(apiDispatch(GET_MORE_CAUSES_PENDING, false))
       })
   }
 }

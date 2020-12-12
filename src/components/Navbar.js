@@ -24,7 +24,6 @@ import { logout } from '../actions/AuthActions'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)',
     width: '100%',
     position: 'fixed',
     zIndex: 1100,
@@ -41,7 +40,6 @@ const useStyles = makeStyles(theme => ({
     padding: '0 1.25rem',
     fontSize: '1.5rem',
     fontWeight: 500,
-    textAlign: 'center'
   },
   sideBarHeading: {
     padding: '0 1.25rem',

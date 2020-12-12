@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import { Button } from '@material-ui/core'
 
-import {apiClient} from '../../helpers/apiClient'
+import {apiAuthClient} from '../../helpers/apiClient'
 
 export default function UpdateUser () {
   const [user, setUser] = useState(null)
@@ -15,8 +15,8 @@ export default function UpdateUser () {
   const [phone_number, setPhoneNumber] = useState(null)
   const [email_verified, setEmailVerified] = useState(true)
   useEffect(() => {
-    apiClient
-      .get('http://127.0.0.1:8000/auth/who_am_i/')
+    apiAuthClient
+      .get('/who_am_i')
       .then(response => {
         console.log(response)
         setUser(response.data)
@@ -32,7 +32,6 @@ export default function UpdateUser () {
       })
       .catch(error => {
         console.log(error)
-        //window.location.href = 'http://127.0.0.1:3000/login/'
       })
   }, [])
 
@@ -54,7 +53,7 @@ export default function UpdateUser () {
           .then(() => {
             // Email sent.
             console.log('email sent')
-            apiClient.post('http://127.0.0.1:8000/auth/sync_with_firebase/',{})
+            apiAuthClient.post('/sync_with_firebase/',{})
             .then(response =>{
               console.log(response)
               let data = response.data
@@ -84,12 +83,12 @@ export default function UpdateUser () {
       phone_number: phone_number,
       email: email
     }
-    apiClient
-      .patch('http://127.0.0.1:8000/auth/update_user/', data)
+    apiAuthClient
+      .patch('/update_user/', data)
       .then(response => {
         console.log(response)
-        apiClient
-          .get('http://127.0.0.1:8000/auth/who_am_i/')
+        apiAuthClient
+          .get('/who_am_i')
           .then(response => {
             console.log(response)
             setUser(response.data)

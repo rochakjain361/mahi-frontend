@@ -25,7 +25,6 @@ const useStyles = makeStyles(theme => ({
       padding: '0 1.25rem',
       fontSize: '1.5rem',
       fontWeight: 500,
-      textAlign: 'center'
     },
   }))
 
@@ -113,11 +112,15 @@ function Chips () {
     const selected_tag = useSelector(state => state.extras.tag)
     console.log(selected_tag)
     const all_tags = useSelector(state => state.extras.Tags)
+    const changeTag = (id) => {
+      window.scrollTo(0,0)
+      dispatch(setTag(id))
+    }
     const chipList = all_tags.map(tag => {
       return (
         <Chip
           className={selected_tag == tag.id ? classes.selectedTag : ''}
-          onClick={() => dispatch(setTag(tag.id))}
+          onClick={() => changeTag(tag.id)}
           label={tag.tag_name}
           key={tag.id}
           clickable
@@ -128,7 +131,7 @@ function Chips () {
       <div className={classes.root}>
         <Chip
           className={selected_tag == '0' ? classes.selectedTag : ''}
-          onClick={() => dispatch(setTag(0))}
+          onClick={() => changeTag(0)}
           label='all'
           key='0'
           clickable

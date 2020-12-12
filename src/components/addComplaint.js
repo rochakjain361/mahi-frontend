@@ -91,7 +91,8 @@ const useStyles = makeStyles(theme => ({
   },
   textfield: {
     width: '100%',
-    fontSize: 'small'
+    fontSize: 'small',
+    marginBottom: '2rem'
   },
   hiddentextfield: {
     width: '100%',
@@ -99,7 +100,10 @@ const useStyles = makeStyles(theme => ({
     display: 'none'
   },
   formInput: {
-    marginBottom: '2rem'
+    marginBottom: '1.5rem'
+  },
+  formInput2: {
+    marginBottom: '2.25rem'
   },
   checkbox: {
     width: '100%',
@@ -122,7 +126,8 @@ const useStyles = makeStyles(theme => ({
   },
   formLabel: {
     display: 'flex',
-    color: '#000000'
+    color: '#000000',
+    marginBottom: '1rem'
   },
   formControl: {
     margin: theme.spacing(1),
@@ -152,7 +157,6 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     backgroundColor: '#6552FF',
     color: 'white',
-    display: 'flex',
     justifyContent: 'center',
     padding: '1.2rem',
     borderRadius: '0.4rem'
@@ -722,7 +726,7 @@ export default function AddComplaint () {
                 helperText={bank_ifsc_error ? bank_ifsc_error : ''}
               />
             </div>
-            <div className={classes.formInput}>
+            <div className={classes.formInput2}>
               <FormControlLabel
                 className={classes.checkbox}
                 control={

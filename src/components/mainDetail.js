@@ -30,7 +30,7 @@ export default function MainDetail () {
   const id = params.id
   useEffect(() => {
     dispatch(getCause(id))
-  }, [id])
+  }, [id, dispatch])
   const activeCause = useSelector(state => state.causes.activeCause)
   console.log(activeCause)
   return (

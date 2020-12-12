@@ -23,11 +23,22 @@ const useStyles = makeStyles(theme => ({
   },
   fab: {
     boxShadow: 'none',
-    position: 'sticky',
-    bottom: '1rem',
     textTransform: 'none',
     fontWeight: 500,
     fontSize: '0.875rem'
+  },
+  fabContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'sticky',
+    bottom: '1rem'
+  },
+  loader: {
+    width: '100%',
+    height: '80vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }))
 
@@ -42,20 +53,22 @@ export default function Main () {
   }, [tag, ordering, dispatch])
 
   const more_causes_url = useSelector(state => state.causes.Causes.next)
-  const pending_causes = useSelector(
-    state => state.causes.getCausesPending
+  const pending_causes = useSelector(state => state.causes.getCausesPending)
+  const pending_more_causes = useSelector(
+    state => state.causes.getMoreCausesPending
   )
 
   const load_more_causes = useCallback(() => {
     const list = document.getElementById('mahi_causes_container')
     if (
-      !pending_causes &&
+      !pending_more_causes &&
       more_causes_url &&
-      window.scrollY + window.innerHeight === list.clientHeight + list.offsetTop
+      window.pageYOffset + window.innerHeight + 100 >=
+        list.clientHeight + list.offsetTop
     ) {
       dispatch(getMoreCauses(more_causes_url))
     }
-  }, [more_causes_url, pending_causes, dispatch])
+  }, [more_causes_url, pending_more_causes, dispatch])
 
   useEffect(() => {
     window.addEventListener('scroll', load_more_causes)
@@ -74,21 +87,37 @@ export default function Main () {
   })
 
   return (
-    <ThemeProvider theme={theme}>
-      <NavbarForLandingPage/>
-      <div className={classes.root} id='mahi_causes_container'>
-        {PostCards}
-        {pending_causes && <div><CircularProgress color='secondary'/></div>}
-        <Fab
-          variant='extended'
-          color='secondary'
-          className={classes.fab}
-          onClick={addComplain}
-        >
-          <AddIcon className={classes.extendedIcon} />
-          Add your complaint
-        </Fab>
-      </div>
-    </ThemeProvider>
+    <React.Fragment>
+      <NavbarForLandingPage />
+      <ThemeProvider theme={theme}>
+        {pending_causes ? (
+          <div className={classes.loader}>
+            <CircularProgress color='secondary' />
+          </div>
+        ) : (
+          <React.Fragment>
+            <div className={classes.root} id='mahi_causes_container'>
+              {PostCards}
+              {pending_more_causes && (
+                <div>
+                  <CircularProgress color='secondary' />
+                </div>
+              )}
+            </div>
+            <div className={classes.fabContainer}>
+              <Fab
+                variant='extended'
+                color='secondary'
+                className={classes.fab}
+                onClick={addComplain}
+              >
+                <AddIcon className={classes.extendedIcon} />
+                Add your complaint
+              </Fab>
+            </div>
+          </React.Fragment>
+        )}
+      </ThemeProvider>
+    </React.Fragment>
   )
 }

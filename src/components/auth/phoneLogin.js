@@ -3,6 +3,7 @@ import 'firebase/auth'
 import axios from 'axios'
 
 import getCookie from '../../utils/get_cookie'
+import {api_base_url} from '../../urls'
 
 export const send_phone_otp = (phone_number, appVerifier) => {
   firebase
@@ -37,7 +38,7 @@ export const verify_phone_otp = (confirmationResult, code) => {
           // ...
           axios
             .post(
-              'http://127.0.0.1:8000/auth/login/',
+              `${api_base_url}/auth/login/`,
               { token: idToken },
               {
                 withCredentials: true,

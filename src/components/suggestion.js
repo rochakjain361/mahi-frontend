@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core'
 import TimeAgo from 'react-timeago'
 import { addSuggestion } from '../actions/extraActions'
+import {api_base_url} from '../urls'
 
 const useStyles = makeStyles({
   root: {
@@ -80,7 +81,7 @@ export default function Suggestions () {
             <Avatar
               src={
                 suggestion.person.display_picture
-                  ? 'http://127.0.0.1:8000' + suggestion.person.display_picture
+                  ? api_base_url + suggestion.person.display_picture
                   : ''
               }
               className={classes.avatar}

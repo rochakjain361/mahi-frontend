@@ -1,8 +1,9 @@
 import axios from 'axios'
 import getCookie from '../utils/get_cookie'
+import {api_base_url} from '../urls'
 
 export const apiAuthClient = axios.create({
-  baseURL: `http://127.0.0.1:8000/auth/`,
+  baseURL: `${api_base_url}/auth/`,
   withCredentials: true,
   headers: {
     'X-CSRFToken': getCookie('mahi_csrftoken'),
@@ -11,7 +12,7 @@ export const apiAuthClient = axios.create({
 })
 
 export const apiClient = axios.create({
-  baseURL: `http://127.0.0.1:8000/mahi_app/`,
+  baseURL: `${api_base_url}/mahi_app/`,
   withCredentials: true,
   headers: {
     'X-CSRFToken': getCookie('mahi_csrftoken'),

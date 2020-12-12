@@ -24,6 +24,7 @@ import {
 import StarBorderIcon from '@material-ui/icons/StarBorder'
 import SendIcon from '@material-ui/icons/Send'
 
+import {api_base_url} from '../urls'
 import { theme } from '../theme'
 import Comment from './comment'
 import TimeAgo from 'react-timeago'
@@ -60,9 +61,7 @@ function a11yProps (index) {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%'
-  },
-  root: {
+    width: '100%',
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
@@ -194,7 +193,7 @@ function LogTabs () {
     causeDonations.map(donation => {
       return (
         <GridListTile key={donation.id}>
-          <img src={'http://127.0.0.1:8000' + donation.media} alt='Media' />
+          <img src={api_base_url + donation.media} alt='Media' />
           <GridListTileBar
             title={donation.description}
             classes={{
@@ -221,7 +220,7 @@ function LogTabs () {
             <Avatar
               src={
                 activity.person.user.display_picture
-                  ? 'http://127.0.0.1:8000' +
+                  ? api_base_url +
                     activity.person.user.display_picture
                   : ''
               }
@@ -258,7 +257,7 @@ function LogTabs () {
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.root}>
-        <div>
+        <div style={{width:'100%'}}>
           <Tabs
             classes={{
               root: classes.tabs,
@@ -294,7 +293,7 @@ function LogTabs () {
               <Card className={classes.inputCard}>
                 <FormLabel className={classes.formLabel}>                  
                   <div onClick={() => removeImage('needy_photo')}>
-                  {donation_media[0] ? donation_media[0].name : 'Add Donation'}
+                  {donation_media[0] ? donation_media[0].name : ''}
                 </div>
                 </FormLabel>
                 <input
@@ -307,7 +306,7 @@ function LogTabs () {
                 />
                 <label htmlFor='contained-button-file-donation_media'>
                   <Button variant='contained' color='primary' component='span'>
-                    {donation_media ? 'Update' : 'Upload'}
+                    {donation_media ? 'Update Donation' : 'Add Donation'}
                   </Button>
                   <div className={classes.uploadErrorContainer}>
                   {donation_photo_error}

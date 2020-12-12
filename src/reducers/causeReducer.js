@@ -3,6 +3,7 @@ import {
   GET_MORE_CAUSES,
   CAUSE_API_ERROR,
   GET_CAUSES_PENDING,
+  GET_MORE_CAUSES_PENDING,
   GET_CAUSE_PENDING,
   GET_CAUSE,
   CREATE_CAUSE_PENDING,
@@ -13,6 +14,7 @@ import {
 
 const initialPendingState = {
   getCausesPending: false,
+  getMoreCausesPending: false,
   getCausePending: false,
   createCausePending: false,
   updateLikeUserPending: false
@@ -47,6 +49,8 @@ const causeReducer = (state = initialState, action) => {
       return { ...state, activeCause: payload }
     case GET_CAUSES_PENDING:
       return { ...state, getCausesPending: payload }
+    case GET_MORE_CAUSES_PENDING:
+      return { ...state, getMoreCausesPending: payload }
     case GET_CAUSE_PENDING:
       return { ...state, getCausePending: payload }
     case CREATE_CAUSE_PENDING:
