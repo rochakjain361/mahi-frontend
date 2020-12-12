@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom'
 import PostCard from './postCard'
 import { getAllCauses, getMoreCauses } from '../actions/CauseActions'
 import { theme } from '../theme'
-import { NavbarForLandingPage } from './Navbar'
+import NavbarForLandingPage from './NavbarForLandingPage'
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -11,7 +11,7 @@ import Suggestions from './suggestion'
 import { useParams } from 'react-router-dom'
 import { getCause } from '../actions/CauseActions'
 import AdditionalDoc from './additionalDoc'
-import Navbar, { NavbarForDetailsPage } from './Navbar'
+import { NavbarForDetailsPage } from './NavbarForDetailsPage'
 
 const useStyles = makeStyles(theme => ({
   root: {
