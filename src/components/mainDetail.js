@@ -11,6 +11,7 @@ import Suggestions from './suggestion'
 import { useParams } from 'react-router-dom'
 import { getCause } from '../actions/CauseActions'
 import AdditionalDoc from './additionalDoc'
+import { NavbarForDetailsPage } from './NavbarForDetailsPage'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,8 +32,11 @@ export default function MainDetail () {
     dispatch(getCause(id))
   }, [id])
   const activeCause = useSelector(state => state.causes.activeCause)
+  console.log(activeCause)
   return (
-    <div className={classes.root}>
+    <div>
+      <NavbarForDetailsPage cause={activeCause}/>
+      <div className={classes.root}>
       <PostDetailCard />
       <BankDetails />
       <Volunteer />
@@ -40,6 +44,7 @@ export default function MainDetail () {
       <Suggestions />
       <AdditionalDoc />
       <AskUpdate />
+    </div>
     </div>
   )
 }

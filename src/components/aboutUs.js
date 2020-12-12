@@ -16,6 +16,7 @@ import Asset1 from '../icons/asset1'
 import Asset2 from '../icons/asset2'
 import Asset3 from '../icons/asset3'
 import MahiIcon from '../icons/mahi'
+import Navbar from './Navbar'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -82,8 +83,10 @@ const useStyles = makeStyles(theme => ({
 export default function AboutUs (props) {
   const classes = useStyles()
   return (
-    <Container className={classes.root}>
-      <ThemeProvider theme={theme}>
+    <div>
+      <Navbar/>
+       <Container className={classes.root}>
+      <ThemeProvider theme={theme}> 
         <div className={classes.mainDiv}>
           <h3 className={classes.title}>About Us.</h3>
           <Typography className={classes.content}>
@@ -188,5 +191,6 @@ export default function AboutUs (props) {
         </div>
       </ThemeProvider>
     </Container>
+    </div>
   )
 }
