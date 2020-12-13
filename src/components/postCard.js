@@ -35,12 +35,12 @@ const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     borderRadius: '0.5rem',
-    marginBottom: '0.8rem'
+    // marginBottom: '0.8rem'
   },
   daysLeft: {
     position: 'absolute',
     top: '10%',
-    left: '10%',
+    left: '6.25%',
     color: 'white',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     display: 'flex',
@@ -54,9 +54,9 @@ const useStyles = makeStyles(theme => ({
   PostCardBottom: {
     display: 'flex',
     position: 'absolute',
-    bottom: '20%',
-    left: '10%',
-    width: '80%',
+    bottom: '10%',
+    left: '6.25%',
+    width: '87.5%',
     alignItems: 'center',
     color: 'white',
     fontSize: '0.8rem'
@@ -169,7 +169,7 @@ export default function PostCard ({ cause }) {
             </div>
           }
         />
-        <CardContent>
+        <CardContent onClick={() => history.push(`/${cause.id}`)}>
           <Typography variant='body2' color='textPrimary' component='div'>
             <ShowMoreText
               lines={1}
