@@ -222,15 +222,7 @@ export default function PostDetailCard (cause) {
         </CardActions>
         <div className={classes.PostCardDescription}>
           <Typography variant='body2' color='textPrimary' component='div'>
-            <ShowMoreText
-              lines={2}
-              more={'Show More'}
-              less={'Show Less'}
-              onClick={onClick}
-              expanded={expand}
-            >
               {activeCause.description}
-            </ShowMoreText>
           </Typography>
         </div>
         <div className={classes.PostCardBottom}>

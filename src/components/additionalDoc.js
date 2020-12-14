@@ -8,12 +8,12 @@ import IconButton from '@material-ui/core/IconButton'
 import StarBorderIcon from '@material-ui/icons/StarBorder'
 import { Typography } from '@material-ui/core'
 
-import {api_base_url} from '../urls'
+import { api_base_url } from '../urls'
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    marginTop: '0.5rem',
+    marginTop: '1rem',
     borderRadius: '0.5rem',
     marginBottom: '0.5rem',
     padding: '0 1.25rem',
@@ -65,13 +65,15 @@ export default function AdditionalDoc () {
     })
 
   return (
-    <div className={classes.root}>
-      <div className={classes.gridroot}>
-        <Typography className={classes.header}>Additional Documents</Typography>
-        <GridList className={classes.gridList} cols={1}>
-          {additionalMedia}
-        </GridList>
+    <React.Fragment>
+      <Typography className={classes.header}>Additional Documents</Typography>
+      <div className={classes.root}>
+        <div className={classes.gridroot}>
+          <GridList className={classes.gridList} cols={1}>
+            {additionalMedia}
+          </GridList>
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   )
 }

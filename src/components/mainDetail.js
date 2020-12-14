@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import AskUpdate from './askUpdate'
 
+import { theme } from '../theme'
 import PostDetailCard from './postDetailCard'
 import BankDetails from './bankDetails'
 import Volunteer from './volunteer'
@@ -34,17 +35,19 @@ export default function MainDetail () {
   const activeCause = useSelector(state => state.causes.activeCause)
   console.log(activeCause)
   return (
-    <div>
-      <NavbarForDetailsPage cause={activeCause}/>
-      <div className={classes.root}>
-      <PostDetailCard />
-      <BankDetails />
-      <Volunteer />
-      <Log />
-      <Suggestions />
-      <AdditionalDoc />
-      <AskUpdate />
-    </div>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div>
+        <NavbarForDetailsPage cause={activeCause} />
+        <div className={classes.root}>
+          <PostDetailCard />
+          <BankDetails />
+          <Volunteer />
+          <Log />
+          <Suggestions />
+          <AdditionalDoc />
+          <AskUpdate />
+        </div>
+      </div>
+    </ThemeProvider>
   )
 }
