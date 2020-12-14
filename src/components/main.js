@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { CircularProgress, Fab, ThemeProvider } from '@material-ui/core'
+import { CircularProgress, Fab, Grid, GridList, GridListTile, ThemeProvider } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
+import {isMobile} from 'react-device-detect'
 
 import PostCard from './postCard'
 import { getAllCauses, getMoreCauses } from '../actions/CauseActions'
@@ -11,12 +12,25 @@ import { theme } from '../theme'
 import NavbarForLandingPage from './NavbarForLandingPage'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
+  desktopRoot: {
+    // display: 'flex',
     justifyContent: 'center',
-    flexFlow: 'column',
+    // flexFlow: 'column',
+    alignItems: 'center',
+    padding: '3rem 6rem'
+  },
+  mobileRoot: {
+    // display: 'flex',
+    justifyContent: 'center',
+    // flexFlow: 'column',
     alignItems: 'center',
     padding: '1.25rem'
+  },
+  gridItemDesktop: {
+    padding: '0.75rem',
+  },
+  gridItemMobile: {
+    paddingBottom: '1rem',
   },
   extendedIcon: {
     marginRight: '0.5rem'
@@ -83,7 +97,7 @@ export default function Main () {
 
   const all_causes = useSelector(state => state.causes.Causes)
   const PostCards = all_causes.results.map(cause => {
-    return <PostCard cause={cause} key={cause.id} />
+    return <Grid lg={4} sm={6} xs={12} item className={isMobile ? classes.gridItemMobile : classes.gridItemDesktop} ><PostCard cause={cause} key={cause.id}/></Grid>
   })
 
   return (
@@ -96,14 +110,14 @@ export default function Main () {
           </div>
         ) : (
           <React.Fragment>
-            <div className={classes.root} id='mahi_causes_container'>
+            <Grid container lg={12} className={isMobile ? classes.mobileRoot : classes.desktopRoot} id='mahi_causes_container'>
               {PostCards}
               {pending_more_causes && (
                 <div>
                   <CircularProgress color='secondary' />
                 </div>
               )}
-            </div>
+            </Grid>
             <div className={classes.fabContainer}>
               <Fab
                 variant='extended'
