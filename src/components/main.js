@@ -60,11 +60,13 @@ export default function Main () {
   const classes = useStyles()
   const dispatch = useDispatch()
   const history = useHistory()
+  const [prev_more_cause_url, setPrevMoreCauseUrl] = React.useState(null)
   const tag = useSelector(state => state.extras.tag)
   const ordering = useSelector(state => state.extras.ordering)
+  const pending = useSelector(state => state.extras.show_pending_cause)
   useEffect(() => {
-    dispatch(getAllCauses(tag, ordering))
-  }, [tag, ordering, dispatch])
+    dispatch(getAllCauses(tag, ordering, pending))
+  }, [tag, ordering, pending, dispatch])
 
   const more_causes_url = useSelector(state => state.causes.Causes.next)
   const pending_causes = useSelector(state => state.causes.getCausesPending)
@@ -75,14 +77,17 @@ export default function Main () {
   const load_more_causes = useCallback(() => {
     const list = document.getElementById('mahi_causes_container')
     if (
+      list &&
       !pending_more_causes &&
       more_causes_url &&
-      window.pageYOffset + window.innerHeight + 100 >=
+      more_causes_url !== prev_more_cause_url &&
+      window.pageYOffset + window.innerHeight +100 >=
         list.clientHeight + list.offsetTop
     ) {
       dispatch(getMoreCauses(more_causes_url))
+      setPrevMoreCauseUrl(more_causes_url)
     }
-  }, [more_causes_url, pending_more_causes, dispatch])
+  }, [more_causes_url, prev_more_cause_url, pending_more_causes, dispatch])
 
   useEffect(() => {
     window.addEventListener('scroll', load_more_causes)
@@ -97,7 +102,7 @@ export default function Main () {
 
   const all_causes = useSelector(state => state.causes.Causes)
   const PostCards = all_causes.results.map(cause => {
-    return <Grid lg={4} sm={6} xs={12} item className={isMobile ? classes.gridItemMobile : classes.gridItemDesktop} ><PostCard cause={cause} key={cause.id}/></Grid>
+    return <Grid lg={4} sm={6} xs={12} item className={isMobile ? classes.gridItemMobile : classes.gridItemDesktop} key={cause.id} ><PostCard cause={cause} /></Grid>
   })
 
   return (

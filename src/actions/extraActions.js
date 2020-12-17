@@ -7,6 +7,7 @@ import {
   EXTRA_API_ERROR,
   SET_TAG,
   SET_ORDERING,
+  SHOW_PENDING_CAUSE,
   ADD_SUGGESTION_PENDING,
   ADD_ACTIVITY_PENDING,
   ADD_DONATION_PENDING
@@ -103,5 +104,11 @@ export const setTag = tag => {
 export const setOrdering = order => {
   return dispatch => {
     dispatch(apiDispatch(SET_ORDERING, order))
+  }
+}
+
+export const showPendingCause = pending => {
+  return dispatch => {
+    dispatch(apiDispatch(SHOW_PENDING_CAUSE, pending))
   }
 }

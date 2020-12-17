@@ -12,7 +12,8 @@ import {
   CREATE_CAUSE_PENDING,
   UPDATE_LIKE_USER,
   UPDATE_LIKE_USER_ON_ACTIVE_CAUSE,
-  UPDATE_LIKE_USER_PENDING
+  UPDATE_LIKE_USER_PENDING,
+  WHITELIST_CAUSE_PENDING,
 } from './CauseActionsType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -29,10 +30,10 @@ const apiError = error => {
   }
 }
 
-export const getAllCauses = (tag, ordering) => {
+export const getAllCauses = (tag, ordering='-created_on', pending=false) => {
   const url = tag
-    ? `${CAUSE_APIS.CauseItems}?tag=${tag}&ordering=${ordering}`
-    : `${CAUSE_APIS.CauseItems}?ordering=${ordering}`
+    ? `${CAUSE_APIS.CauseItems}?tag=${tag}&ordering=${ordering}&pending=${pending}`
+    : `${CAUSE_APIS.CauseItems}?ordering=${ordering}&pending=${pending}`
   return dispatch => {
     dispatch(apiDispatch(GET_CAUSES_PENDING, true))
     apiClient
@@ -128,6 +129,23 @@ export const updateLikedUserOnActiveCause = causeId => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(UPDATE_LIKE_USER_PENDING, false))
+      })
+  }
+}
+
+export const whitelistCause = (causeId, callback = () => {} ) => {
+  const url = `${CAUSE_APIS.CauseItems}/${causeId}/whitelist_cause/`
+  return dispatch => {
+    dispatch(apiDispatch(WHITELIST_CAUSE_PENDING, true))
+    apiClient
+      .patch(url)
+      .then(res => {
+        dispatch(apiDispatch(WHITELIST_CAUSE_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(WHITELIST_CAUSE_PENDING, false))
       })
   }
 }

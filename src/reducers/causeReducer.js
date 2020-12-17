@@ -9,7 +9,8 @@ import {
   CREATE_CAUSE_PENDING,
   UPDATE_LIKE_USER,
   UPDATE_LIKE_USER_ON_ACTIVE_CAUSE,
-  UPDATE_LIKE_USER_PENDING
+  UPDATE_LIKE_USER_PENDING,
+  WHITELIST_CAUSE_PENDING
 } from '../actions/CauseActionsType'
 
 const initialPendingState = {
@@ -17,7 +18,8 @@ const initialPendingState = {
   getMoreCausesPending: false,
   getCausePending: false,
   createCausePending: false,
-  updateLikeUserPending: false
+  updateLikeUserPending: false,
+  whitelistCausePending: false,
 }
 
 const initialCauses = {
@@ -55,8 +57,6 @@ const causeReducer = (state = initialState, action) => {
       return { ...state, getCausePending: payload }
     case CREATE_CAUSE_PENDING:
       return { ...state, createCausePending: payload }
-    case CAUSE_API_ERROR:
-      return { ...state, error: error }
     case UPDATE_LIKE_USER:
       return {
         ...state,
@@ -84,6 +84,10 @@ const causeReducer = (state = initialState, action) => {
       }
     case UPDATE_LIKE_USER_PENDING:
       return { ...state, updateLikeUserPending: payload }
+    case WHITELIST_CAUSE_PENDING:
+      return { ...state, whitelistCausePending: payload }
+    case CAUSE_API_ERROR:
+      return { ...state, error: error }
     default:
       return state
   }

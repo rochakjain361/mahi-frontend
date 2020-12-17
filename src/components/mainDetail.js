@@ -9,10 +9,18 @@ import BankDetails from './bankDetails'
 import Volunteer from './volunteer'
 import Log from './log'
 import Suggestions from './suggestion'
-import { useParams } from 'react-router-dom'
-import { getCause } from '../actions/CauseActions'
+import { useHistory, useParams } from 'react-router-dom'
+import { getCause, whitelistCause } from '../actions/CauseActions'
 import AdditionalDoc from './additionalDoc'
 import { NavbarForDetailsPage } from './NavbarForDetailsPage'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,24 +29,83 @@ const useStyles = makeStyles(theme => ({
     flexFlow: 'column',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  approveButton: {
+    display: 'flex',
+    width: '100%',
+    borderRadius: '0.4rem',
+    marginBottom: '1.25rem',
+    color: 'white'
+  },
+  textfield: {
+    width: '100%'
   }
 }))
 
 export default function MainDetail () {
   const classes = useStyles()
+  const [open, setOpen] = React.useState(false)
   const params = useParams()
   const dispatch = useDispatch()
+  const history = useHistory()
   const id = params.id
+
   useEffect(() => {
     dispatch(getCause(id))
   }, [id, dispatch])
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleWhitelist = () => {
+    dispatch(whitelistCause(id, () => {
+      history.push('/')
+    }))
+  }
+
   const activeCause = useSelector(state => state.causes.activeCause)
-  console.log(activeCause)
   return (
     <ThemeProvider theme={theme}>
       <div>
         <NavbarForDetailsPage cause={activeCause} />
         <div className={classes.root}>
+          {activeCause && activeCause.is_whitelisted === false && (
+            <React.Fragment>
+              <Button
+                className={classes.approveButton}
+                color = 'secondary'
+                variant='contained'
+                onClick={() => {
+                  setOpen(true)
+                }}
+              >
+                Approve Complaint
+              </Button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>
+                  {'Approve this cause/complaint?'}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id='alert-dialog-description'>
+                    By approving this cause/complaint you agree to volunteer
+                    this cause/complaint.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleWhitelist}>OK</Button>
+                  <Button onClick={handleClose} autoFocus>
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </React.Fragment>
+          )}
           <PostDetailCard />
           <BankDetails />
           <Volunteer />
