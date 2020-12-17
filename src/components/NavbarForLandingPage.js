@@ -14,20 +14,23 @@ import {
   setOrdering,
   showPendingCause
 } from '../actions/extraActions'
-import NavbarContent from './Navbar'
+import NavbarContent, { NavbarContentDesktop, NavbarExtra } from './Navbar'
+import { isMobile } from 'react-device-detect'
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)',
     width: '100%',
-    position: 'fixed',
     zIndex: 1100
   },
   motto: {
     padding: '0 1.25rem',
     fontSize: '1.5rem',
     fontWeight: 500
+  },
+  appBarDesktop: {
+    padding: '1% 10% 1% 10%'
   }
 }))
 
@@ -45,8 +48,13 @@ const useSelectStyles = makeStyles(theme => ({
   },
   formControl: {
     marginLeft: theme.spacing(1),
-    flexDirection: 'row'
+    fontSize: '0.75rem'
   },
+  // formControl: {
+  //   marginLeft: theme.spacing(1),
+  //   minWidth: 120,
+  //   flexDirection: 'row'
+  // },
   labelControl: {
     marginRight: 0,
     minWidth: 0,
@@ -191,14 +199,16 @@ export default function NavbarForLandingPage (props) {
       <div className={classes.root}>
         <ThemeProvider theme={theme}>
           <AppBar position='static' elevation={0}>
-            <NavbarContent />
-            <h3 className={classes.motto}>Be the Change</h3>
-            <Chips />
-            <SimpleSelect />
+            {isMobile ? <NavbarContent /> : <NavbarContentDesktop />}
+            <div className={isMobile ? '' : classes.appBarDesktop}>
+              {isMobile ? '' : <NavbarExtra />}
+              <h3 className={classes.motto}>Be the Change</h3>
+              <Chips />
+              <SimpleSelect />
+            </div>
           </AppBar>
         </ThemeProvider>
       </div>
-      <div style={{ paddingBottom: '15.47rem' }} />
     </div>
   )
 }
