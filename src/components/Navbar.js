@@ -242,7 +242,7 @@ export function NavbarContent (props) {
         </SwipeableDrawer>
       </IconButton>
       <Typography variant='h6' className={classes.title} onClick={returnHome}>
-        Mahi
+        <MahiIcon/>
       </Typography>
       <Avatar
         src={
@@ -366,7 +366,7 @@ export function NavbarContentDesktop (props) {
           className={classes.navbarDesktopDiv}
         >
           <div onClick={returnHome}>
-           <MahiIcon/>
+            <MahiIcon />
           </div>
           {list()}
         </div>
@@ -398,7 +398,7 @@ export default function Navbar (props) {
           </AppBar>
         </ThemeProvider>
       </div>
-      <div style={{ paddingBottom: '4.75rem' }} />
+      <div style={{ paddingBottom: '3.75rem' }} />
     </div>
   )
 }

@@ -18,6 +18,8 @@ import Asset2 from '../icons/asset2'
 import Asset3 from '../icons/asset3'
 import MahiIcon from '../icons/mahi'
 import Navbar from './Navbar'
+import aboutUsHeader from '../media/aboutUsHeader.png'
+import { isMobile } from 'react-device-detect'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -87,6 +89,10 @@ const useStyles = makeStyles(theme => ({
   gridContent: {
     maxWidth: '1502px',
     margin: 'auto'
+  },
+  aboutUsHeaderImage: {
+    marginBottom: '-1rem',
+    width: '100%',
   }
 }))
 
@@ -95,6 +101,9 @@ export default function AboutUs (props) {
   return (
     <div>
       <Navbar />
+      {isMobile ? '' : <div style={{margin: '0.5rem'}}>
+            <img src={aboutUsHeader} className={classes.aboutUsHeaderImage}/>
+          </div>}
       <Container className={classes.root} maxWidth={false}>
         <ThemeProvider theme={theme}>
           <div className={classes.mainDiv}>

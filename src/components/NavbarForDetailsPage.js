@@ -4,10 +4,12 @@ import AppBar from '@material-ui/core/AppBar'
 import {
   Avatar,
   CardHeader,
-  ThemeProvider
+  ThemeProvider,
+  Toolbar
 } from '@material-ui/core'
 import { theme } from '../theme'
 import NavbarContent from './Navbar'
+import { api_base_url } from '../urls'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,14 +17,9 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)',
     width: '100%',
     position: 'fixed',
+    alignItems: 'center',
     zIndex: 1100,
-  },
-  motto: {
-    padding: '0 1.25rem',
-    fontSize: '1.5rem',
-    fontWeight: 500,
-    textAlign: 'center'
-  },
+  }
 }))
 
 export function NavbarForDetailsPage ({ cause }) {
@@ -36,7 +33,7 @@ export function NavbarForDetailsPage ({ cause }) {
             <CardHeader
               avatar={
                 <Avatar
-                  src={cause.needy_photo ? cause.needy_photo : ''}
+                  src={cause.needy_photo ? api_base_url +cause.needy_photo : ''}
                   className={classes.avatar}
                 >
                 </Avatar>
@@ -49,11 +46,12 @@ export function NavbarForDetailsPage ({ cause }) {
                   </div>
                 </div>
               }
+              className={classes.cardHeader}
             />
           </AppBar>
         </ThemeProvider>
       </div>
-      <div style={{paddingBottom: '10.5rem'}}></div>
+      <div style={{paddingBottom: '9rem'}}></div>
       </div>
     )
   }
