@@ -32,6 +32,7 @@ export default function Volunteer () {
     activeCause.associated_volunteers.map(volunteer => {
       return (
         <CardHeader
+          key = {volunteer.user.id}
           avatar={
             <Avatar
               src={

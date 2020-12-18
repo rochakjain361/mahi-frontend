@@ -1,4 +1,4 @@
-import React,{ useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
@@ -24,7 +24,7 @@ import {
 import StarBorderIcon from '@material-ui/icons/StarBorder'
 import SendIcon from '@material-ui/icons/Send'
 
-import {api_base_url} from '../urls'
+import { api_base_url } from '../urls'
 import { theme } from '../theme'
 import Comment from './comment'
 import TimeAgo from 'react-timeago'
@@ -109,6 +109,12 @@ const useStyles = makeStyles(theme => ({
   },
   justify_space: {
     justifyContent: 'space-around'
+  },
+  swipeableContainer: {
+    width: '100%',
+  },
+  textfield: {
+    width: '100%'
   }
 }))
 
@@ -130,17 +136,20 @@ function LogTabs () {
   const [activity_expanded, setActivityExpanded] = React.useState(false)
   const [donation_expanded, setDonationExpanded] = React.useState(false)
   const activeCause = useSelector(state => state.causes.activeCause)
+  const logged_in_user = useSelector(state => state.auth.Loggedinuser)
   const [donation_media, setDonationMedia] = React.useState('')
   const [donation_description, setDonationDescription] = React.useState('')
   const causeDonations = activeCause.cause_donations
-  const [donation_description_error, set_donation_description_error] = useState(null)
+  const [donation_description_error, set_donation_description_error] = useState(
+    null
+  )
   const [donation_photo_error, set_donation_photo_error] = useState(null)
   const [activity, setActivity] = React.useState('')
 
   const validateUpload = () => {
     let err = false
     if (!donation_media || donation_media.length === 0) {
-      set_donation_photo_error("Please upload proof of donation")
+      set_donation_photo_error('Please upload proof of donation')
       err = true
     } else {
       set_donation_photo_error(null)
@@ -149,19 +158,19 @@ function LogTabs () {
     if (!donation_description) {
       set_donation_description_error('Describe in 3-4 words')
       err = true
-    }else{
+    } else {
       set_donation_description_error(null)
     }
-    
+
     return !err
   }
 
   const handleDonationSubmit = () => {
-    if(validateUpload()){
+    if (validateUpload()) {
       let formdata = new FormData()
       formdata.append('description', donation_description)
       formdata.append('cause', activeCause.id)
-      formdata.append('media',donation_media[0])
+      formdata.append('media', donation_media[0])
       dispatch(addDonation(formdata, handleSuccess))
     }
   }
@@ -213,15 +222,43 @@ function LogTabs () {
   const causeActivities =
     activeCause &&
     activeCause.cause_activities &&
-    activeCause.cause_activities.map(activity => {
+    activeCause.cause_activities.slice(0, 3).map(activity => {
       return (
         <Comment
+          key={activity.id}
           avatar={
             <Avatar
               src={
                 activity.person.user.display_picture
-                  ? api_base_url +
-                    activity.person.user.display_picture
+                  ? api_base_url + activity.person.user.display_picture
+                  : ''
+              }
+              // className={classes.avatar}
+            >
+              {activity.person.user.display_name
+                ? activity.person.user.display_name[0]
+                : 'User'}
+            </Avatar>
+          }
+          title={activity.person.user.display_name}
+          subtitle={<TimeAgo date={activity.created_on} />}
+          content={activity.description}
+        />
+      )
+    })
+
+  const moreCauseActivities =
+    activeCause &&
+    activeCause.cause_activities &&
+    activeCause.cause_activities.slice(3).map(activity => {
+      return (
+        <Comment
+          key={activity.id}
+          avatar={
+            <Avatar
+              src={
+                activity.person.user.display_picture
+                  ? api_base_url + activity.person.user.display_picture
                   : ''
               }
               // className={classes.avatar}
@@ -257,7 +294,7 @@ function LogTabs () {
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.root}>
-        <div style={{width:'100%'}}>
+        <div style={{ width: '100%' }}>
           <Tabs
             classes={{
               root: classes.tabs,
@@ -283,6 +320,7 @@ function LogTabs () {
           </Tabs>
         </div>
         <SwipeableViews
+          className={classes.swipeableContainer}
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={value}
           onChangeIndex={handleChangeIndex}
@@ -290,77 +328,88 @@ function LogTabs () {
           <TabPanel value={value} index={0} dir={theme.direction}>
             <GridList className={classes.gridList} cols={1}>
               <GridListTile key='0'>
-              <Card className={classes.inputCard}>
-                <FormLabel className={classes.formLabel}>                  
-                  <div onClick={() => removeImage('needy_photo')}>
-                  {donation_media[0] ? donation_media[0].name : ''}
-                </div>
-                </FormLabel>
-                <input
-                  accept='image/*'
-                  onChange={handleSingleImageChange}
-                  name='donation_media'
-                  className={classes.inputHidden}
-                  id='contained-button-file-donation_media'
-                  type='file'
-                />
-                <label htmlFor='contained-button-file-donation_media'>
-                  <Button variant='contained' color='primary' component='span'>
-                    {donation_media ? 'Update Donation' : 'Add Donation'}
-                  </Button>
+                <Card className={classes.inputCard}>
+                  <FormLabel className={classes.formLabel}>
+                    <div onClick={() => removeImage('needy_photo')}>
+                      {donation_media[0] ? donation_media[0].name : ''}
+                    </div>
+                  </FormLabel>
+                  <input
+                    accept='image/*'
+                    onChange={handleSingleImageChange}
+                    name='donation_media'
+                    className={classes.inputHidden}
+                    id='contained-button-file-donation_media'
+                    type='file'
+                  />
+                  <label htmlFor='contained-button-file-donation_media'>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      component='span'
+                    >
+                      {donation_media ? 'Update Donation' : 'Add Donation'}
+                    </Button>
+                    <div className={classes.uploadErrorContainer}>
+                      {donation_photo_error}
+                    </div>
+                  </label>
+                  <div className={classes.input}>
+                    <TextField
+                      className={classes.textfield}
+                      onChange={e => setDonationDescription(e.target.value)}
+                      value={donation_description}
+                      name='donation'
+                      id='standard-basic'
+                      label='Write something'
+                      error={donation_description_error ? true : false}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <SvgIcon onClick={handleDonationSubmit}>
+                              <SendIcon />
+                            </SvgIcon>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </div>
                   <div className={classes.uploadErrorContainer}>
-                  {donation_photo_error}
-                </div>
-                </label>
-                <div className={classes.input}>
-              <TextField
-                className={classes.textfield}
-                onChange={(e) => setDonationDescription(e.target.value)}
-                value={donation_description}
-                name='donation'
-                id='standard-basic'
-                label='Write something'
-                error={donation_description_error ? true : false}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <SvgIcon onClick={handleDonationSubmit}>
-                        <SendIcon />
-                      </SvgIcon>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </div>
-                <div className={classes.uploadErrorContainer}>
-                  {donation_description_error}
-                </div>
-              </Card>
+                    {donation_description_error}
+                  </div>
+                </Card>
               </GridListTile>
               {donationsMedia}
             </GridList>
           </TabPanel>
 
           <TabPanel value={value} index={1} dir={theme.direction}>
-            <div className={classes.input}>
-              <TextField
-                className={classes.textfield}
-                onChange={handleActivityChange}
-                value={activity}
-                name='activity'
-                id='standard-basic'
-                label='Give brief activity'
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <SvgIcon onClick={handleSubmit}>
-                        <SendIcon />
-                      </SvgIcon>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </div>
+            {activeCause &&
+              logged_in_user &&
+              activeCause.associated_volunteers &&
+              activeCause.associated_volunteers
+                .map(volunteer => volunteer.user.id)
+                .includes(logged_in_user.id) && (
+                <div className={classes.input}>
+                  <TextField
+                    className={classes.textfield}
+                    onChange={handleActivityChange}
+                    value={activity}
+                    name='activity'
+                    id='standard-basic'
+                    label='Give brief activity'
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <SvgIcon onClick={handleSubmit}>
+                            <SendIcon />
+                          </SvgIcon>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </div>
+              )}
             {causeActivities}
             <CardActions style={{ justifyContent: 'center' }}>
               <Button
@@ -371,18 +420,7 @@ function LogTabs () {
               </Button>
             </CardActions>
             <Collapse in={activity_expanded} timeout='auto' unmountOnExit>
-              <Comment
-                avatar={{
-                  src:
-                    'https://react.semantic-ui.com/images/avatar/small/christian.jpg',
-                  alt: 'Mahi'
-                }}
-                title={'Aditya Kulkarni'}
-                subtitle={'21 hours ago'}
-                content={
-                  'Due to public transit strike in your area, maybe try arriving at the destination a day before. '
-                }
-              />
+              {moreCauseActivities}
             </Collapse>
           </TabPanel>
         </SwipeableViews>

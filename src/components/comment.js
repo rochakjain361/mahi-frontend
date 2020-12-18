@@ -3,7 +3,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import Avatar from '@material-ui/core/Avatar'
-import { CardContent, Typography } from '@material-ui/core'
+import { CardContent, ThemeProvider, Typography } from '@material-ui/core'
+
+import { theme } from '../theme'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     fontSize: '0.875rem',
     fontWeight: 400,
-    padding: '1rem 0 1.5rem 0',
+    padding: '1rem 0 1.5rem 0'
   }
 }))
 
@@ -28,15 +30,17 @@ export default function Comment (props) {
   const classes = useStyles()
 
   return (
-    <Card className={classes.root}>
-      <CardHeader
-        avatar={avatar}
-        title={<Typography>{title}</Typography>}
-        subheader={subtitle}
-      />
-      <CardContent style={{padding: 0}}>
-        <Typography className={classes.content}>{content}</Typography>
-      </CardContent>
-    </Card>
+    <ThemeProvider theme={theme}>
+      <Card className={classes.root}>
+        <CardHeader
+          avatar={avatar}
+          title={<Typography>{title}</Typography>}
+          subheader={subtitle}
+        />
+        <CardContent style={{ padding: 0 }}>
+          <Typography className={classes.content}>{content}</Typography>
+        </CardContent>
+      </Card>
+    </ThemeProvider>
   )
 }
