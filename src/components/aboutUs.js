@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   mainDiv: {
     width: '100%',
     padding: '1rem 1rem 2.5rem 1rem',
-    marginTop: '1rem',
+    marginBottom: '1rem',
     background: 'white',
     textAlign: 'center'
   },
@@ -48,6 +48,16 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 400,
     maxWidth: '612px',
     margin: 'auto'
+  },
+  headerContent:{
+    fontSize: '20px',
+    padding: '0 1.25rem',
+    lineHeight: '1.875rem',
+    fontWeight: 400,
+    maxWidth: '590px',
+    margin: 'auto',
+    fontFamily: 'Montserrat',
+    fontStyle: 'italic',
   },
   subtitle: {
     fontSize: '1rem',
@@ -91,7 +101,6 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto'
   },
   aboutUsHeaderImage: {
-    marginBottom: '-1rem',
     width: '100%',
   }
 }))
@@ -101,12 +110,28 @@ export default function AboutUs (props) {
   return (
     <div>
       <Navbar />
-      {isMobile ? '' : <div style={{margin: '0.5rem'}}>
-            <img src={aboutUsHeader} className={classes.aboutUsHeaderImage}/>
-          </div>}
       <Container className={classes.root} maxWidth={false}>
         <ThemeProvider theme={theme}>
           <div className={classes.mainDiv}>
+          {isMobile ? (
+                ''
+              ) : (
+                <Grid container lg={12} className={classes.gridContent} style={{marginBottom: '5rem'}}>
+                  <Grid item lg={6} sm={6} xs={12}>
+                    <div style={{ margin: '0.5rem' }}>
+                      <img
+                        src={aboutUsHeader}
+                        className={classes.aboutUsHeaderImage}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} sm={6} xs={12} className={classes.headerContent}>
+                    I cannot do all the good that the world needs. But the world
+                    needs all the good that I can do. <br />
+                    <div style={{ textAlign: 'right', marginTop: '1rem', fontStyle: 'normal' }}> - Jana Stanfield</div>
+                  </Grid>
+                </Grid>
+              )}
             <h3 className={classes.title}>About Us.</h3>
             <Typography className={classes.content}>
               Mahi literally means “The Union of Heaven and Earth”. The vision
