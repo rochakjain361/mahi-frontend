@@ -24,6 +24,7 @@ import { theme } from '../theme'
 import { useHistory } from 'react-router-dom'
 import { logout } from '../actions/AuthActions'
 import { isMobile } from 'react-device-detect'
+import MahiIcon from '../icons/mahi'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -241,7 +242,7 @@ export function NavbarContent (props) {
         </SwipeableDrawer>
       </IconButton>
       <Typography variant='h6' className={classes.title} onClick={returnHome}>
-        Mahi
+        <MahiIcon/>
       </Typography>
       <Avatar
         src={
@@ -365,9 +366,7 @@ export function NavbarContentDesktop (props) {
           className={classes.navbarDesktopDiv}
         >
           <div onClick={returnHome}>
-            <Typography variant='h6' className={classes.title}>
-              Mahi
-            </Typography>
+            <MahiIcon />
           </div>
           {list()}
         </div>
@@ -399,7 +398,7 @@ export default function Navbar (props) {
           </AppBar>
         </ThemeProvider>
       </div>
-      <div style={{ paddingBottom: '4.75rem' }} />
+      <div style={{ paddingBottom: '3.75rem' }} />
     </div>
   )
 }
