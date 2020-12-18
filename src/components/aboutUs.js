@@ -1,6 +1,7 @@
 import {
   Button,
   Container,
+  Grid,
   Paper,
   ThemeProvider,
   Typography
@@ -42,7 +43,9 @@ const useStyles = makeStyles(theme => ({
     fontSize: '14px',
     padding: '0 1.25rem',
     lineHeight: '1.875rem',
-    fontWeight: 400
+    fontWeight: 400,
+    maxWidth: '612px',
+    margin: 'auto'
   },
   subtitle: {
     fontSize: '1rem',
@@ -77,6 +80,13 @@ const useStyles = makeStyles(theme => ({
   },
   assets: {
     marginBottom: '1.5rem'
+  },
+  mahIcon: {
+    paddingTop: '2.5rem'
+  },
+  gridContent: {
+    maxWidth: '1502px',
+    margin: 'auto'
   }
 }))
 
@@ -84,113 +94,137 @@ export default function AboutUs (props) {
   const classes = useStyles()
   return (
     <div>
-      <Navbar/>
-       <Container className={classes.root}>
-      <ThemeProvider theme={theme}> 
-        <div className={classes.mainDiv}>
-          <h3 className={classes.title}>About Us.</h3>
-          <Typography className={classes.content}>
-            Mahi literally means “The Union of Heaven and Earth”. The vision is
-            to make this a reality, starting with India.
-          </Typography>
-        </div>
-        <div className={classes.mainDiv}>
-          <h3 className={classes.title}>What we do?</h3>
-          <Typography className={classes.content}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultrices et
-            pulvinar in mauris ut risus, libero magna duis. Rhoncus eu nunc nisl
-            id et. Commodo nisi, scelerisque facilisis sed adipiscing egestas
-            placerat magna. Urna dignissim dignissim duis aliquam netus enim
-            elementum.
-          </Typography>
-        </div>
-        <div className={classes.mainDiv}>
-          <h3 className={classes.title}>How we work?</h3>
-          <div className={classes.subtitle}>
-            <div className={classes.assets}>
-              <Asset1 />
+      <Navbar />
+      <Container className={classes.root} maxWidth={false}>
+        <ThemeProvider theme={theme}>
+          <div className={classes.mainDiv}>
+            <h3 className={classes.title}>About Us.</h3>
+            <Typography className={classes.content}>
+              Mahi literally means “The Union of Heaven and Earth”. The vision
+              is to make this a reality, starting with India.
+            </Typography>
+          </div>
+          <div className={classes.mainDiv}>
+            <h3 className={classes.title}>What we do?</h3>
+            <Typography className={classes.content}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultrices
+              et pulvinar in mauris ut risus, libero magna duis. Rhoncus eu nunc
+              nisl id et. Commodo nisi, scelerisque facilisis sed adipiscing
+              egestas placerat magna. Urna dignissim dignissim duis aliquam
+              netus enim elementum.
+            </Typography>
+          </div>
+          <div className={classes.mainDiv}>
+            <h3 className={classes.title}>How we work?</h3>
+            <Grid container lg={12} className={classes.gridContent}>
+              <Grid lg={4} xs={12} item>
+                <div className={classes.subtitle}>
+                  <div className={classes.assets}>
+                    <Asset1 />
+                  </div>
+                  Add Complaint
+                </div>
+                <Typography className={classes.subcontent}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Ultrices et pulvinar in mauris ut risus.
+                </Typography>
+              </Grid>
+              <Grid lg={4} xs={12} item>
+                <div className={classes.subtitle}>
+                  <div className={classes.assets}>
+                    <Asset2 />
+                  </div>
+                  Volunteer reaches out
+                </div>
+                <Typography className={classes.subcontent}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Ultrices et pulvinar in mauris ut risus.
+                </Typography>
+              </Grid>
+              <Grid lg={4} xs={12} item>
+                <div className={classes.subtitle}>
+                  <div className={classes.assets}>
+                    <Asset3 />
+                  </div>
+                  Resolved Problem
+                </div>
+                <Typography className={classes.subcontent}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Ultrices et pulvinar in mauris ut risus.
+                </Typography>
+              </Grid>
+            </Grid>
+          </div>
+          <div className={classes.mainDiv}>
+            <h3 className={classes.title}>Want to Become a volunteer</h3>
+            <Typography className={classes.content}>
+              Best gift that you can give is your time
+            </Typography>
+            <Button className={classes.becomeVolunteerButton}>
+              Become a Volunteer
+            </Button>
+          </div>
+          <div className={classes.mainDiv}>
+            <Grid container lg={12} className={classes.gridContent}>
+              <Grid item lg={2} sm={4} xs={12}>
+                <MahiIcon className={classes.mahIcon} />
+              </Grid>
+              <Grid item lg={2} sm={4} xs={12}>
+                <div className={classes.subtitle}>Resources</div>
+                <Typography className={classes.subcontent}>
+                  Home <br />
+                  Complaints <br />
+                  Volunteer <br />
+                </Typography>
+              </Grid>
+              <Grid item lg={2} sm={4} xs={12}>
+                <div className={classes.subtitle}>Add Complaint</div>
+                <Typography className={classes.subcontent}>
+                  Hunger <br />
+                  Health <br />
+                  Homeless <br />
+                  JEE/NEET <br />
+                  Others <br />
+                </Typography>
+              </Grid>
+              <Grid item lg={3} sm={6} xs={12}>
+                <div className={classes.subtitle}>More</div>
+                <Typography className={classes.subcontent}>
+                  Become a Volunteer
+                  <br />
+                  Help Needy <br />
+                  Success Stories <br />
+                  Common Question <br />
+                </Typography>
+              </Grid>
+              <Grid item lg={3} sm={6} xs={12}>
+                <div className={classes.subtitle}>Contact Us</div>
+                <div className={classes.subcontent}>
+                  Mob: +91 9077339077
+                  <br />
+                  Email: mahi.care123@gmail.com
+                  <br />
+                </div>
+              </Grid>
+            </Grid>
+            <IconButton className={classes.socialIcons}>
+              <FacebookIcon className={classes.icons} />
+            </IconButton>
+            <IconButton className={classes.socialIcons}>
+              <LinkedInIcon className={classes.icons} />
+            </IconButton>
+            <IconButton className={classes.socialIcons}>
+              <TwitterIcon className={classes.icons} />
+            </IconButton>
+            <IconButton className={classes.socialIcons}>
+              <InstagramIcon className={classes.icons} />
+            </IconButton>
+            <div className={classes.subcontent}>
+              mahi.care © 2020 Copyright, All Rights Reserved
             </div>
-            Add Complaint
           </div>
-          <Typography className={classes.subcontent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultrices et
-            pulvinar in mauris ut risus.
-          </Typography>
-          <div className={classes.subtitle}>
-            <div className={classes.assets}>
-              <Asset2 />
-            </div>
-            Volunteer reaches out
-          </div>
-          <Typography className={classes.subcontent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultrices et
-            pulvinar in mauris ut risus.
-          </Typography>
-          <div className={classes.subtitle}>
-            <div className={classes.assets}>
-              <Asset3/>
-            </div>
-            Resolved Problem</div>
-          <Typography className={classes.subcontent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultrices et
-            pulvinar in mauris ut risus.
-          </Typography>
-        </div>
-        <div className={classes.mainDiv}>
-          <h3 className={classes.title}>Want to Become a volunteer</h3>
-          <Typography className={classes.content}>
-            Best gift that you can give is your time
-          </Typography>
-          <Button className={classes.becomeVolunteerButton}>
-            Become a Volunteer
-          </Button>
-        </div>
-        <div className={classes.mainDiv}>
-          <h3 className={classes.title}>Mahi</h3>
-          <div className={classes.content}>
-            "The Union of the Heaven And the Earth"
-          </div>
-          <div className={classes.subtitle}>Resources</div>
-          <Typography className={classes.subcontent}>
-            Home <br />
-            Complaints <br />
-            Volunteer <br />
-          </Typography>
-          <div className={classes.subtitle}>Add Complaint</div>
-          <Typography className={classes.subcontent}>
-            Hunger <br />
-            Health <br />
-            Homeless <br />
-            JEE/NEET <br />
-            Others <br />
-          </Typography>
-          <div className={classes.subtitle}>More</div>
-          <Typography className={classes.subcontent}>
-            Become a Volunteer
-            <br />
-            Help Needy <br />
-            Success Stories <br />
-            Common Question <br />
-          </Typography>
-          <div className={classes.subtitle}>Contact Us</div>
-          <div className={classes.subcontent}>
-            Mob: +91 9077339077
-            <br />
-            Email: mahi.care123@gmail.com
-            <br />
-          </div>
-          <IconButton className={classes.socialIcons}>
-            <FacebookIcon className={classes.icons} />
-            <LinkedInIcon className={classes.icons} />
-            <TwitterIcon className={classes.icons} />
-            <InstagramIcon className={classes.icons} />
-          </IconButton>
-          <div className={classes.subcontent}>
-            mahi.care © 2020 Copyright, All Rights Reserved
-          </div>
-        </div>
-      </ThemeProvider>
-    </Container>
+        </ThemeProvider>
+      </Container>
     </div>
   )
 }
