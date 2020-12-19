@@ -1,10 +1,19 @@
 import React, { useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { CircularProgress, Fab, Grid, GridList, GridListTile, ThemeProvider } from '@material-ui/core'
+import {
+  Button,
+  CircularProgress,
+  Fab,
+  Grid,
+  GridList,
+  GridListTile,
+  ThemeProvider
+} from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
-import {isMobile} from 'react-device-detect'
+import { isMobile } from 'react-device-detect'
+import ClearIcon from '@material-ui/icons/Clear'
 
 import PostCard from './postCard'
 import { getAllCauses, getMoreCauses } from '../actions/CauseActions'
@@ -27,10 +36,10 @@ const useStyles = makeStyles(theme => ({
     padding: '1.25rem'
   },
   gridItemDesktop: {
-    padding: '0.75rem',
+    padding: '0.75rem'
   },
   gridItemMobile: {
-    paddingBottom: '1rem',
+    paddingBottom: '1rem'
   },
   extendedIcon: {
     marginRight: '0.5rem'
@@ -39,13 +48,13 @@ const useStyles = makeStyles(theme => ({
     boxShadow: 'none',
     textTransform: 'none',
     fontWeight: 500,
-    fontSize: '0.875rem'
+    fontSize: '0.875rem',
+    margin: '0 1rem'
   },
   fabContainer: {
     display: 'flex',
     justifyContent: 'center',
-    position: 'sticky',
-    bottom: '1rem'
+    position: 'sticky'
   },
   loader: {
     width: '100%',
@@ -53,6 +62,18 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  alertBarDesktop: {
+    width: '100%',
+    background: 'white',
+    height: '5rem',
+    padding: '1rem',
+    position: 'sticky',
+    bottom: '0',
+    justifyContent: 'center'
+  },
+  innerAlert: {
+    maxWidth: '1720px'
   }
 }))
 
@@ -73,7 +94,8 @@ export default function Main () {
   const pending_more_causes = useSelector(
     state => state.causes.getMoreCausesPending
   )
-
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  console.log(isAuthenticated)
   const load_more_causes = useCallback(() => {
     const list = document.getElementById('mahi_causes_container')
     if (
@@ -81,7 +103,7 @@ export default function Main () {
       !pending_more_causes &&
       more_causes_url &&
       more_causes_url !== prev_more_cause_url &&
-      window.pageYOffset + window.innerHeight +100 >=
+      window.pageYOffset + window.innerHeight + 100 >=
         list.clientHeight + list.offsetTop
     ) {
       dispatch(getMoreCauses(more_causes_url))
@@ -102,7 +124,18 @@ export default function Main () {
 
   const all_causes = useSelector(state => state.causes.Causes)
   const PostCards = all_causes.results.map(cause => {
-    return <Grid lg={4} sm={6} xs={12} item className={isMobile ? classes.gridItemMobile : classes.gridItemDesktop} key={cause.id} ><PostCard cause={cause} /></Grid>
+    return (
+      <Grid
+        lg={4}
+        sm={6}
+        xs={12}
+        item
+        className={isMobile ? classes.gridItemMobile : classes.gridItemDesktop}
+        key={cause.id}
+      >
+        <PostCard cause={cause} />
+      </Grid>
+    )
   })
 
   return (
@@ -115,7 +148,12 @@ export default function Main () {
           </div>
         ) : (
           <React.Fragment>
-            <Grid container lg={12} className={isMobile ? classes.mobileRoot : classes.desktopRoot} id='mahi_causes_container'>
+            <Grid
+              container
+              lg={12}
+              className={isMobile ? classes.mobileRoot : classes.desktopRoot}
+              id='mahi_causes_container'
+            >
               {PostCards}
               {pending_more_causes && (
                 <div>
@@ -123,17 +161,81 @@ export default function Main () {
                 </div>
               )}
             </Grid>
-            <div className={classes.fabContainer}>
-              <Fab
-                variant='extended'
-                color='secondary'
-                className={classes.fab}
-                onClick={addComplain}
+            {isAuthenticated ? (
+              <div className={classes.fabContainer} style={{ bottom: '1rem' }}>
+                <Fab
+                  variant='extended'
+                  color='secondary'
+                  className={classes.fab}
+                  onClick={addComplain}
+                >
+                  <AddIcon className={classes.extendedIcon} />
+                  Add your complaint
+                </Fab>
+              </div>
+            ) : (
+              <div
+                className={classes.fabContainer}
+                style={{ bottom: '5.5rem' }}
               >
-                <AddIcon className={classes.extendedIcon} />
-                Add your complaint
-              </Fab>
-            </div>
+                <Fab
+                  variant='extended'
+                  color='secondary'
+                  className={classes.fab}
+                  onClick={addComplain}
+                >
+                  <AddIcon className={classes.extendedIcon} />
+                  Add your complaint
+                </Fab>
+              </div>
+            )}
+            {isAuthenticated ? (
+              ''
+            ) : (
+              <Grid container lg={12} className={isMobile ? classes.alertBarMobile : classes.alertBarDesktop}>
+                {isMobile ? (
+                  ''
+                ) : (
+                  <Grid
+                    item
+                    lg={3}
+                    xs={4}
+                    style={{
+                      textAlign: 'center',
+                      marginTop: 'auto',
+                      marginBottom: 'auto'
+                    }}
+                  >
+                    Our platform isn’t an NGO, and takes NO commission
+                  </Grid>
+                )}
+                {isMobile ? (
+                  ''
+                ) : (
+                  <Grid item lg={1} xs={3} style={{ textAlign: 'center' }}>
+                    <Fab
+                      variant='extended'
+                      color='secondary'
+                      className={classes.fab}
+                    >
+                      Okay got it!
+                    </Fab>
+                  </Grid>
+                )}
+                {isMobile ? (
+                  ''
+                ) : (
+                  <Grid
+                    item
+                    lg={1}
+                    xs={1}
+                    style={{ paddingTop: '0.75rem', marginLeft: '2rem' }}
+                  >
+                    <ClearIcon />
+                  </Grid>
+                )}
+              </Grid>
+            )}
           </React.Fragment>
         )}
       </ThemeProvider>
