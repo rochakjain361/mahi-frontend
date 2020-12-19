@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   Button,
@@ -51,6 +51,13 @@ const useStyles = makeStyles(theme => ({
     fontSize: '0.875rem',
     margin: '0 1rem'
   },
+  fabMobile: {
+    boxShadow: 'none',
+    textTransform: 'none',
+    fontWeight: 500,
+    fontSize: '0.75rem',
+    margin: '0'
+  },
   fabContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -72,6 +79,15 @@ const useStyles = makeStyles(theme => ({
     bottom: '0',
     justifyContent: 'center'
   },
+  alertBarMobile: {
+    width: '100%',
+    background: 'white',
+    height: '3.5rem',
+    padding: '0.25rem 0',
+    position: 'sticky',
+    bottom: '0',
+    justifyContent: 'center'
+  },
   innerAlert: {
     maxWidth: '1720px'
   }
@@ -82,6 +98,7 @@ export default function Main () {
   const dispatch = useDispatch()
   const history = useHistory()
   const [prev_more_cause_url, setPrevMoreCauseUrl] = React.useState(null)
+  const [alertBarVisible, setAlertBarVisible] = useState(true)
   const tag = useSelector(state => state.extras.tag)
   const ordering = useSelector(state => state.extras.ordering)
   const pending = useSelector(state => state.extras.show_pending_cause)
@@ -120,6 +137,10 @@ export default function Main () {
 
   const addComplain = () => {
     history.push('/add')
+  }
+
+  const closeAlertBar = () => {
+    setAlertBarVisible({ alertBarVisible: false })
   }
 
   const all_causes = useSelector(state => state.causes.Causes)
@@ -176,7 +197,7 @@ export default function Main () {
             ) : (
               <div
                 className={classes.fabContainer}
-                style={{ bottom: '5.5rem' }}
+                style={isMobile ? { bottom: '4rem' } : { bottom: '5.5rem' }}
               >
                 <Fab
                   variant='extended'
@@ -192,9 +213,26 @@ export default function Main () {
             {isAuthenticated ? (
               ''
             ) : (
-              <Grid container lg={12} className={isMobile ? classes.alertBarMobile : classes.alertBarDesktop}>
+              <Grid
+                container
+                lg={12}
+                className={
+                  isMobile ? classes.alertBarMobile : classes.alertBarDesktop
+                }
+              >
                 {isMobile ? (
-                  ''
+                  <Grid
+                    item
+                    xs={6}
+                    style={{
+                      textAlign: 'center',
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                      fontSize: '1rem'
+                    }}
+                  >
+                    Our platform isn’t an NGO, and takes NO commission
+                  </Grid>
                 ) : (
                   <Grid
                     item
@@ -210,20 +248,32 @@ export default function Main () {
                   </Grid>
                 )}
                 {isMobile ? (
-                  ''
+                  <Grid item xs={4} style={{ textAlign: 'center' }}>
+                    <Fab
+                      variant='extended'
+                      color='secondary'
+                      className={classes.fabMobile}
+                      onClick={closeAlertBar}
+                    >
+                      Okay got it!
+                    </Fab>
+                  </Grid>
                 ) : (
                   <Grid item lg={1} xs={3} style={{ textAlign: 'center' }}>
                     <Fab
                       variant='extended'
                       color='secondary'
                       className={classes.fab}
+                      onClick={closeAlertBar}
                     >
                       Okay got it!
                     </Fab>
                   </Grid>
                 )}
                 {isMobile ? (
-                  ''
+                  <Grid item xs={1} style={{ paddingTop: '0.75rem' }}>
+                    <ClearIcon />
+                  </Grid>
                 ) : (
                   <Grid
                     item
