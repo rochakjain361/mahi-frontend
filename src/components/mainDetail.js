@@ -15,12 +15,14 @@ import AdditionalDoc from './additionalDoc'
 import { NavbarForDetailsPage } from './NavbarForDetailsPage'
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle
 } from '@material-ui/core'
+import NotFound from './notFound'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,6 +41,9 @@ const useStyles = makeStyles(theme => ({
   },
   textfield: {
     width: '100%'
+  },
+  tempDiv: {
+    margin: '25%',
   }
 }))
 
@@ -59,62 +64,73 @@ export default function MainDetail () {
   }
 
   const handleWhitelist = () => {
-    dispatch(whitelistCause(id, () => {
-      history.push('/')
-    }))
+    dispatch(
+      whitelistCause(id, () => {
+        history.push('/')
+      })
+    )
   }
 
   const activeCause = useSelector(state => state.causes.activeCause)
+  const getCausePending = useSelector(state => state.causes.getCausePending)
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <NavbarForDetailsPage cause={activeCause} />
-        <div className={classes.root}>
-          {activeCause && activeCause.is_whitelisted === false && (
-            <React.Fragment>
-              <Button
-                className={classes.approveButton}
-                color = 'secondary'
-                variant='contained'
-                onClick={() => {
-                  setOpen(true)
-                }}
-              >
-                Approve Complaint
-              </Button>
-              <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby='alert-dialog-title'
-                aria-describedby='alert-dialog-description'
-              >
-                <DialogTitle id='alert-dialog-title'>
-                  {'Approve this cause/complaint?'}
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText id='alert-dialog-description'>
-                    By approving this cause/complaint you agree to volunteer
-                    this cause/complaint.
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleWhitelist}>OK</Button>
-                  <Button onClick={handleClose} autoFocus>
-                    Cancel
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </React.Fragment>
-          )}
-          <PostDetailCard />
-          <BankDetails />
-          <Volunteer />
-          <Log />
-          <Suggestions />
-          <AdditionalDoc />
-          <AskUpdate />
+      {getCausePending ? (
+        <div className={classes.tempDiv}>
+          <CircularProgress color='secondary' />
         </div>
-      </div>
+      ) : activeCause && activeCause.id ? (
+        <div>
+          <NavbarForDetailsPage cause={activeCause} />
+          <div className={classes.root}>
+            {activeCause && activeCause.is_whitelisted === false && (
+              <React.Fragment>
+                <Button
+                  className={classes.approveButton}
+                  color='secondary'
+                  variant='contained'
+                  onClick={() => {
+                    setOpen(true)
+                  }}
+                >
+                  Approve Complaint
+                </Button>
+                <Dialog
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby='alert-dialog-title'
+                  aria-describedby='alert-dialog-description'
+                >
+                  <DialogTitle id='alert-dialog-title'>
+                    {'Approve this cause/complaint?'}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id='alert-dialog-description'>
+                      By approving this cause/complaint you agree to volunteer
+                      this cause/complaint.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleWhitelist}>OK</Button>
+                    <Button onClick={handleClose} autoFocus>
+                      Cancel
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </React.Fragment>
+            )}
+            <PostDetailCard />
+            <BankDetails />
+            <Volunteer />
+            <Log />
+            <Suggestions />
+            <AdditionalDoc />
+            <AskUpdate />
+          </div>
+        </div>
+      ) : (
+        <NotFound />
+      )}
     </ThemeProvider>
   )
 }

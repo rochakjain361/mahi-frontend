@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify'
+// import 'react-toastify/dist/ReactTostify.css'
 import { apiClient } from '../helpers/apiClient'
 import { CAUSE_APIS } from '../urls'
 
@@ -15,6 +17,8 @@ import {
   UPDATE_LIKE_USER_PENDING,
   WHITELIST_CAUSE_PENDING,
 } from './CauseActionsType'
+
+toast.configure()
 
 const apiDispatch = (actionType = '', data) => {
   return {
@@ -45,6 +49,7 @@ export const getAllCauses = (tag, ordering='-created_on', pending=false) => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(GET_CAUSES_PENDING, false))
+        toast('error in getting complaints')
       })
   }
 }
