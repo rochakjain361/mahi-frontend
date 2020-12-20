@@ -1,5 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { ToastContainer, toast } from 'material-react-toastify'
+import 'material-react-toastify/dist/ReactToastify.css'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -18,7 +20,7 @@ import {
 } from '@material-ui/core'
 import TimeAgo from 'react-timeago'
 import { addSuggestion } from '../actions/extraActions'
-import {api_base_url} from '../urls'
+import { api_base_url } from '../urls'
 
 const useStyles = makeStyles({
   root: {
@@ -60,6 +62,9 @@ export default function Suggestions () {
 
   const handleSuccess = () => {
     setSuggestion('')
+    toast.success('suggestion submitted succesfully!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
   }
 
   const handleChange = e => {
@@ -143,6 +148,7 @@ export default function Suggestions () {
           />
         </Collapse>
       </Card>
+      <ToastContainer />
     </React.Fragment>
   )
 }

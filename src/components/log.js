@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { ToastContainer, toast } from 'material-react-toastify'
+import 'material-react-toastify/dist/ReactToastify.css'
+
 import PropTypes from 'prop-types'
 import SwipeableViews from 'react-swipeable-views'
 import { makeStyles } from '@material-ui/core/styles'
@@ -192,6 +195,7 @@ function LogTabs () {
     setActivity('')
     setDonationDescription('')
     setDonationMedia('')
+    toast.success('submitted successfully!',{position: toast.POSITION.BOTTOM_CENTER})
   }
   const handleActivityChange = e => {
     setActivity(e.target.value)
@@ -424,6 +428,7 @@ function LogTabs () {
             </Collapse>
           </TabPanel>
         </SwipeableViews>
+        <ToastContainer />
       </div>
     </ThemeProvider>
   )
