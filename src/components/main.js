@@ -72,7 +72,8 @@ const useStyles = makeStyles(theme => ({
   },
   alertBarDesktop: {
     width: '100%',
-    background: 'white',
+    background: 'black',
+    color: 'white',
     height: '5rem',
     padding: '1rem',
     position: 'sticky',
@@ -88,6 +89,9 @@ const useStyles = makeStyles(theme => ({
     bottom: '0',
     justifyContent: 'center'
   },
+  hiddenAlertBar: {
+    display: 'none'
+  },
   innerAlert: {
     maxWidth: '1720px'
   }
@@ -99,6 +103,7 @@ export default function Main () {
   const history = useHistory()
   const [prev_more_cause_url, setPrevMoreCauseUrl] = React.useState(null)
   const [alertBarVisible, setAlertBarVisible] = useState(true)
+  console.log(alertBarVisible)
   const tag = useSelector(state => state.extras.tag)
   const ordering = useSelector(state => state.extras.ordering)
   const pending = useSelector(state => state.extras.show_pending_cause)
@@ -140,7 +145,9 @@ export default function Main () {
   }
 
   const closeAlertBar = () => {
+    console.log('HW')
     setAlertBarVisible({ alertBarVisible: false })
+    console.log(alertBarVisible)
   }
 
   const all_causes = useSelector(state => state.causes.Causes)
@@ -197,7 +204,13 @@ export default function Main () {
             ) : (
               <div
                 className={classes.fabContainer}
-                style={isMobile ? { bottom: '4rem' } : { bottom: '5.5rem' }}
+                style={
+                  alertBarVisible == true
+                    ? isMobile
+                      ? { bottom: '4rem' }
+                      : { bottom: '5.5rem' }
+                    : { bottom: '1rem' }
+                }
               >
                 <Fab
                   variant='extended'
@@ -217,7 +230,11 @@ export default function Main () {
                 container
                 lg={12}
                 className={
-                  isMobile ? classes.alertBarMobile : classes.alertBarDesktop
+                  alertBarVisible == true
+                    ? isMobile
+                      ? classes.alertBarMobile
+                      : classes.alertBarDesktop
+                    : classes.hiddenAlertBar
                 }
               >
                 {isMobile ? (
@@ -262,7 +279,7 @@ export default function Main () {
                   <Grid item lg={1} xs={3} style={{ textAlign: 'center' }}>
                     <Fab
                       variant='extended'
-                      color='secondary'
+                      color='primary'
                       className={classes.fab}
                       onClick={closeAlertBar}
                     >
@@ -272,7 +289,7 @@ export default function Main () {
                 )}
                 {isMobile ? (
                   <Grid item xs={1} style={{ paddingTop: '0.75rem' }}>
-                    <ClearIcon />
+                    <ClearIcon onClick={closeAlertBar}/>
                   </Grid>
                 ) : (
                   <Grid
@@ -281,7 +298,7 @@ export default function Main () {
                     xs={1}
                     style={{ paddingTop: '0.75rem', marginLeft: '2rem' }}
                   >
-                    <ClearIcon />
+                    <ClearIcon onClick={closeAlertBar}/>
                   </Grid>
                 )}
               </Grid>
