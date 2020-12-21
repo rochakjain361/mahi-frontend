@@ -32,6 +32,7 @@ import { theme } from '../theme'
 import Comment from './comment'
 import TimeAgo from 'react-timeago'
 import { addActivity, addDonation } from '../actions/extraActions'
+import { isMobile } from 'react-device-detect'
 
 function TabPanel (props) {
   const { children, value, index, ...other } = props
@@ -122,11 +123,19 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const useCardStyles = makeStyles(theme => ({
-  root: {
+  rootMobile: {
     width: '100%',
     marginTop: '0.5rem',
     borderRadius: '0.5rem',
     marginBottom: '0.5rem',
+    padding: '0 1.25rem',
+    boxSizing: 'border-box'
+  },
+  rootDesktop: {
+    width: '100%',
+    marginTop: '0.5rem',
+    borderRadius: '0.5rem',
+    marginBottom: '1.5rem',
     padding: '0 1.25rem',
     boxSizing: 'border-box'
   }
@@ -438,7 +447,7 @@ export default function Log () {
   const classes = useCardStyles()
 
   return (
-    <Card className={classes.root}>
+    <Card className={isMobile ? classes.rootMobile : classes.rootDesktop}>
       <LogTabs />
     </Card>
   )

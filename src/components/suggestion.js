@@ -21,6 +21,7 @@ import {
 import TimeAgo from 'react-timeago'
 import { addSuggestion } from '../actions/extraActions'
 import { api_base_url } from '../urls'
+import { isMobile } from 'react-device-detect'
 
 const useStyles = makeStyles({
   root: {
@@ -31,10 +32,18 @@ const useStyles = makeStyles({
     padding: '1rem 1.25rem 0 1.25rem',
     boxSizing: 'border-box'
   },
-  header: {
+  headerDesktop: {
+    fontSize: '1.5em',
+    marginTop: '1.75em',
+    marginBottom: '1.25em',
+    fontWeight: 500,
+    textAlign: 'center'
+  },
+  headerMobile: {
     fontSize: '1.25em',
     marginTop: '0.75em',
-    fontWeight: 500
+    fontWeight: 500,
+    textAlign: 'center'
   },
   expand: {
     textTransform: 'none',
@@ -103,7 +112,7 @@ export default function Suggestions () {
 
   return (
     <React.Fragment>
-      <Typography className={classes.header}>Suggestions</Typography>
+      <Typography className={isMobile ? classes.headerMobile : classes.headerDesktop}>Suggestions</Typography>
       <Card className={classes.root}>
         <div className={classes.input}>
           <TextField

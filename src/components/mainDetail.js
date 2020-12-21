@@ -20,9 +20,12 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Grid
 } from '@material-ui/core'
 import NotFound from './notFound'
+import { isMobile } from 'react-device-detect'
+import Navbar from './Navbar'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,8 +46,11 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   },
   tempDiv: {
-    margin: '25%',
-  }
+    margin: '25%'
+  },
+  gridItemDesktop: {
+    padding: '1rem'
+  },
 }))
 
 export default function MainDetail () {
@@ -80,54 +86,111 @@ export default function MainDetail () {
           <CircularProgress color='secondary' />
         </div>
       ) : activeCause && activeCause.id ? (
-        <div>
-          <NavbarForDetailsPage cause={activeCause} />
-          <div className={classes.root}>
-            {activeCause && activeCause.is_whitelisted === false && (
-              <React.Fragment>
-                <Button
-                  className={classes.approveButton}
-                  color='secondary'
-                  variant='contained'
-                  onClick={() => {
-                    setOpen(true)
-                  }}
-                >
-                  Approve Complaint
-                </Button>
-                <Dialog
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby='alert-dialog-title'
-                  aria-describedby='alert-dialog-description'
-                >
-                  <DialogTitle id='alert-dialog-title'>
-                    {'Approve this cause/complaint?'}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id='alert-dialog-description'>
-                      By approving this cause/complaint you agree to volunteer
-                      this cause/complaint.
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleWhitelist}>OK</Button>
-                    <Button onClick={handleClose} autoFocus>
-                      Cancel
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </React.Fragment>
-            )}
-            <PostDetailCard />
-            <BankDetails />
-            <Volunteer />
-            <Log />
-            <Suggestions />
-            <AdditionalDoc />
-            <AskUpdate />
+        isMobile ? (
+          <div>
+            <NavbarForDetailsPage cause={activeCause} />
+            <div className={classes.root}>
+              {activeCause && activeCause.is_whitelisted === false && (
+                <React.Fragment>
+                  <Button
+                    className={classes.approveButton}
+                    color='secondary'
+                    variant='contained'
+                    onClick={() => {
+                      setOpen(true)
+                    }}
+                  >
+                    Approve Complaint
+                  </Button>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby='alert-dialog-title'
+                    aria-describedby='alert-dialog-description'
+                  >
+                    <DialogTitle id='alert-dialog-title'>
+                      {'Approve this cause/complaint?'}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id='alert-dialog-description'>
+                        By approving this cause/complaint you agree to volunteer
+                        this cause/complaint.
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleWhitelist}>OK</Button>
+                      <Button onClick={handleClose} autoFocus>
+                        Cancel
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </React.Fragment>
+              )}
+              <PostDetailCard />
+              <BankDetails />
+              <Volunteer />
+              <Log />
+              <Suggestions />
+              <AdditionalDoc />
+              <AskUpdate />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            <Navbar />
+            <div className={classes.root}>
+              {activeCause && activeCause.is_whitelisted === false && (
+                <React.Fragment>
+                  <Button
+                    className={classes.approveButton}
+                    color='secondary'
+                    variant='contained'
+                    onClick={() => {
+                      setOpen(true)
+                    }}
+                  >
+                    Approve Complaint
+                  </Button>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby='alert-dialog-title'
+                    aria-describedby='alert-dialog-description'
+                  >
+                    <DialogTitle id='alert-dialog-title'>
+                      {'Approve this cause/complaint?'}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id='alert-dialog-description'>
+                        By approving this cause/complaint you agree to volunteer
+                        this cause/complaint.
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleWhitelist}>OK</Button>
+                      <Button onClick={handleClose} autoFocus>
+                        Cancel
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </React.Fragment>
+              )}
+              <Grid container xs={12} style={{ maxWidth: '1440px'}}>
+                <Grid item xs={7} className={classes.gridItemDesktop}>
+                <PostDetailCard />
+                <Log />
+                <Suggestions />
+                <AdditionalDoc />
+                <AskUpdate />
+                </Grid>
+                <Grid item xs={5} className={classes.gridItemDesktop}>
+                <BankDetails />
+                <Volunteer />
+                </Grid> 
+              </Grid>
+            </div>
+          </div>
+        )
       ) : (
         <NotFound />
       )}
