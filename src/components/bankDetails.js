@@ -173,7 +173,7 @@ export default function BankDetails (cause) {
               <div style={{ marginLeft: 'auto' }}>
                 <IconButton
                   onClick={() =>
-                    copyToClipboard('givetomlp.venkateshprabhu1@icici')
+                    copyToClipboard(activeCause && activeCause.id ? activeCause.bank_upi_id : '')
                   }
                 >
                   <CopyIcon />

@@ -37,7 +37,12 @@ const otpError = error => {
   }
 }
 
-export const sendOTP = (phone_number, appVerifier) => {
+export const sendOTP = (
+  phone_number,
+  appVerifier,
+  success_callback = message => {},
+  failure_callback = message => {}
+) => {
   return dispatch => {
     phone_number = `+91${phone_number.trim()}`
     let check_phone_number_url = USER_APIS.phone_number_exists
@@ -49,6 +54,7 @@ export const sendOTP = (phone_number, appVerifier) => {
         let phone_number_exists = response_data.phone_number_exists
         if (phone_number_exists) {
           dispatch(apiDispatch(GET_PHONE_NUMBER_EXISTS, true))
+          failure_callback('Phone number already exists. Try signing in with this phone number')
         } else {
           dispatch(apiDispatch(GET_PHONE_NUMBER_EXISTS, false))
           dispatch(apiDispatch(GET_OTP_SENDING, true))
@@ -66,18 +72,32 @@ export const sendOTP = (phone_number, appVerifier) => {
               dispatch(apiDispatch(GET_OTP_SENDING, false))
               dispatch(apiDispatch(GET_OTP_PENDING, false))
               dispatch(otpError(error))
+              failure_callback('Unable to send OTP. Please try again later.')
               // Error; SMS not sent
               // ...
             })
         }
       })
-      .catch(error =>{
+      .catch(error => {
         dispatch(apiError(error))
+        failure_callback(
+          error.response
+            ? error.response.error
+              ? error.response.error
+              : error.response.statusText
+            : 'Something went wrong. Please try again later.'
+        )
       })
   }
 }
 
-export const VerifyOTP = (confirmationResult, code, name) => {
+export const VerifyOTP = (
+  confirmationResult,
+  code,
+  name,
+  success_callback = message => {},
+  failure_callback = message => {}
+) => {
   return dispatch => {
     let login_url = USER_APIS.login
     confirmationResult
@@ -109,21 +129,36 @@ export const VerifyOTP = (confirmationResult, code, name) => {
                 dispatch(apiDispatch(CREATING_ACCOUNT, false))
                 dispatch(apiDispatch(GET_AUTHENTICATION_STATUS, false))
                 dispatch(apiError(error))
+                failure_callback(
+                  error.response
+                    ? error.response.error
+                      ? error.response.error
+                      : error.response.statusText
+                    : 'Unable to create account. Please try again later.'
+                )
               })
           })
           .catch(error => {
             dispatch(apiError(error))
+            failure_callback(
+              'Unable to create account. Please try again later.'
+            )
           })
         // ...
       })
       .catch(error => {
+        if (error.code === 'auth/invalid-verification-code') {
+          failure_callback('Invalid OTP')
+        } else {
+          failure_callback('Authentication error')
+        }
         dispatch(otpError(error))
       })
   }
 }
 
-export const cleanOTP = () =>{
-    return dispatch => {
-        dispatch(apiDispatch(CLEAN_OTP, {}))
-    }
+export const cleanOTP = () => {
+  return dispatch => {
+    dispatch(apiDispatch(CLEAN_OTP, {}))
+  }
 }
