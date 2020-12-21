@@ -22,16 +22,12 @@ import NavbarForLandingPage from './NavbarForLandingPage'
 
 const useStyles = makeStyles(theme => ({
   desktopRoot: {
-    // display: 'flex',
     justifyContent: 'center',
-    // flexFlow: 'column',
     alignItems: 'center',
     padding: '3rem 6rem'
   },
   mobileRoot: {
-    // display: 'flex',
     justifyContent: 'center',
-    // flexFlow: 'column',
     alignItems: 'center',
     padding: '1.25rem'
   },
@@ -61,7 +57,20 @@ const useStyles = makeStyles(theme => ({
   fabContainer: {
     display: 'flex',
     justifyContent: 'center',
-    position: 'sticky'
+    position: 'sticky',
+    bottom: '1rem'
+  },
+  fabContainerDesktop: {
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'sticky',
+    bottom: '5.5rem'
+  },
+  fabContainerMobile: {
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'sticky',
+    bottom: '4rem'
   },
   loader: {
     width: '100%',
@@ -94,6 +103,22 @@ const useStyles = makeStyles(theme => ({
   },
   innerAlert: {
     maxWidth: '1720px'
+  },
+  alertDescription: {
+    textAlign: 'center',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+    fontSize: '1rem'
+  },
+  textAlignCentre: {
+    textAlign: 'center'
+  },
+  closeAlertMobile: {
+    paddingTop: '0.75rem'
+  },
+  closeAlertDesktop: {
+    paddingTop: '0.75rem',
+    marginLeft: '2rem'
   }
 }))
 
@@ -103,7 +128,6 @@ export default function Main () {
   const history = useHistory()
   const [prev_more_cause_url, setPrevMoreCauseUrl] = React.useState(null)
   const [alertBarVisible, setAlertBarVisible] = useState(true)
-  console.log(alertBarVisible)
   const tag = useSelector(state => state.extras.tag)
   const ordering = useSelector(state => state.extras.ordering)
   const pending = useSelector(state => state.extras.show_pending_cause)
@@ -117,7 +141,6 @@ export default function Main () {
     state => state.causes.getMoreCausesPending
   )
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-  console.log(isAuthenticated)
   const load_more_causes = useCallback(() => {
     const list = document.getElementById('mahi_causes_container')
     if (
@@ -145,9 +168,7 @@ export default function Main () {
   }
 
   const closeAlertBar = () => {
-    console.log('HW')
     setAlertBarVisible({ alertBarVisible: false })
-    console.log(alertBarVisible)
   }
 
   const all_causes = useSelector(state => state.causes.Causes)
@@ -190,7 +211,7 @@ export default function Main () {
               )}
             </Grid>
             {isAuthenticated ? (
-              <div className={classes.fabContainer} style={{ bottom: '1rem' }}>
+              <div className={classes.fabContainer}>
                 <Fab
                   variant='extended'
                   color='secondary'
@@ -203,13 +224,12 @@ export default function Main () {
               </div>
             ) : (
               <div
-                className={classes.fabContainer}
-                style={
+                className={
                   alertBarVisible == true
                     ? isMobile
-                      ? { bottom: '4rem' }
-                      : { bottom: '5.5rem' }
-                    : { bottom: '1rem' }
+                      ? classes.fabContainerMobile
+                      : classes.fabContainerDesktop
+                    : classes.fabContainer
                 }
               >
                 <Fab
@@ -238,34 +258,16 @@ export default function Main () {
                 }
               >
                 {isMobile ? (
-                  <Grid
-                    item
-                    xs={6}
-                    style={{
-                      textAlign: 'center',
-                      marginTop: 'auto',
-                      marginBottom: 'auto',
-                      fontSize: '1rem'
-                    }}
-                  >
+                  <Grid item xs={6} className={classes.alertDescription}>
                     Our platform isn’t an NGO, and takes NO commission
                   </Grid>
                 ) : (
-                  <Grid
-                    item
-                    lg={3}
-                    xs={4}
-                    style={{
-                      textAlign: 'center',
-                      marginTop: 'auto',
-                      marginBottom: 'auto'
-                    }}
-                  >
+                  <Grid item lg={3} xs={4} className={classes.alertDescription}>
                     Our platform isn’t an NGO, and takes NO commission
                   </Grid>
                 )}
                 {isMobile ? (
-                  <Grid item xs={4} style={{ textAlign: 'center' }}>
+                  <Grid item xs={4} className={classes.textAlignCentre}>
                     <Fab
                       variant='extended'
                       color='secondary'
@@ -276,7 +278,7 @@ export default function Main () {
                     </Fab>
                   </Grid>
                 ) : (
-                  <Grid item lg={1} xs={3} style={{ textAlign: 'center' }}>
+                  <Grid item lg={1} xs={3} className={classes.textAlignCentre}>
                     <Fab
                       variant='extended'
                       color='primary'
@@ -288,17 +290,17 @@ export default function Main () {
                   </Grid>
                 )}
                 {isMobile ? (
-                  <Grid item xs={1} style={{ paddingTop: '0.75rem' }}>
-                    <ClearIcon onClick={closeAlertBar}/>
+                  <Grid item xs={1} className={classes.closeAlertMobile}>
+                    <ClearIcon onClick={closeAlertBar} />
                   </Grid>
                 ) : (
                   <Grid
                     item
                     lg={1}
                     xs={1}
-                    style={{ paddingTop: '0.75rem', marginLeft: '2rem' }}
+                    className={classes.closeAlertDesktop}
                   >
-                    <ClearIcon onClick={closeAlertBar}/>
+                    <ClearIcon onClick={closeAlertBar} />
                   </Grid>
                 )}
               </Grid>

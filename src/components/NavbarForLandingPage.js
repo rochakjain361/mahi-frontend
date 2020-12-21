@@ -161,7 +161,6 @@ function Chips () {
     dispatch(getAllTags())
   }, [dispatch])
   const selected_tag = useSelector(state => state.extras.tag)
-  console.log(selected_tag)
   const all_tags = useSelector(state => state.extras.Tags)
   const changeTag = id => {
     window.scrollTo(0, 0)

@@ -7,11 +7,12 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
 import {
   Card,
   Checkbox,
+  Container,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -39,6 +40,7 @@ import Button from '@material-ui/core/Button'
 import PostCard from './postCard'
 import { useHistory } from 'react-router-dom'
 import { createCause } from '../actions/CauseActions'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
 import {
   validateEmail,
   validateIFSC,
@@ -61,7 +63,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   mainDiv: {
-    padding: '1rem'
+    padding: '1rem 0'
   },
   modal: {
     display: 'flex',
@@ -143,17 +145,19 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
     display: 'flex',
     justifyContent: 'center',
-    padding: '1.2rem'
+    padding: '1.2rem',
+    borderRadius: '0.5rem'
   },
   bottomButtonPublish: {
     backgroundColor: '#6552FF',
     color: 'white',
     display: 'flex',
     justifyContent: 'center',
-    padding: '1.2rem'
+    padding: '1.2rem',
+    borderRadius: '0.5rem'
   },
   returnFeedDiv: {
-    display : 'flex',
+    display: 'flex',
     alignItems: 'center',
     backgroundColor: '#6552FF',
     color: 'white',
@@ -166,7 +170,19 @@ const useStyles = makeStyles(theme => ({
     marginTop: '0.2rem',
     color: '#f44336'
   },
-  selectCategory: {}
+  selectCategory: {},
+  formContainer: {
+    maxWidth: '912px',
+    margin: 'auto'
+  },
+  stepperDiv: {
+    background: 'white',
+    width: '100%'
+  },
+  stepper: {
+    maxWidth: '1196px',
+    margin: 'auto'
+  }
 }))
 
 function getSteps () {
@@ -369,7 +385,6 @@ export default function AddComplaint () {
     } else {
       set_needy_photo_error(null)
     }
-    console.log(cause.media.benchmark_data)
     if (
       !cause.media.benchmark_data ||
       cause.media.benchmark_data.length === 0
@@ -531,24 +546,26 @@ export default function AddComplaint () {
         return (
           <div>
             <ListItem>
-            <ListItemAvatar>
-              <InsertDriveFileOutlinedIcon />
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                additional_file.name.length > 15
-                  ?additional_file.name.slice(0, 15) + '...'
-                  : additional_file.name
-              }
-            />
-            <ListItemSecondaryAction>
-              <IconButton edge='end' aria-label='delete'>
-                <CancelOutlinedIcon
-                  onClick={() => removeMediaImage(additional_file, 'additional_files')}
-                />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+              <ListItemAvatar>
+                <InsertDriveFileOutlinedIcon />
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  additional_file.name.length > 15
+                    ? additional_file.name.slice(0, 15) + '...'
+                    : additional_file.name
+                }
+              />
+              <ListItemSecondaryAction>
+                <IconButton edge='end' aria-label='delete'>
+                  <CancelOutlinedIcon
+                    onClick={() =>
+                      removeMediaImage(additional_file, 'additional_files')
+                    }
+                  />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
           </div>
         )
       }
@@ -906,7 +923,7 @@ export default function AddComplaint () {
                 Additional Files
               </FormLabel>
               <List>
-              {cause.media.additional_files[0] ? additional_files_names : ''}
+                {cause.media.additional_files[0] ? additional_files_names : ''}
               </List>
               <input
                 accept='image/*'
@@ -954,59 +971,64 @@ export default function AddComplaint () {
         </AppBar>
       </ThemeProvider>
       <div className={classes.root}>
-        <Stepper alternativeLabel activeStep={activeStep}>
-          {steps.map(label => (
-            <Step key={label}>
-              <StepLabel style={{ color: '#6552FF' }}>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+        <div className={classes.stepperDiv}>
+          <Stepper alternativeLabel activeStep={activeStep} className={classes.stepper}>
+            {steps.map(label => (
+              <Step key={label}>
+                <StepLabel style={{ color: '#6552FF' }}>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
         <div className={classes.mainDiv}>
-          <Card className={classes.instructionDiv}>
-            This information will be shared to public and third party companies
-            for getting responses
-          </Card>
-          {activeStep === steps.length ? (
-            <div>
-              {/* <Typography className={classes.instructions}>
+          <Container className={classes.formContainer}>
+            <Card className={classes.instructionDiv}>
+              <InfoOutlinedIcon style={{ fontSize: '1rem' }} /> This information
+              will be shared to public and third party companies for getting
+              responses
+            </Card>
+            {activeStep === steps.length ? (
+              <div>
+                {/* <Typography className={classes.instructions}>
                 Complaint Registered! We will contact you via mail or phone.
               </Typography>
               <Button onClick={handleReset} className={classes.button}>
                 More complaints ?
               </Button> */}
-              <Modal
-                disablePortal
-                disableEnforceFocus
-                disableAutoFocus
-                open
-                aria-labelledby='server-modal-title'
-                aria-describedby='server-modal-description'
-                className={classes.modal}
-                // container={() => rootRef.current}
-              >
-                <div className={classes.paper}>
-                  <img src={publish}></img>
-                  <h2 id='Registered'>Registered</h2>
-                  <p id='server-modal-description'>
-                    Your complaint is under review. A Volunteer will reach out
-                    to you via email/phone.
-                  </p>
-                  <div
-                    onClick={() => history.push('/')}
-                    className={classes.returnFeedDiv}
-                  >
-                    Return to Feed <ArrowForwardIcon />
+                <Modal
+                  disablePortal
+                  disableEnforceFocus
+                  disableAutoFocus
+                  open
+                  aria-labelledby='server-modal-title'
+                  aria-describedby='server-modal-description'
+                  className={classes.modal}
+                  // container={() => rootRef.current}
+                >
+                  <div className={classes.paper}>
+                    <img src={publish}></img>
+                    <h2 id='Registered'>Registered</h2>
+                    <p id='server-modal-description'>
+                      Your complaint is under review. A Volunteer will reach out
+                      to you via email/phone.
+                    </p>
+                    <div
+                      onClick={() => history.push('/')}
+                      className={classes.returnFeedDiv}
+                    >
+                      Return to Feed <ArrowForwardIcon />
+                    </div>
                   </div>
-                </div>
-              </Modal>
-            </div>
-          ) : (
-            <div className={classes.formDiv}>
-              <div>{getStepContent(activeStep)}</div>
-            </div>
-          )}
+                </Modal>
+              </div>
+            ) : (
+              <div className={classes.formDiv}>
+                <div>{getStepContent(activeStep)}</div>
+              </div>
+            )}
+            <div>{getStepButton(activeStep)}</div>
+          </Container>
         </div>
-        <div>{getStepButton(activeStep)}</div>
       </div>
     </div>
   )

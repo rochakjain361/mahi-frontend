@@ -218,7 +218,6 @@ export function NavbarContent (props) {
   )
 
   const LoggedInUser = useSelector(state => state.auth.Loggedinuser)
-  console.log(LoggedInUser)
 
   return (
     <Toolbar className={classes.toolBar}>
@@ -354,7 +353,6 @@ export function NavbarContentDesktop (props) {
   )
 
   const LoggedInUser = useSelector(state => state.auth.Loggedinuser)
-  console.log(LoggedInUser)
 
   return (
     <div className={classes.mainDivDesktop}>
