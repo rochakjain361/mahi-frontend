@@ -77,14 +77,15 @@ const useStyles = makeStyles(theme => ({
     display: 'none'
   },
   inputCard: {
-    padding: '1.5rem',
-    borderRadius: '0.75rem',
+    padding: '1rem',
     marginBottom: '1rem',
     display: 'flex',
     flexDirection: 'column',
     textAlign: '-webkit-center',
     justifyContent: 'space-between',
-    minHeight: '5rem'
+    border: 'none',
+    boxShadow: 'none',
+    height: '100%'
   },
   gridList: {
     flexWrap: 'nowrap',
@@ -116,10 +117,15 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-around'
   },
   swipeableContainer: {
-    width: '100%',
+    width: '100%'
   },
   textfield: {
-    width: '100%'
+    width: '100%',
+    bottom: '0'
+  },
+  tabPanel: {
+    overflowX: 'hidden',
+    marginBottom: '2rem'
   }
 }))
 
@@ -205,7 +211,9 @@ function LogTabs () {
     setActivity('')
     setDonationDescription('')
     setDonationMedia('')
-    toast.success('submitted successfully!',{position: toast.POSITION.BOTTOM_CENTER})
+    toast.success('submitted successfully!', {
+      position: toast.POSITION.BOTTOM_CENTER
+    })
   }
   const handleActivityChange = e => {
     setActivity(e.target.value)
@@ -215,7 +223,10 @@ function LogTabs () {
     causeDonations &&
     causeDonations.map(donation => {
       return (
-        <GridListTile key={donation.id}>
+        <GridListTile
+          key={donation.id}
+          style={{ minHeight: '22.5vw', minWidth: '270px' }}
+        >
           <img src={api_base_url + donation.media} alt='Media' />
           <GridListTileBar
             title={donation.description}
@@ -349,7 +360,7 @@ function LogTabs () {
           index={value}
           onChangeIndex={handleChangeIndex}
         >
-          <TabPanel value={value} index={0} dir={theme.direction}>
+          <TabPanel value={value} index={0} dir={theme.direction} className={classes.tabPanel}>
             <GridList className={classes.gridList} cols={1}>
               <GridListTile key='0'>
                 <Card className={classes.inputCard}>

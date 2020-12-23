@@ -115,7 +115,7 @@ const useStyles = makeStyles(theme => ({
     backgroundSize: 'contain'
   },
   mediaDiv: {
-    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);',
+    background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%,  rgba(0, 0, 0, 0.1)100%);',
     height: '-webkit-fill-available',
     width: '100%',
     position: 'absolute',

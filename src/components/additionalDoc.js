@@ -15,11 +15,11 @@ const useStyles = makeStyles(theme => ({
   '@global': {
     '*::-webkit-scrollbar': {
       width: '0.1em',
-      height:'0.6rem',
+      height: '0.6rem',
       backgroundColor: 'rgba(0,0,0,0.03)'
     },
     '*::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 4px rgba(0,0,0,0.00)',
+      '-webkit-box-shadow': 'inset 0 0 4px rgba(0,0,0,0.00)'
     },
     '*::-webkit-scrollbar-thumb': {
       backgroundColor: 'rgba(0,0,0,0.08)',
@@ -32,25 +32,25 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '0.5rem',
     marginBottom: '0.5rem',
     padding: '0 1.25rem',
-    boxSizing: 'border-box',
+    boxSizing: 'border-box'
   },
   header: {
     fontSize: '1.25em',
     marginTop: '0.75em',
     fontWeight: 500,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   headerDesktop: {
     fontSize: '1.5em',
     marginTop: '1.75em',
     marginBottom: '1.25em',
     fontWeight: 500,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   gridList: {
     flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)',
+    transform: 'translateZ(0)'
   },
   title: {
     color: theme.palette.primary.light,
@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
     float: 'left',
     width: '100%',
     minHeight: '22.5vw',
-    minWidth: '300px',
+    minWidth: '300px'
   }
 }))
 
@@ -78,7 +78,7 @@ export default function AdditionalDoc () {
         <GridListTile key={file.id} className={classes.gridTile}>
           <img src={api_base_url + file.media} alt='Media' />
           <GridListTileBar
-            title={file.media.split("/").pop()}
+            title={file.media.split('/').pop()}
             classes={{
               root: classes.titleBar,
               title: classes.title
@@ -90,7 +90,9 @@ export default function AdditionalDoc () {
 
   return (
     <React.Fragment>
-      <Typography className={isMobile ? classes.header : classes.headerDesktop}>Additional Documents</Typography>
+      <Typography className={isMobile ? classes.header : classes.headerDesktop}>
+        Additional Documents
+      </Typography>
       <div className={classes.root}>
         <div className={classes.gridroot}>
           <GridList className={classes.gridList} cols={1}>
