@@ -16,6 +16,10 @@ import {
   UPDATE_LIKE_USER_ON_ACTIVE_CAUSE,
   UPDATE_LIKE_USER_PENDING,
   WHITELIST_CAUSE_PENDING,
+  GET_MORE_SUGGESTIONS,
+  GET_MORE_SUGGESTIONS_PENDING,
+  GET_MORE_ACTIVITIES,
+  GET_MORE_ACTIVITIES_PENDING,
 } from './CauseActionsType'
 
 toast.configure()
@@ -34,7 +38,11 @@ const apiError = error => {
   }
 }
 
-export const getAllCauses = (tag, ordering='-created_on', pending=false) => {
+export const getAllCauses = (
+  tag,
+  ordering = '-created_on',
+  pending = false
+) => {
   const url = tag
     ? `${CAUSE_APIS.CauseItems}?tag=${tag}&ordering=${ordering}&pending=${pending}`
     : `${CAUSE_APIS.CauseItems}?ordering=${ordering}&pending=${pending}`
@@ -137,7 +145,7 @@ export const updateLikedUserOnActiveCause = causeId => {
   }
 }
 
-export const whitelistCause = (causeId, callback = () => {} ) => {
+export const whitelistCause = (causeId, callback = () => {}) => {
   const url = `${CAUSE_APIS.CauseItems}/${causeId}/whitelist_cause/`
   return dispatch => {
     dispatch(apiDispatch(WHITELIST_CAUSE_PENDING, true))
@@ -150,6 +158,42 @@ export const whitelistCause = (causeId, callback = () => {} ) => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(WHITELIST_CAUSE_PENDING, false))
+      })
+  }
+}
+
+export const getMoreSuggestions = (causeId, callback = () => {}) => {
+  const url = `${CAUSE_APIS.CauseItems}/${causeId}/get_more_suggestions/`
+  return dispatch => {
+    dispatch(apiDispatch(GET_MORE_SUGGESTIONS_PENDING, true))
+    apiClient
+      .get(url)
+      .then(respose => {
+        dispatch(apiDispatch(GET_MORE_SUGGESTIONS_PENDING, false))
+        dispatch(apiDispatch(GET_MORE_SUGGESTIONS, respose.data))
+      })
+      .catch(error => {
+        dispatch(apiDispatch(GET_MORE_SUGGESTIONS_PENDING, false))
+        dispatch(apiError(error))
+        callback()
+      })
+  }
+}
+
+export const getMoreActivities = (causeId, callback = () => {}) => {
+  const url = `${CAUSE_APIS.CauseItems}/${causeId}/get_more_activities/`
+  return dispatch => {
+    dispatch(apiDispatch(GET_MORE_ACTIVITIES_PENDING, true))
+    apiClient
+      .get(url)
+      .then(respose => {
+        dispatch(apiDispatch(GET_MORE_ACTIVITIES_PENDING, false))
+        dispatch(apiDispatch(GET_MORE_ACTIVITIES, respose.data))
+      })
+      .catch(error => {
+        dispatch(apiDispatch(GET_MORE_ACTIVITIES_PENDING, false))
+        dispatch(apiError(error))
+        callback()
       })
   }
 }

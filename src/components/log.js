@@ -32,6 +32,7 @@ import { theme } from '../theme'
 import Comment from './comment'
 import TimeAgo from 'react-timeago'
 import { addActivity, addDonation } from '../actions/extraActions'
+import { getMoreActivities } from '../actions/CauseActions'
 import { isMobile } from 'react-device-detect'
 
 function TabPanel (props) {
@@ -235,7 +236,7 @@ function LogTabs () {
   const causeActivities =
     activeCause &&
     activeCause.cause_activities &&
-    activeCause.cause_activities.slice(0, 3).map(activity => {
+    activeCause.cause_activities.map(activity => {
       return (
         <Comment
           key={activity.id}
@@ -262,8 +263,8 @@ function LogTabs () {
 
   const moreCauseActivities =
     activeCause &&
-    activeCause.cause_activities &&
-    activeCause.cause_activities.slice(3).map(activity => {
+    activeCause.moreActivities &&
+    activeCause.moreActivities.map(activity => {
       return (
         <Comment
           key={activity.id}
@@ -297,6 +298,16 @@ function LogTabs () {
   }
 
   const handleActivityExpandClick = () => {
+    !activity_expanded &&
+      activeCause &&
+      !activeCause.moreActivities &&
+      dispatch(
+        getMoreActivities(activeCause.id, () => {
+          toast.error('Unable to load more activities.', {
+            position: toast.POSITION.BOTTOM_CENTER
+          })
+        })
+      )
     setActivityExpanded(!activity_expanded)
   }
 

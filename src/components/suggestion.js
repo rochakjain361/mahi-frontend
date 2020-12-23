@@ -20,6 +20,7 @@ import {
 } from '@material-ui/core'
 import TimeAgo from 'react-timeago'
 import { addSuggestion } from '../actions/extraActions'
+import { getMoreSuggestions } from '../actions/CauseActions'
 import { api_base_url } from '../urls'
 import { isMobile } from 'react-device-detect'
 
@@ -81,6 +82,16 @@ export default function Suggestions () {
   }
 
   const handleSuggestionExpandClick = () => {
+    !suggestions_expanded &&
+      activeCause &&
+      !activeCause.moreSuggestions &&
+      dispatch(
+        getMoreSuggestions(activeCause.id, () => {
+          toast.error('Unable to load more suggestion.', {
+            position: toast.POSITION.BOTTOM_CENTER
+          })
+        })
+      )
     setSuggestionsExpanded(!suggestions_expanded)
   }
 
@@ -110,9 +121,39 @@ export default function Suggestions () {
       )
     })
 
+  const moreSuggestions =
+    activeCause &&
+    activeCause.moreSuggestions &&
+    activeCause.moreSuggestions.map(suggestion => {
+      return (
+        <Comment
+          key={suggestion.id}
+          avatar={
+            <Avatar
+              src={
+                suggestion.person.display_picture
+                  ? api_base_url + suggestion.person.display_picture
+                  : ''
+              }
+              className={classes.avatar}
+            >
+              {suggestion.person.display_name[0]}
+            </Avatar>
+          }
+          title={suggestion.person.display_name}
+          subtitle={<TimeAgo date={suggestion.created_on} />}
+          content={suggestion.description}
+        />
+      )
+    })
+
   return (
     <React.Fragment>
-      <Typography className={isMobile ? classes.headerMobile : classes.headerDesktop}>Suggestions</Typography>
+      <Typography
+        className={isMobile ? classes.headerMobile : classes.headerDesktop}
+      >
+        Suggestions
+      </Typography>
       <Card className={classes.root}>
         <div className={classes.input}>
           <TextField
@@ -143,18 +184,7 @@ export default function Suggestions () {
           </Button>
         </CardActions>
         <Collapse in={suggestions_expanded} timeout='auto' unmountOnExit>
-          <Comment
-            avatar={{
-              src:
-                'https://react.semantic-ui.com/images/avatar/small/christian.jpg',
-              alt: 'Mahi'
-            }}
-            title={'Aditya Kulkarni'}
-            subtitle={'21 hours ago'}
-            content={
-              'Due to public transit strike in your area, maybe try arriving at the destination a day before. '
-            }
-          />
+          {moreSuggestions}
         </Collapse>
       </Card>
       <ToastContainer />
