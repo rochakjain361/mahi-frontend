@@ -26,6 +26,7 @@ import {
 import NotFound from './notFound'
 import { isMobile } from 'react-device-detect'
 import Navbar from './Navbar'
+import SimilarCauses from './similarCauses'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles(theme => ({
   },
   gridItemDesktop: {
     padding: '1rem'
-  },
+  }
 }))
 
 export default function MainDetail () {
@@ -133,6 +134,7 @@ export default function MainDetail () {
               <Suggestions />
               <AdditionalDoc />
               <AskUpdate />
+              <SimilarCauses cause_id={id} />
             </div>
           </div>
         ) : (
@@ -175,18 +177,21 @@ export default function MainDetail () {
                   </Dialog>
                 </React.Fragment>
               )}
-              <Grid container xs={12} style={{ maxWidth: '1440px'}}>
+              <Grid container xs={12} style={{ maxWidth: '1440px' }}>
                 <Grid item xs={7} className={classes.gridItemDesktop}>
-                <PostDetailCard />
-                <Log />
-                <Suggestions />
-                <AdditionalDoc />
-                <AskUpdate />
+                  <PostDetailCard />
+                  <Log />
+                  <Suggestions />
+                  <AdditionalDoc />
+                  <AskUpdate />
                 </Grid>
                 <Grid item xs={5} className={classes.gridItemDesktop}>
-                <BankDetails />
-                <Volunteer />
-                </Grid> 
+                  <BankDetails />
+                  <Volunteer />
+                </Grid>
+                <Grid item xs={12} className={classes.gridItemDesktop}>
+                  <SimilarCauses cause_id={id} />
+                </Grid>
               </Grid>
             </div>
           </div>

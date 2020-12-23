@@ -1,5 +1,4 @@
 import { toast } from 'react-toastify'
-// import 'react-toastify/dist/ReactTostify.css'
 import { apiClient } from '../helpers/apiClient'
 import { CAUSE_APIS } from '../urls'
 
@@ -20,6 +19,10 @@ import {
   GET_MORE_SUGGESTIONS_PENDING,
   GET_MORE_ACTIVITIES,
   GET_MORE_ACTIVITIES_PENDING,
+  GET_SIMILAR_CAUSES,
+  GET_SIMILAR_CAUSES_PENDING,
+  GET_MORE_SIMILAR_CAUSES,
+  GET_MORE_SIMILAR_CAUSES_PENDING,
 } from './CauseActionsType'
 
 toast.configure()
@@ -186,14 +189,47 @@ export const getMoreActivities = (causeId, callback = () => {}) => {
     dispatch(apiDispatch(GET_MORE_ACTIVITIES_PENDING, true))
     apiClient
       .get(url)
-      .then(respose => {
+      .then(response => {
         dispatch(apiDispatch(GET_MORE_ACTIVITIES_PENDING, false))
-        dispatch(apiDispatch(GET_MORE_ACTIVITIES, respose.data))
+        dispatch(apiDispatch(GET_MORE_ACTIVITIES, response.data))
       })
       .catch(error => {
         dispatch(apiDispatch(GET_MORE_ACTIVITIES_PENDING, false))
         dispatch(apiError(error))
         callback()
+      })
+  }
+}
+
+export const getSimilarCauses = causeId => {
+  const url = `${CAUSE_APIS.CauseItems}/${causeId}/get_similar_causes/`
+  return dispatch => {
+    dispatch(apiDispatch(GET_SIMILAR_CAUSES_PENDING, true))
+    apiClient
+      .get(url)
+      .then(response => {
+        dispatch(apiDispatch(GET_SIMILAR_CAUSES_PENDING, false))
+        dispatch(apiDispatch(GET_SIMILAR_CAUSES, response.data))
+      })
+      .catch(error => {
+        dispatch(apiDispatch(GET_SIMILAR_CAUSES_PENDING, false))
+        dispatch(apiError(error))
+      })
+  }
+}
+
+export const getMoreSimilarCauses = next_url => {
+  return dispatch => {
+    dispatch(apiDispatch(GET_MORE_SIMILAR_CAUSES_PENDING, true))
+    apiClient
+      .get(next_url)
+      .then(res => {
+        dispatch(apiDispatch(GET_MORE_SIMILAR_CAUSES_PENDING, false))
+        dispatch(apiDispatch(GET_MORE_SIMILAR_CAUSES, res.data))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+        dispatch(apiDispatch(GET_MORE_SIMILAR_CAUSES_PENDING, false))
       })
   }
 }

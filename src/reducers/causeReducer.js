@@ -14,7 +14,11 @@ import {
   GET_MORE_SUGGESTIONS,
   GET_MORE_SUGGESTIONS_PENDING,
   GET_MORE_ACTIVITIES,
-  GET_MORE_ACTIVITIES_PENDING
+  GET_MORE_ACTIVITIES_PENDING,
+  GET_SIMILAR_CAUSES,
+  GET_SIMILAR_CAUSES_PENDING,
+  GET_MORE_SIMILAR_CAUSES,
+  GET_MORE_SIMILAR_CAUSES_PENDING
 } from '../actions/CauseActionsType'
 
 const initialPendingState = {
@@ -25,7 +29,9 @@ const initialPendingState = {
   updateLikeUserPending: false,
   whitelistCausePending: false,
   getMoreSuggestionsPending: false,
-  getMoreActivitiesPending: false
+  getMoreActivitiesPending: false,
+  getSimilarCausesPending: false,
+  getMoreSimilarCausesPending: false
 }
 
 const initialCauses = {
@@ -38,7 +44,8 @@ const initialCauses = {
 const initialState = {
   ...initialPendingState,
   Causes: { ...initialCauses },
-  activeCause: {}
+  activeCause: {},
+  similarCauses: { ...initialCauses }
 }
 const causeReducer = (state = initialState, action) => {
   const { type, payload, error } = action
@@ -77,6 +84,18 @@ const causeReducer = (state = initialState, action) => {
                 }
               : el
           )
+        },
+        similarCauses: {
+          ...state.similarCauses,
+          results: state.similarCauses.results.map(el =>
+            el.id === payload.id
+              ? {
+                  ...el,
+                  liked_by: payload.liked_by,
+                  supporter_count: payload.supporter_count
+                }
+              : el
+          )
         }
       }
     case UPDATE_LIKE_USER_ON_ACTIVE_CAUSE:
@@ -100,6 +119,20 @@ const causeReducer = (state = initialState, action) => {
           moreSuggestions: payload
         }
       }
+    case GET_SIMILAR_CAUSES:
+      return { ...state, similarCauses: payload }
+    case GET_MORE_SIMILAR_CAUSES:
+      return {
+        ...state,
+        similarCauses: {
+          ...payload,
+          results: [...state.similarCauses.results, ...payload.results]
+        }
+      }
+    case GET_SIMILAR_CAUSES_PENDING:
+      return { ...state, getSimilarCausesPending: payload }
+    case GET_MORE_SIMILAR_CAUSES_PENDING:
+      return { ...state, getMoreSimilarCausesPending: payload }
     case GET_MORE_SUGGESTIONS_PENDING:
       return { ...state, getMoreSuggestionsPending: payload }
     case GET_MORE_ACTIVITIES:
