@@ -49,7 +49,6 @@ export const getAllCauses = (tag, ordering='-created_on', pending=false) => {
       .catch(error => {
         dispatch(apiError(error))
         dispatch(apiDispatch(GET_CAUSES_PENDING, false))
-        toast('error in getting complaints')
       })
   }
 }
