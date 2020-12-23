@@ -11,9 +11,13 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
+import LocationOnIcon from '@material-ui/icons/LocationOn'
+import { red } from '@material-ui/core/colors'
 import {
+  Avatar,
   Card,
   CardActions,
+  CardHeader,
   CardMedia,
   IconButton,
   LinearProgress,
@@ -30,13 +34,20 @@ import { useParams } from 'react-router-dom'
 
 import {api_base_url} from '../urls'
 import { getCause } from '../actions/CauseActions'
+import { isMobile } from 'react-device-detect'
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  rootMobile: {
     width: '100%',
     borderRadius: '0.5rem',
     paddingBottom: '0.8rem',
     marginBottom: '0.5rem'
+  },
+  rootDesktop: {
+    width: '100%',
+    borderRadius: '0.5rem',
+    paddingBottom: '0.8rem',
+    marginBottom: '1.5rem'
   },
   header: {
     display: 'flex',
@@ -110,6 +121,27 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: 0,
   },
+  avatar:{
+    backgroundColor: red[500],
+    height: '3rem',
+    width: '3rem'
+  },
+  subheader: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  subheader_icon: {
+    display: 'flex',
+    fontSize: '1.0rem'
+  },
+  subheader_text: {
+    display: 'flex',
+    alignItems: 'start'
+  },
+  cardHeaderTitle: {
+    fontSize: '18px',
+    fontWeight: 500,
+  }
 }))
 
 const BorderLinearProgress = withStyles(theme => ({
@@ -150,8 +182,32 @@ export default function PostDetailCard (cause) {
   const percentage = (activeCause.raised / activeCause.goal) * 100
   const dispatch = useDispatch()
   return (
-    <Card className={classes.root}>
+    <Card className={isMobile ? classes.rootMobile : classes.rootDesktop}>
       <ThemeProvider theme={theme}>
+        {isMobile ? '' : <CardHeader
+          avatar={
+            <Avatar
+              src={activeCause.needy_photo ? api_base_url + activeCause.needy_photo : ''}
+              className={classes.avatar}
+            >
+              {activeCause.needy_name[0]}
+            </Avatar>
+          }
+          title={activeCause.needy_name}
+          classes={{
+            title: classes.cardHeaderTitle
+          }}
+          subheader={
+            <div className={classes.subheader}>
+              <div>
+                <LocationOnIcon className={classes.subheader_icon} />
+              </div>
+              <div className={classes.subheader_text}>
+                {activeCause.needy_address}
+              </div>
+            </div>
+          }
+        />}
           <CardMedia
             className={classes.img}
             image={

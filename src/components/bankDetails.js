@@ -7,11 +7,18 @@ import Typography from '@material-ui/core/Typography'
 import { IconButton, Snackbar } from '@material-ui/core'
 
 import CopyIcon from '../icons/copyIcon'
+import { isMobile } from 'react-device-detect'
 
 const useStyles = makeStyles({
   root: {
     width: '100%',
     marginTop: '1rem',
+    borderRadius: '0.5rem',
+    marginBottom: '0.5rem'
+  },
+  rootDesktop: {
+    width: '100%',
+    marginTop: '0',
     borderRadius: '0.5rem',
     marginBottom: '0.5rem'
   },
@@ -28,7 +35,8 @@ const useStyles = makeStyles({
   header: {
     fontSize: '1.25em',
     marginTop: '0.75em',
-    fontWeight: 500
+    fontWeight: 500,
+    textAlign: 'center'
   },
   title: {
     fontSize: '0.875rem',
@@ -56,6 +64,9 @@ const useStyles = makeStyles({
     marginTop: '1rem',
     display: 'flex',
     alignItems: 'center'
+  },
+  detContainer: {
+    width: '100%'
   }
 })
 
@@ -86,7 +97,9 @@ export default function BankDetails (cause) {
 
   return (
     <React.Fragment>
-      <Typography className={classes.header}>Bank Details</Typography>
+      {isMobile ? (
+        <div className={classes.detContainer}>
+          <Typography className={classes.header}>Bank Details</Typography>
       <Card className={classes.root}>
         <CardContent>
           <div
@@ -193,6 +206,116 @@ export default function BankDetails (cause) {
           </div>
         </CardContent>
       </Card>
-    </React.Fragment>
+    
+        </div>
+      ) : (<Card className={classes.rootDesktop}>
+        <Typography className={classes.header}>Bank Details</Typography>
+          <CardContent>
+            <div
+              className={
+                activeCause && activeCause.id && activeCause.bank_name
+                  ? ''
+                  : classes.hiddenDiv
+              }
+            >
+              <Typography className={classes.title} color='textSecondary'>
+                Account name
+              </Typography>
+              <Typography variant='body2' className={classes.info} component='p'>
+                {activeCause && activeCause.id ? activeCause.bank_name : ''}
+              </Typography>
+              <div className={classes.account_info}>
+                <div>
+                  <Typography className={classes.title} color='textSecondary'>
+                    IFSC code:
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    className={classes.info}
+                    component='p'
+                  >
+                    {activeCause && activeCause.id
+                      ? activeCause.bank_ifsc_code
+                      : ''}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography className={classes.title} color='textSecondary'>
+                    Account number
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    className={classes.info}
+                    component='p'
+                  >
+                    {activeCause && activeCause.id
+                      ? activeCause.bank_account_no
+                      : ''}
+                  </Typography>
+                </div>
+              </div>
+            </div>
+            <div
+              className={
+                activeCause &&
+                activeCause.id &&
+                activeCause.bank_name &&
+                activeCause.bank_upi_id
+                  ? ''
+                  : classes.hiddenDiv
+              }
+            >
+              <div className={classes.divider}>
+                <div className={classes.separator} />
+                <span className={classes.dividerContent}>or</span>
+                <div className={classes.separator} />
+              </div>
+            </div>
+            <div
+              className={
+                activeCause && activeCause.id && activeCause.bank_upi_id
+                  ? ''
+                  : classes.hiddenDiv
+              }
+            >
+              <div className={classes.upi}>
+                <div>
+                  <Typography className={classes.title} color='textSecondary'>
+                    UPI ID:
+                  </Typography>
+                  <Typography
+                    id='upi_id'
+                    variant='body2'
+                    className={classes.info}
+                    component='p'
+                  >
+                    {activeCause && activeCause.id ? activeCause.bank_upi_id : ''}
+                  </Typography>
+                </div>
+                <div style={{ marginLeft: 'auto' }}>
+                  <IconButton
+                    onClick={() =>
+                      copyToClipboard('givetomlp.venkateshprabhu1@icici')
+                    }
+                  >
+                    <CopyIcon />
+                  </IconButton>
+                </div>
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center'
+                  }}
+                  open={open}
+                  autoHideDuration={1500}
+                  onClose={handleClose}
+                  message='UPI id copied to clipboard'
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      </React.Fragment>
   )
 }
