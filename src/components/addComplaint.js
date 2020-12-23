@@ -1,17 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { isMobile } from 'react-device-detect'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
+import AttachFileIcon from '@material-ui/icons/AttachFile'
+import { getAllTags } from '../actions/extraActions'
 import {
   Card,
   Checkbox,
+  CircularProgress,
   Container,
   FormControl,
   FormControlLabel,
@@ -65,23 +70,33 @@ const useStyles = makeStyles(theme => ({
   mainDiv: {
     padding: '1rem 0'
   },
+  mediaButton: {
+    backgroundColor: '#262626',
+    color: 'white',
+    minWidth: '10rem',
+    height: '3rem',
+    borderRadius: '1rem'
+  },
   modal: {
     display: 'flex',
-    flexDirection: 'column',
-    textAlignLast: 'center',
-    marginTop: '47%',
-    backgroundColor: '#FFFFFF',
-    width: '60%',
-    height: '40%',
-    marginLeft: '12%',
-    position: 'absolute',
-    borderRadius: '1.2rem',
-    padding: '1.2rem'
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    maxWidth: '60%',
+    padding: theme.spacing(2, 4, 3),
   },
   instructionDiv: {
     padding: '1rem',
     marginBottom: '1rem',
     borderRadius: '0.75rem'
+  },
+  centerDiv: {
+    display: 'flex',
+    justifyContent: 'center'
   },
   toolBar: {
     padding: '1.25rem 1.25rem 0 1.25rem'
@@ -141,12 +156,13 @@ const useStyles = makeStyles(theme => ({
     padding: '0.2rem'
   },
   bottomButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#262626',
     color: 'white',
     display: 'flex',
     justifyContent: 'center',
     padding: '1.2rem',
-    borderRadius: '0.5rem'
+    borderRadius: '0.5rem',
+    width: '100%',
   },
   bottomButtonPublish: {
     backgroundColor: '#6552FF',
@@ -154,11 +170,13 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     padding: '1.2rem',
-    borderRadius: '0.5rem'
+    borderRadius: '0.5rem',
+    width: '100%'
   },
   returnFeedDiv: {
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
     backgroundColor: '#6552FF',
     color: 'white',
     justifyContent: 'center',
@@ -195,6 +213,9 @@ export default function AddComplaint () {
   const dispatch = useDispatch()
   const [dense, setDense] = React.useState(false)
   const [activeStep, setActiveStep] = useState(0)
+  useEffect(() => {
+    dispatch(getAllTags())
+  }, [dispatch])
   const all_tags = useSelector(state => state.extras.Tags)
   const initCause = {
     tags: [],
@@ -240,7 +261,7 @@ export default function AddComplaint () {
   const [bank, setBank] = useState(false)
   const [upi, setUpi] = useState(false)
   const steps = getSteps()
-
+  const createCausePending = useSelector(state => state.causes.createCausePending)
   const handleChange = event => {
     setCause({ ...cause, [event.target.name]: event.target.value })
   }
@@ -313,7 +334,7 @@ export default function AddComplaint () {
       } else {
         set_bank_ifsc_error(null)
       }
-      if (!cause.bank_name) {
+      if (!bankName) {
         set_bank_name_error('Please select a bank')
         err = true
       } else {
@@ -423,7 +444,6 @@ export default function AddComplaint () {
       default:
         return null
     }
-    // setActiveStep(prevActiveStep => prevActiveStep + 1)
   }
 
   const handleBack = () => {
@@ -434,10 +454,17 @@ export default function AddComplaint () {
     setActiveStep(0)
   }
 
+  const handleBankChange = e => {
+    setCause({ ...cause, [e.target.name]: e.target.value })
+  }
+
   const handleSubmit = () => {
     let formdata = new FormData()
     for (let i = 0; i < cause.tags.length; i++) {
-      formdata.append('tag', cause.tags[i].toString())
+      const tg = all_tags.find(tag => {
+        return tag.tag_name == cause.tags[i]
+      })
+      formdata.append('tag', tg.id)
     }
     for (let i = 0; i < cause.media.additional_files.length; i++) {
       formdata.append('media_files', cause.media.additional_files[i])
@@ -459,7 +486,7 @@ export default function AddComplaint () {
     formdata.append('needy_address', cause.needy_address)
     formdata.append('needy_photo', cause.needy_photo[0])
     if (bank) {
-      formdata.append('bank_name', cause.bank_name)
+      formdata.append('bank_name', bankName.value)
       formdata.append('bank_ifsc_code', cause.ifsc_code)
       formdata.append('bank_account_no', cause.account_no)
     }
@@ -482,12 +509,14 @@ export default function AddComplaint () {
       style: {
         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
         width: 250
-        // bottom: '0rem'
       }
     }
   }
 
   const bankList = getBankList()
+
+  const [bankName, setBankName] = React.useState(bankList[0].value)
+  const [inputBankName, setInputBankName] = React.useState('')
 
   const getNavbarIcon = step => {
     switch (step) {
@@ -525,15 +554,15 @@ export default function AddComplaint () {
       case 0:
       case 1:
         return (
-          <div onClick={handleNext} className={classes.bottomButton}>
+          <Button pending={true} onClick={handleNext} className={classes.bottomButton}>
             Continue
-          </div>
+          </Button>
         )
       case 2:
         return (
-          <div onClick={handleSubmit} className={classes.bottomButtonPublish}>
-            Publish Complaint
-          </div>
+          <Button onClick={handleSubmit} className={classes.bottomButtonPublish}>
+            {createCausePending ? <CircularProgress /> : 'Publish Complaint'}
+          </Button>
         )
       default:
         return null
@@ -551,8 +580,12 @@ export default function AddComplaint () {
               </ListItemAvatar>
               <ListItemText
                 primary={
-                  additional_file.name.length > 15
-                    ? additional_file.name.slice(0, 15) + '...'
+                  isMobile
+                    ? additional_file.name.length > 15
+                      ? additional_file.name.slice(0, 15) + '...'
+                      : additional_file.name
+                    : additional_file.name.length > 100
+                    ? additional_file.name.slice(0, 100) + '...'
                     : additional_file.name
                 }
               />
@@ -570,7 +603,6 @@ export default function AddComplaint () {
         )
       }
     )
-
     const benchmark_data_names = cause.media.benchmark_data.map(data => {
       return (
         <div>
@@ -580,8 +612,12 @@ export default function AddComplaint () {
             </ListItemAvatar>
             <ListItemText
               primary={
-                data.name.length > 15
-                  ? data.name.slice(0, 15) + '...'
+                isMobile
+                  ? data.name.length > 15
+                    ? data.name.slice(0, 15) + '...'
+                    : data.name
+                  : data.name.length > 100
+                  ? data.name.slice(0, 100) + '...'
                   : data.name
               }
             />
@@ -611,7 +647,7 @@ export default function AddComplaint () {
                   labelId='demo-mutiple-checkbox-label'
                   id='demo-mutiple-checkbox'
                   multiple
-                  value={cause.tags ? cause.tags : ''}
+                  value={cause.tags}
                   name='tags'
                   onChange={handleChange}
                   input={<Input />}
@@ -620,8 +656,10 @@ export default function AddComplaint () {
                 >
                   {all_tags &&
                     all_tags.map(tag => (
-                      <MenuItem key={tag.id} value={tag.id}>
-                        <Checkbox checked={cause.tags.indexOf(tag.id) > -1} />
+                      <MenuItem key={tag.id} value={tag.tag_name}>
+                        <Checkbox
+                          checked={cause.tags.indexOf(tag.tag_name) > -1}
+                        />
                         <ListItemText primary={tag.tag_name} />
                       </MenuItem>
                     ))}
@@ -706,22 +744,31 @@ export default function AddComplaint () {
                 }
                 label='Bank'
               />
-              <TextField
+              <Autocomplete
                 className={bank ? classes.textfield : classes.hiddentextfield}
-                onChange={handleChange}
-                value={cause.bank_name ? cause.bank_name : ''}
-                select
+                id='combo-box-demo'
+                options={bankList}
+                onChange={(event, newBankName) => {
+                  setBankName(newBankName)
+                }}
+                inputValue={inputBankName}
+                onInputChange={(event, newInputBankName) => {
+                  setInputBankName(newInputBankName)
+                }}
+                getOptionLabel={option =>
+                  option.displayName ? option.displayName : ''
+                }
+                value={bankName ? bankName : ''}
                 name='bank_name'
-                label='Bank Name'
-                error={bank_name_error ? true : false}
-                helperText={bank_name_error ? bank_name_error : ''}
-              >
-                {bankList.map(bank => (
-                  <MenuItem key={bank.value} value={bank.value}>
-                    {bank.displayName}
-                  </MenuItem>
-                ))}
-              </TextField>
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    onChange={handleBankChange}
+                    label='Bank Name'
+                    variant='outlined'
+                  />
+                )}
+              />
               <TextField
                 className={bank ? classes.textfield : classes.hiddentextfield}
                 onChange={handleChange}
@@ -812,8 +859,12 @@ export default function AddComplaint () {
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          cause.needy_photo[0].name.length > 15
-                            ? cause.needy_photo[0].name.slice(0, 15) + '...'
+                          isMobile
+                            ? cause.needy_photo[0].name.length > 15
+                              ? cause.needy_photo[0].name.slice(0, 15) + '...'
+                              : cause.needy_photo[0].name
+                            : cause.needy_photo[0].name.length > 100
+                            ? cause.needy_photo[0].name.slice(0, 100) + '...'
                             : cause.needy_photo[0].name
                         }
                       />
@@ -839,7 +890,12 @@ export default function AddComplaint () {
                 type='file'
               />
               <label htmlFor='contained-button-file-needy_photo'>
-                <Button variant='contained' color='primary' component='span'>
+                <Button
+                  variant='contained'
+                  className={classes.mediaButton}
+                  component='span'
+                  startIcon={<AttachFileIcon />}
+                >
                   {cause.needy_photo[0] ? 'Update' : 'Upload'}
                 </Button>
               </label>
@@ -864,7 +920,13 @@ export default function AddComplaint () {
                 type='file'
               />
               <label htmlFor='contained-button-file-benchmark_data'>
-                <Button variant='contained' color='primary' component='span'>
+                <Button
+                  variant='contained'
+                  className={classes.mediaButton}
+                  component='span'
+                  startIcon={<AttachFileIcon />}
+                  startIcon={<AttachFileIcon />}
+                >
                   {cause.media.benchmark_data[0] ? 'Upload More' : 'Upload'}
                 </Button>
               </label>
@@ -883,8 +945,12 @@ export default function AddComplaint () {
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          cause.cover_photo[0].name.length > 15
-                            ? cause.cover_photo[0].name.slice(0, 15) + '...'
+                          isMobile
+                            ? cause.cover_photo[0].name.length > 15
+                              ? cause.cover_photo[0].name.slice(0, 15) + '...'
+                              : cause.cover_photo[0].name
+                            : cause.cover_photo[0].name.length > 100
+                            ? cause.cover_photo[0].name.slice(0, 100) + '...'
                             : cause.cover_photo[0].name
                         }
                       />
@@ -910,7 +976,12 @@ export default function AddComplaint () {
                 type='file'
               />
               <label htmlFor='contained-button-file-cover_photo'>
-                <Button variant='contained' color='primary' component='span'>
+                <Button
+                  variant='contained'
+                  className={classes.mediaButton}
+                  component='span'
+                  startIcon={<AttachFileIcon />}
+                >
                   {cause.cover_photo[0] ? 'Update' : 'Upload'}
                 </Button>
               </label>
@@ -935,7 +1006,12 @@ export default function AddComplaint () {
                 type='file'
               />
               <label htmlFor='contained-button-file-additional_files'>
-                <Button variant='contained' color='primary' component='span'>
+                <Button
+                  variant='contained'
+                  className={classes.mediaButton}
+                  component='span'
+                  startIcon={<AttachFileIcon />}
+                >
                   {cause.media.additional_files[0] ? 'Upload More' : 'Upload'}
                 </Button>
               </label>
@@ -948,7 +1024,10 @@ export default function AddComplaint () {
             <FormLabel className={classes.formLabel}>
               Complaint Preview
             </FormLabel>
-            <div className={classes.previewCard}>
+            <div
+              style={{ pointerEvents: 'none' }}
+              className={classes.previewCard}
+            >
               <PostCard cause={cause} />
             </div>
           </div>
@@ -972,7 +1051,11 @@ export default function AddComplaint () {
       </ThemeProvider>
       <div className={classes.root}>
         <div className={classes.stepperDiv}>
-          <Stepper alternativeLabel activeStep={activeStep} className={classes.stepper}>
+          <Stepper
+            alternativeLabel
+            activeStep={activeStep}
+            className={classes.stepper}
+          >
             {steps.map(label => (
               <Step key={label}>
                 <StepLabel style={{ color: '#6552FF' }}>{label}</StepLabel>
@@ -989,35 +1072,29 @@ export default function AddComplaint () {
             </Card>
             {activeStep === steps.length ? (
               <div>
-                {/* <Typography className={classes.instructions}>
-                Complaint Registered! We will contact you via mail or phone.
-              </Typography>
-              <Button onClick={handleReset} className={classes.button}>
-                More complaints ?
-              </Button> */}
                 <Modal
-                  disablePortal
-                  disableEnforceFocus
-                  disableAutoFocus
-                  open
-                  aria-labelledby='server-modal-title'
-                  aria-describedby='server-modal-description'
+                  aria-labelledby='spring-modal-title'
+                  aria-describedby='spring-modal-description'
                   className={classes.modal}
-                  // container={() => rootRef.current}
+                  open
+                  closeAfterTransition
+                  BackdropProps={{
+                    timeout: 500
+                  }}
                 >
                   <div className={classes.paper}>
-                    <img src={publish}></img>
-                    <h2 id='Registered'>Registered</h2>
-                    <p id='server-modal-description'>
+                    <div className={classes.centerDiv}><img src={publish}></img></div>
+                    <div className={classes.centerDiv}><h2 id='Registered'>Registered</h2></div>
+                    <div className={classes.centerDiv}><p id='server-modal-description'>
                       Your complaint is under review. A Volunteer will reach out
                       to you via email/phone.
-                    </p>
-                    <div
+                    </p></div>
+                    <Button
                       onClick={() => history.push('/')}
                       className={classes.returnFeedDiv}
                     >
                       Return to Feed <ArrowForwardIcon />
-                    </div>
+                    </Button>
                   </div>
                 </Modal>
               </div>
