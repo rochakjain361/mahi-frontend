@@ -12,13 +12,27 @@ import { api_base_url } from '../urls'
 import { isMobile } from 'react-device-detect'
 
 const useStyles = makeStyles(theme => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.1em',
+      height:'0.6rem',
+      backgroundColor: 'rgba(0,0,0,0.03)'
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 4px rgba(0,0,0,0.00)',
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,0.08)',
+      borderRadius: '1rem'
+    }
+  },
   root: {
     width: '100%',
     marginTop: '1rem',
     borderRadius: '0.5rem',
     marginBottom: '0.5rem',
     padding: '0 1.25rem',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
   },
   header: {
     fontSize: '1.25em',
@@ -36,14 +50,20 @@ const useStyles = makeStyles(theme => ({
   gridList: {
     flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)'
+    transform: 'translateZ(0)',
   },
   title: {
-    color: theme.palette.primary.light
+    color: theme.palette.primary.light,
+    fontWeight: 450
   },
   titleBar: {
-    background:
-      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)'
+    background: 'rgba(0, 0, 0, 0.6)'
+  },
+  gridTile: {
+    float: 'left',
+    width: '100%',
+    minHeight: '22.5vw',
+    minWidth: '300px',
   }
 }))
 
@@ -55,19 +75,14 @@ export default function AdditionalDoc () {
     activeCause.media_files &&
     activeCause.media_files.map(file => {
       return (
-        <GridListTile key={file.id}>
+        <GridListTile key={file.id} className={classes.gridTile}>
           <img src={api_base_url + file.media} alt='Media' />
           <GridListTileBar
-            title='additional doc'
+            title={file.media.split("/").pop()}
             classes={{
               root: classes.titleBar,
               title: classes.title
             }}
-            actionIcon={
-              <IconButton aria-label={`star doc`}>
-                <StarBorderIcon className={classes.title} />
-              </IconButton>
-            }
           />
         </GridListTile>
       )
