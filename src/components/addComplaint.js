@@ -55,6 +55,7 @@ import {
   validatePositiveNumber
 } from '../utils/validations'
 import getBankList from '../constants/bank'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -213,6 +214,15 @@ export default function AddComplaint () {
   const dispatch = useDispatch()
   const [dense, setDense] = React.useState(false)
   const [activeStep, setActiveStep] = useState(0)
+  const user = useSelector(state => state.auth.Loggedinuser)
+  useEffect(() => {
+    if(!(user && user.id)){
+      toast.error('Login to register a complaint', {
+        position: toast.POSITION.TOP_CENTER
+      })
+      history.push('/')
+    }
+  }, [user])
   useEffect(() => {
     dispatch(getAllTags())
   }, [dispatch])

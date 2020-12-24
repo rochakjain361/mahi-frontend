@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'
 import {
   GET_ALL_CAUSES,
   GET_MORE_CAUSES,
@@ -146,6 +147,18 @@ const causeReducer = (state = initialState, action) => {
     case GET_MORE_ACTIVITIES_PENDING:
       return { ...state, getMoreActivitiesPending: payload }
     case CAUSE_API_ERROR:
+      console.log(error.response)
+      if(error.response.status==403){
+        console.log('true')
+        toast.error('You are not authorized to perform such action', {
+          position: toast.POSITION.BOTTOM_CENTER
+        })
+      }
+      else{
+        toast.error('error occured while performing action', {
+          position: toast.POSITION.BOTTOM_CENTER
+        })
+      }
       return { ...state, error: error }
     default:
       return state

@@ -30,11 +30,12 @@ import {
 } from '../icons/menu'
 import { theme } from '../theme'
 import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    borderRadius: '0.5rem',
+    borderRadius: '0.5rem'
     // marginBottom: '0.8rem'
   },
   daysLeft: {
@@ -92,7 +93,7 @@ const useStyles = makeStyles(theme => ({
     height: '-webkit-fill-available',
     width: '100%',
     position: 'absolute',
-    top: 0,
+    top: 0
   },
   media: {
     height: 0,
@@ -144,7 +145,25 @@ export default function PostCard ({ cause }) {
     setExpand(!expand)
   }
 
+  const [liked_by, setLikedBy] = useState(
+    cause && cause.id && user && cause.liked_by.includes(user.id)
+  )
+  const [supporterCount, setSupporterCount] = useState(cause.supporter_count)
   const dispatch = useDispatch()
+  const handleLikeClick = () => {
+    user && user.id
+      ? handleLike()
+      : toast.error('Login to support a complaint', {
+          position: toast.POSITION.BOTTOM_CENTER
+        })
+  }
+  const handleLike = () => {
+    dispatch(updateLikedUser(cause.id))
+    liked_by
+      ? setSupporterCount(supporterCount - 1)
+      : setSupporterCount(supporterCount + 1)
+    setLikedBy(!liked_by)
+  }
   return (
     <Card className={classes.root}>
       <ThemeProvider theme={theme}>
@@ -215,14 +234,9 @@ export default function PostCard ({ cause }) {
               <PostCardFooterFavLeftIcon />
             </SvgIcon>
           </IconButton>
-          <p>{cause.supporter_count} Supporters</p>
-          <IconButton
-            className={classes.LikeIcon}
-            onClick={() => {
-              cause && dispatch(updateLikedUser(cause.id))
-            }}
-          >
-            {cause && cause.id && user && (cause.liked_by).includes(user.id) ? (
+          <p>{supporterCount} Supporters</p>
+          <IconButton className={classes.LikeIcon} onClick={handleLikeClick}>
+            {liked_by ? (
               <FavoriteIcon style={{ fill: '#FC747A' }} />
             ) : (
               <FavoriteBorderIcon />

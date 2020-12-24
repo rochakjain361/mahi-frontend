@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'
 import {
   GET_ALL_TAGS,
   EXTRA_API_ERROR,
@@ -44,6 +45,16 @@ const extraReducer = (state = initialState, action) => {
     case SHOW_PENDING_CAUSE:
       return {...state, show_pending_cause: payload}
     case EXTRA_API_ERROR:
+      if(error.response.status==403){
+        toast.error('You are not authorized to perform such action', {
+          position: toast.POSITION.BOTTOM_CENTER
+        })
+      }
+      else{
+        toast.error('error occured while performing action', {
+          position: toast.POSITION.BOTTOM_CENTER
+        })
+      }
       return { ...state, error: error }
     default:
       return state

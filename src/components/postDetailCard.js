@@ -32,7 +32,7 @@ import {
 } from '../icons/menu'
 import { useParams } from 'react-router-dom'
 
-import {api_base_url} from '../urls'
+import { api_base_url } from '../urls'
 import { getCause } from '../actions/CauseActions'
 import { isMobile } from 'react-device-detect'
 
@@ -119,9 +119,9 @@ const useStyles = makeStyles(theme => ({
     height: '-webkit-fill-available',
     width: '100%',
     position: 'absolute',
-    top: 0,
+    top: 0
   },
-  avatar:{
+  avatar: {
     backgroundColor: red[500],
     height: '3rem',
     width: '3rem'
@@ -140,7 +140,7 @@ const useStyles = makeStyles(theme => ({
   },
   cardHeaderTitle: {
     fontSize: '18px',
-    fontWeight: 500,
+    fontWeight: 500
   }
 }))
 
@@ -181,43 +181,64 @@ export default function PostDetailCard (cause) {
 
   const percentage = (activeCause.raised / activeCause.goal) * 100
   const dispatch = useDispatch()
+  const [liked_by, setLikedBy] = useState(
+    user &&
+      user.id &&
+      activeCause.liked_by &&
+      activeCause.liked_by.includes(user.id)
+  )
+  const [supporterCount, setSupporterCount] = useState(activeCause.supporter_count)
+  const handleLikeClick = () => {
+    dispatch(updateLikedUserOnActiveCause(activeCause.id))
+    liked_by
+      ? setSupporterCount(supporterCount - 1)
+      : setSupporterCount(supporterCount + 1)
+    setLikedBy(!liked_by)
+  }
   return (
     <Card className={isMobile ? classes.rootMobile : classes.rootDesktop}>
       <ThemeProvider theme={theme}>
-        {isMobile ? '' : <CardHeader
-          avatar={
-            <Avatar
-              src={activeCause.needy_photo ? api_base_url + activeCause.needy_photo : ''}
-              className={classes.avatar}
-            >
-              {activeCause.needy_name[0]}
-            </Avatar>
-          }
-          title={activeCause.needy_name}
-          classes={{
-            title: classes.cardHeaderTitle
-          }}
-          subheader={
-            <div className={classes.subheader}>
-              <div>
-                <LocationOnIcon className={classes.subheader_icon} />
-              </div>
-              <div className={classes.subheader_text}>
-                {activeCause.needy_address}
-              </div>
-            </div>
-          }
-        />}
-          <CardMedia
-            className={classes.img}
-            image={
-              activeCause.id
-                ? api_base_url +
-                  activeCause.benchmark_media[activeStep].media
-                : ''
+        {isMobile ? (
+          ''
+        ) : (
+          <CardHeader
+            avatar={
+              <Avatar
+                src={
+                  activeCause.needy_photo
+                    ? api_base_url + activeCause.needy_photo
+                    : ''
+                }
+                className={classes.avatar}
+              >
+                {activeCause.needy_name[0]}
+              </Avatar>
             }
-            alt='benchmark data'
-          >
+            title={activeCause.needy_name}
+            classes={{
+              title: classes.cardHeaderTitle
+            }}
+            subheader={
+              <div className={classes.subheader}>
+                <div>
+                  <LocationOnIcon className={classes.subheader_icon} />
+                </div>
+                <div className={classes.subheader_text}>
+                  {activeCause.needy_address}
+                </div>
+              </div>
+            }
+          />
+        )}
+        <CardMedia
+          className={classes.img}
+          image={
+            activeCause.id
+              ? api_base_url + activeCause.benchmark_media[activeStep].media
+              : ''
+          }
+          alt='benchmark data'
+        >
           <div className={classes.mediaDiv}>
             <div className={classes.steps}>
               {activeStep + 1}/{maxSteps}
@@ -246,25 +267,17 @@ export default function PostDetailCard (cause) {
                 )}
               </Button>
             </div>
-            </div>
-          </CardMedia>
+          </div>
+        </CardMedia>
         <CardActions disableSpacing>
           <IconButton>
             <SvgIcon>
               <PostCardFooterFavLeftIconDetail />
             </SvgIcon>
           </IconButton>
-          <p>{activeCause.supporter_count} Supporters</p>
-          <IconButton
-            className={classes.LikeIcon}
-            onClick={() => {
-              dispatch(updateLikedUserOnActiveCause(activeCause.id))
-            }}
-          >
-            {user &&
-            user.id &&
-            activeCause.liked_by &&
-            activeCause.liked_by.includes(user.id) ? (
+          <p>{supporterCount} Supporters</p>
+          <IconButton className={classes.LikeIcon} onClick={handleLikeClick}>
+            {liked_by ? (
               <FavoriteIcon style={{ fill: '#FC747A' }} />
             ) : (
               <FavoriteBorderIcon />
@@ -278,7 +291,7 @@ export default function PostDetailCard (cause) {
         </CardActions>
         <div className={classes.PostCardDescription}>
           <Typography variant='body2' color='textPrimary' component='div'>
-              {activeCause.description}
+            {activeCause.description}
           </Typography>
         </div>
         <div className={classes.PostCardBottom}>

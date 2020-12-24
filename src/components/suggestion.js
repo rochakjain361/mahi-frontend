@@ -62,7 +62,14 @@ export default function Suggestions () {
   const [suggestions_expanded, setSuggestionsExpanded] = React.useState(false)
   const [suggestion, setSuggestion] = React.useState('')
   const activeCause = useSelector(state => state.causes.activeCause)
-
+  const user = useSelector(state => state.auth.Loggedinuser)
+  const handleSubmitClick = () => {
+    user && user.id
+      ? handleSubmit()
+      : toast.error('Login to submit a suggestion', {
+          position: toast.POSITION.BOTTOM_CENTER
+        })
+  }
   const handleSubmit = () => {
     let formdata = new FormData()
     formdata.append('description', suggestion)
@@ -166,7 +173,7 @@ export default function Suggestions () {
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
-                  <SvgIcon onClick={handleSubmit}>
+                  <SvgIcon onClick={handleSubmitClick}>
                     <SendIcon />
                   </SvgIcon>
                 </InputAdornment>
