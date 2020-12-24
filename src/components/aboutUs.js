@@ -18,6 +18,7 @@ import Asset2 from '../icons/asset2'
 import Asset3 from '../icons/asset3'
 import MahiIcon from '../icons/mahi'
 import Navbar from './Navbar'
+import aboutUsPageHeader from '../media/aboutUsPageHeader.png'
 import aboutUsHeader from '../media/aboutUsHeader.png'
 import { isMobile } from 'react-device-detect'
 
@@ -110,6 +111,9 @@ export default function AboutUs (props) {
   return (
     <div>
       <Navbar />
+      {isMobile ? <div style={{background: '#fff'}}>
+                  <img src={aboutUsPageHeader} style={{width: '100%'}}/>
+                  </div> : ''}
       <Container className={classes.root} maxWidth={false}>
         <ThemeProvider theme={theme}>
           <div className={classes.mainDiv}>

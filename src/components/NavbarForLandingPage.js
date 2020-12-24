@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Chip from '@material-ui/core/Chip'
-import { ThemeProvider } from '@material-ui/core'
+import { Grid, ThemeProvider } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
@@ -20,9 +20,10 @@ import { isMobile } from 'react-device-detect'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)',
     width: '100%',
-    zIndex: 1100
+    zIndex: 1100,
+    border: 'none',
+    boxShadow: 'none',
   },
   motto: {
     padding: '0 1.25rem',
@@ -69,10 +70,25 @@ const useSelectStyles = makeStyles(theme => ({
 }))
 
 const useChipStyles = makeStyles(theme => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.1em',
+      height: '0.6rem',
+      backgroundColor: 'rgba(0,0,0,0.03)'
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 4px rgba(0,0,0,0.00)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,0.08)',
+      borderRadius: '1rem'
+    }
+  },
   root: {
     display: 'flex',
     overflowX: 'auto',
-    padding: '0 0 0 1.25rem',
+    margin: '0 1rem',
+    padding: '0 0 0 0.5rem',
     marginBottom: theme.spacing(2),
     '& > *': {
       backgroundColor: '#F5F5F5',
@@ -87,7 +103,7 @@ const useChipStyles = makeStyles(theme => ({
   }
 }))
 
-function SimpleSelect () {
+export function SimpleSelect () {
   const classes = useSelectStyles()
   const dispatch = useDispatch()
   const ordering = useSelector(state => state.extras.ordering)
@@ -154,7 +170,7 @@ function SimpleSelect () {
   )
 }
 
-function Chips () {
+export function Chips () {
   const classes = useChipStyles()
   const dispatch = useDispatch()
   useEffect(() => {
@@ -201,9 +217,7 @@ export default function NavbarForLandingPage (props) {
             {isMobile ? <NavbarContent /> : <NavbarContentDesktop />}
             <div className={isMobile ? '' : classes.appBarDesktop}>
               {isMobile ? '' : <NavbarExtra />}
-              <h3 className={classes.motto}>Be the Change</h3>
-              <Chips />
-              <SimpleSelect />
+              {isMobile ? '' : <h3 className={classes.motto}>Be the Change</h3>}
             </div>
           </AppBar>
         </ThemeProvider>

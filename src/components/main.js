@@ -14,11 +14,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import ClearIcon from '@material-ui/icons/Clear'
-
 import PostCard from './postCard'
 import { getAllCauses, getMoreCauses } from '../actions/CauseActions'
 import { theme } from '../theme'
-import NavbarForLandingPage from './NavbarForLandingPage'
+import landingPageHeader from '../media/landingPageHeader.png'
+import NavbarForLandingPage, {
+  Chips,
+  SimpleSelect
+} from './NavbarForLandingPage'
 
 const useStyles = makeStyles(theme => ({
   desktopRoot: {
@@ -119,6 +122,20 @@ const useStyles = makeStyles(theme => ({
   closeAlertDesktop: {
     paddingTop: '0.75rem',
     marginLeft: '2rem'
+  },
+  motto: {
+    padding: '0 1.25rem',
+    fontSize: '1.5rem',
+    fontWeight: 500
+  },
+  mottoMobile: {
+    padding: '0 1.25rem',
+    fontSize: '1.5rem',
+    fontWeight: 500,
+    textAlign: 'center'
+  },
+  landingPageHeader: {
+    width: '100%'
   }
 }))
 
@@ -190,6 +207,37 @@ export default function Main () {
   return (
     <React.Fragment>
       <NavbarForLandingPage />
+      {isMobile ? (
+        <div style={{background: '#fff', paddingBottom:'1rem'}}>
+          <img src={landingPageHeader} className={classes.landingPageHeader}/>
+           <h3 className={classes.mottoMobile}>Be the Change</h3>
+           <Chips />
+        </div>
+      ) : (
+        <div
+          style={{
+            padding: '1% 10% 1% 10%',
+            boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)',
+            background: 'white',
+            borderTop: '-1rem',
+            position: 'sticky',
+            top: '4rem',
+            zIndex: '1100'
+          }}
+        >
+          <Grid container lg={12}>
+            <Grid item xs={12} sm={12} lg={10}>
+              <Chips />
+            </Grid>
+            <Grid item xs={12} sm={12} lg={2}>
+              <SimpleSelect />
+            </Grid>
+          </Grid>
+        </div>
+      )}
+      {isMobile ? <div style={{position: 'sticky', top: '3.5rem', background: '#fff', zIndex: '1100', boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)'}}>
+          <SimpleSelect />
+          </div> : ''}
       <ThemeProvider theme={theme}>
         {pending_causes ? (
           <div className={classes.loader}>
