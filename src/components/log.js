@@ -361,8 +361,8 @@ function LogTabs () {
           onChangeIndex={handleChangeIndex}
         >
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tabPanel}>
-            <GridList className={classes.gridList} cols={1}>
-              <GridListTile key='0'>
+            <GridList className={classes.gridList} cols={1.1}>
+              <GridListTile key='0' style={{minHeight: '22.5vw'}}>
                 <Card className={classes.inputCard}>
                   <FormLabel className={classes.formLabel}>
                     <div onClick={() => removeImage('needy_photo')}>

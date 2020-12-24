@@ -61,7 +61,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     position: 'sticky',
-    bottom: '1rem'
+    bottom: '1rem',
+    zIndex: '1200'
   },
   fabContainerDesktop: {
     display: 'flex',
@@ -73,7 +74,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     position: 'sticky',
-    bottom: '4rem'
+    bottom: '4rem',
+    zIndex: '1200'
   },
   loader: {
     width: '100%',
@@ -136,6 +138,23 @@ const useStyles = makeStyles(theme => ({
   },
   landingPageHeader: {
     width: '100%'
+  },
+  navbarHeaderDesktop: {
+    padding: '1% 10% 1% 10%',
+    boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)',
+    background: 'white',
+    borderTop: '-1rem',
+    position: 'sticky',
+    top: '4rem',
+    zIndex: '1100'
+  },
+  navbarHeaderMobile: {
+    position: 'sticky',
+    top: '3.5rem',
+    paddingTop: '0.5rem',
+    background: '#fff',
+    zIndex: '1100',
+    boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)'
   }
 }))
 
@@ -208,36 +227,30 @@ export default function Main () {
     <React.Fragment>
       <NavbarForLandingPage />
       {isMobile ? (
-        <div style={{background: '#fff', paddingBottom:'1rem'}}>
-          <img src={landingPageHeader} className={classes.landingPageHeader}/>
-           <h3 className={classes.mottoMobile}>Be the Change</h3>
-           <Chips />
+        <div style={{ background: '#fff', paddingBottom: '1rem' }}>
+          <img src={landingPageHeader} className={classes.landingPageHeader} />
+          <h3 className={classes.mottoMobile}>Be the Change</h3>
         </div>
       ) : (
-        <div
-          style={{
-            padding: '1% 10% 1% 10%',
-            boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)',
-            background: 'white',
-            borderTop: '-1rem',
-            position: 'sticky',
-            top: '4rem',
-            zIndex: '1100'
-          }}
-        >
+        <div className={classes.navbarHeaderDesktop}>
           <Grid container lg={12}>
-            <Grid item xs={12} sm={12} lg={10}>
+            <Grid item xs={12} sm={12} lg={8}>
               <Chips />
             </Grid>
-            <Grid item xs={12} sm={12} lg={2}>
+            <Grid item xs={12} sm={12} lg={4}>
               <SimpleSelect />
             </Grid>
           </Grid>
         </div>
       )}
-      {isMobile ? <div style={{position: 'sticky', top: '3.5rem', background: '#fff', zIndex: '1100', boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)'}}>
+      {isMobile ? (
+        <div className={classes.navbarHeaderMobile}>
+          <Chips />
           <SimpleSelect />
-          </div> : ''}
+        </div>
+      ) : (
+        ''
+      )}
       <ThemeProvider theme={theme}>
         {pending_causes ? (
           <div className={classes.loader}>

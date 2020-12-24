@@ -15,7 +15,7 @@ import {
   showPendingCause
 } from '../actions/extraActions'
 import NavbarContent, { NavbarContentDesktop, NavbarExtra } from './Navbar'
-import { isMobile } from 'react-device-detect'
+import { isMobile, isTablet } from 'react-device-detect'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +41,6 @@ const useSelectStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'baseline',
     fontSize: '0.75rem',
-    flexDirection: 'column'
   },
   selectContainer: {
     display: 'flex',
@@ -129,8 +128,8 @@ export function SimpleSelect () {
   }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.selectContainer}>
+    <Grid container lg={12} className={classes.root}>
+      <Grid item lg={6} xs={5} className={classes.selectContainer}>
         <FormControl className={classes.labelControl}>
           <div>Sorted by</div>
         </FormControl>
@@ -146,9 +145,9 @@ export function SimpleSelect () {
             <MenuItem value={'-supporter_count'}>Supports</MenuItem>
           </Select>
         </FormControl>
-      </div>
+      </Grid>
       {user && user.is_volunteer && (
-        <div className={classes.selectContainer}>
+        <Grid item lg={6} xs={7} className={classes.selectContainer}>
           <FormControl className={classes.labelControl}>
             <div>Show:</div>
           </FormControl>
@@ -164,9 +163,9 @@ export function SimpleSelect () {
               <MenuItem value={true}>Pending complains</MenuItem>
             </Select>
           </FormControl>
-        </div>
+        </Grid>
       )}
-    </div>
+    </Grid>
   )
 }
 
@@ -214,7 +213,7 @@ export default function NavbarForLandingPage (props) {
       <div className={classes.root}>
         <ThemeProvider theme={theme}>
           <AppBar position='static' elevation={0}>
-            {isMobile ? <NavbarContent /> : <NavbarContentDesktop />}
+            {isMobile ? <NavbarContent/> : <NavbarContentDesktop />}
             <div className={isMobile ? '' : classes.appBarDesktop}>
               {isMobile ? '' : <NavbarExtra />}
               {isMobile ? '' : <h3 className={classes.motto}>Be the Change</h3>}
