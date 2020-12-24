@@ -147,14 +147,16 @@ const causeReducer = (state = initialState, action) => {
     case GET_MORE_ACTIVITIES_PENDING:
       return { ...state, getMoreActivitiesPending: payload }
     case CAUSE_API_ERROR:
-      console.log(error.response)
-      if(error.response.status==403){
+      if (
+        error.response &&
+        error.response.status &&
+        error.response.status === 403
+      ) {
         console.log('true')
         toast.error('You are not authorized to perform such action', {
           position: toast.POSITION.BOTTOM_CENTER
         })
-      }
-      else{
+      } else {
         toast.error('error occured while performing action', {
           position: toast.POSITION.BOTTOM_CENTER
         })

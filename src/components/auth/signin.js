@@ -27,6 +27,8 @@ import FacebookIcon from '../../icons/fb'
 import GoogleIcon from '../../icons/google'
 import { Redirect, useHistory } from 'react-router-dom'
 import { validatePhoneNumber } from '../../utils/validations'
+import { isMobile } from 'react-device-detect'
+import MahiFormIcon from '../../icons/mahiFormIcon'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +37,16 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     padding: '0.9375rem 1.25rem',
     boxSizing: 'border-box'
+  },
+  rootDesktop: {
+    width: '100%',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    padding: '0.9375rem 1.25rem',
+    boxSizing: 'border-box',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex'
   },
   closeButtonContainer: {
     display: 'flex',
@@ -113,6 +125,22 @@ const useStyles = makeStyles(theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff'
+  },
+  desktopContainer: {
+    width: '100%',
+    maxWidth: '55rem',
+    backgroundColor: '#fff',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr'
+  },
+  logoContainer: {
+    background: '#6552FF',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  formContainer: {
+    padding: '1.5rem 1.5rem 2rem 1.5rem'
   }
 }))
 
@@ -221,95 +249,198 @@ export default function SignIn () {
 
   return (
     <React.Fragment>
-      <Paper className={classes.root} elevation={0}>
-        <Backdrop open={signingIn} className={classes.backdrop}>
-          <CircularProgress color='inherit' />
-        </Backdrop>
-        {isAuthenticated && <Redirect to='/' />}
-        <div className={classes.closeButtonContainer}>
-          <IconButton onClick={returnHome}>
-            <CloseIcon />
-          </IconButton>
-        </div>
-        <Typography className={classes.header}>Sign in</Typography>
-        <form>
-          <TextField
-            onChange={handlePhoneChange}
-            className={classes.wide_input}
-            label='Phone Number'
-            InputLabelProps={{ className: classes.custom_label }}
-            disabled={otpSending || otpPending}
-            error={phone_error ? true : false}
-            helperText={phone_error ? phone_error : ''}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>+91</InputAdornment>
-              )
-            }}
-          />
-          <div id='reCaptcha' className={classes.recaptchaContainer} />
-          <div
-            className={captcha_error ? classes.errorContainer : classes.hidden}
-          >
-            Please solve the captcha
+      {isMobile ? (
+        <Paper className={classes.root} elevation={0}>
+          <Backdrop open={signingIn} className={classes.backdrop}>
+            <CircularProgress color='inherit' />
+          </Backdrop>
+          {isAuthenticated && <Redirect to='/' />}
+          <div className={classes.closeButtonContainer}>
+            <IconButton onClick={returnHome}>
+              <CloseIcon />
+            </IconButton>
           </div>
-          <TextField
-            onChange={handleOTPChange}
-            className={classes.wide_input}
-            label='OTP'
-            InputLabelProps={{ className: classes.custom_label }}
-            style={{ display: otpPending ? 'inline-flex' : 'none' }}
-          />
-          <Button
-            variant='contained'
-            className={`${classes.custom_button} ${classes.wide_input}`}
-            disableElevation
-            onClick={send_OTP}
-            disabled={otpPending === true ? true : false}
-          >
-            Send OTP
-          </Button>
-          <Button
-            variant='contained'
-            className={`${classes.custom_button} ${classes.wide_input}`}
-            disableElevation
-            onClick={verify_OTP}
-            style={{ display: otpPending ? 'block' : 'none' }}
-          >
-            Verify OTP
-          </Button>
-        </form>
-        <div className={classes.divider}>
-          <div className={classes.separator} />
-          <span className={classes.dividerContent}>or</span>
-          <div className={classes.separator} />
-        </div>
-        <div className={classes.socialAuthContainer}>
-          <Button
-            variant='outlined'
-            startIcon={<FacebookIcon />}
-            className={classes.socialAuthButton}
-            onClick={facebook_login}
-          >
-            Facebook
-          </Button>
-          <Button
-            variant='outlined'
-            startIcon={<GoogleIcon />}
-            className={classes.socialAuthButton}
-            onClick={google_login}
-          >
-            Google
-          </Button>
-        </div>
-        <div className={classes.registerContainer}>
-          Don't have an account?
-          <span className={classes.registerLink} onClick={register}>
-            Register here
-          </span>
-        </div>
-        <ToastContainer />
-      </Paper>
+          <Typography className={classes.header}>Sign in</Typography>
+          <form>
+            <TextField
+              onChange={handlePhoneChange}
+              className={classes.wide_input}
+              label='Phone Number'
+              InputLabelProps={{ className: classes.custom_label }}
+              disabled={otpSending || otpPending}
+              error={phone_error ? true : false}
+              helperText={phone_error ? phone_error : ''}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>+91</InputAdornment>
+                )
+              }}
+            />
+            <div id='reCaptcha' className={classes.recaptchaContainer} />
+            <div
+              className={
+                captcha_error ? classes.errorContainer : classes.hidden
+              }
+            >
+              Please solve the captcha
+            </div>
+            <TextField
+              onChange={handleOTPChange}
+              className={classes.wide_input}
+              label='OTP'
+              InputLabelProps={{ className: classes.custom_label }}
+              style={{ display: otpPending ? 'inline-flex' : 'none' }}
+            />
+            <Button
+              variant='contained'
+              className={`${classes.custom_button} ${classes.wide_input}`}
+              disableElevation
+              onClick={send_OTP}
+              disabled={otpPending === true ? true : false}
+            >
+              Send OTP
+            </Button>
+            <Button
+              variant='contained'
+              className={`${classes.custom_button} ${classes.wide_input}`}
+              disableElevation
+              onClick={verify_OTP}
+              style={{ display: otpPending ? 'block' : 'none' }}
+            >
+              Verify OTP
+            </Button>
+          </form>
+          <div className={classes.divider}>
+            <div className={classes.separator} />
+            <span className={classes.dividerContent}>or</span>
+            <div className={classes.separator} />
+          </div>
+          <div className={classes.socialAuthContainer}>
+            <Button
+              variant='outlined'
+              startIcon={<FacebookIcon />}
+              className={classes.socialAuthButton}
+              onClick={facebook_login}
+            >
+              Facebook
+            </Button>
+            <Button
+              variant='outlined'
+              startIcon={<GoogleIcon />}
+              className={classes.socialAuthButton}
+              onClick={google_login}
+            >
+              Google
+            </Button>
+          </div>
+          <div className={classes.registerContainer}>
+            Don't have an account?
+            <span className={classes.registerLink} onClick={register}>
+              Register here
+            </span>
+          </div>
+          <ToastContainer />
+        </Paper>
+      ) : (
+        <Paper className={classes.rootDesktop} elevation={0}>
+          <div className={classes.desktopContainer}>
+            <div className={classes.logoContainer}>
+              <MahiFormIcon />
+            </div>
+            <div className={classes.formContainer}>
+              <Backdrop open={signingIn} className={classes.backdrop}>
+                <CircularProgress color='inherit' />
+              </Backdrop>
+              {isAuthenticated && <Redirect to='/' />}
+              <div className={classes.closeButtonContainer}>
+                <IconButton onClick={returnHome}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
+              <Typography className={classes.header}>Sign in</Typography>
+              <form>
+                <TextField
+                  onChange={handlePhoneChange}
+                  className={classes.wide_input}
+                  label='Phone Number'
+                  InputLabelProps={{ className: classes.custom_label }}
+                  disabled={otpSending || otpPending}
+                  error={phone_error ? true : false}
+                  helperText={phone_error ? phone_error : ''}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>+91</InputAdornment>
+                    )
+                  }}
+                />
+                <div id='reCaptcha' className={classes.recaptchaContainer} />
+                <div
+                  className={
+                    captcha_error ? classes.errorContainer : classes.hidden
+                  }
+                >
+                  Please solve the captcha
+                </div>
+                <TextField
+                  onChange={handleOTPChange}
+                  className={classes.wide_input}
+                  label='OTP'
+                  InputLabelProps={{ className: classes.custom_label }}
+                  style={{ display: otpPending ? 'inline-flex' : 'none' }}
+                />
+                <Button
+                  variant='contained'
+                  className={`${classes.custom_button} ${classes.wide_input}`}
+                  disableElevation
+                  onClick={send_OTP}
+                  disabled={otpPending === true ? true : false}
+                >
+                  Send OTP
+                </Button>
+                <Button
+                  variant='contained'
+                  className={`${classes.custom_button} ${classes.wide_input}`}
+                  disableElevation
+                  onClick={verify_OTP}
+                  style={{ display: otpPending ? 'block' : 'none' }}
+                >
+                  Verify OTP
+                </Button>
+              </form>
+              <div className={classes.divider}>
+                <div className={classes.separator} />
+                <span className={classes.dividerContent}>or</span>
+                <div className={classes.separator} />
+              </div>
+              <div className={classes.socialAuthContainer}>
+                <Button
+                  variant='outlined'
+                  startIcon={<FacebookIcon />}
+                  className={classes.socialAuthButton}
+                  onClick={facebook_login}
+                >
+                  Facebook
+                </Button>
+                <Button
+                  variant='outlined'
+                  startIcon={<GoogleIcon />}
+                  className={classes.socialAuthButton}
+                  onClick={google_login}
+                >
+                  Google
+                </Button>
+              </div>
+              <div className={classes.registerContainer}>
+                Don't have an account?
+                <span className={classes.registerLink} onClick={register}>
+                  Register here
+                </span>
+              </div>
+              <ToastContainer />
+            </div>
+          </div>
+        </Paper>
+      )}
     </React.Fragment>
   )
 }

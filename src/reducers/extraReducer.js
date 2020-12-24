@@ -43,14 +43,17 @@ const extraReducer = (state = initialState, action) => {
     case SET_ORDERING:
       return { ...state, ordering: payload }
     case SHOW_PENDING_CAUSE:
-      return {...state, show_pending_cause: payload}
+      return { ...state, show_pending_cause: payload }
     case EXTRA_API_ERROR:
-      if(error.response.status==403){
+      if (
+        error.response &&
+        error.response.status &&
+        error.response.status === 403
+      ) {
         toast.error('You are not authorized to perform such action', {
           position: toast.POSITION.BOTTOM_CENTER
         })
-      }
-      else{
+      } else {
         toast.error('error occured while performing action', {
           position: toast.POSITION.BOTTOM_CENTER
         })
