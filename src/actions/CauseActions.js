@@ -213,7 +213,7 @@ export const getSimilarCauses = causeId => {
       })
       .catch(error => {
         dispatch(apiDispatch(GET_SIMILAR_CAUSES_PENDING, false))
-        dispatch(apiError(error))
+        // dispatch(apiError(error))
       })
   }
 }

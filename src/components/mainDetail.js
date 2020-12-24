@@ -79,6 +79,7 @@ export default function MainDetail () {
   }
 
   const activeCause = useSelector(state => state.causes.activeCause)
+  console.log(activeCause)
   const getCausePending = useSelector(state => state.causes.getCausePending)
   return (
     <ThemeProvider theme={theme}>
@@ -132,7 +133,7 @@ export default function MainDetail () {
               <Volunteer />
               <Log />
               <Suggestions />
-              <AdditionalDoc />
+              {activeCause.media_files.length!==0 ? <AdditionalDoc /> : '' }
               <AskUpdate />
               <SimilarCauses cause_id={id} />
             </div>
@@ -182,7 +183,7 @@ export default function MainDetail () {
                   <PostDetailCard />
                   <Log />
                   <Suggestions />
-                  <AdditionalDoc />
+                  {activeCause.media_files.length!==0 ? <AdditionalDoc /> : '' }
                   <AskUpdate />
                 </Grid>
                 <Grid item xs={5} className={classes.gridItemDesktop}>

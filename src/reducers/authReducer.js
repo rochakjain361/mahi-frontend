@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'
 import {
   CREATING_ACCOUNT,
   GET_AUTHENTICATION_STATUS,
