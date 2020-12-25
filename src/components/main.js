@@ -139,8 +139,8 @@ const useStyles = makeStyles(theme => ({
   landingPageHeader: {
     width: '100%',
     height: '100%',
-    borderBottomLeftRadius: '60% 20%',
-    borderBottomRightRadius: '60% 20%',
+    borderBottomLeftRadius: '60% 15%',
+    borderBottomRightRadius: '60% 15%',
     opacity: 0.6
   },
   navbarHeaderDesktop: {
@@ -162,37 +162,43 @@ const useStyles = makeStyles(theme => ({
   },
   HeaderContainer: {
     background: '#fff',
-    paddingBottom: '1rem'
+    paddingBottom: '1rem',
+    overflowX: 'hidden'
   },
   ImageContainer: {
-    borderBottomLeftRadius: '60% 21%',
-    borderBottomRightRadius: '60% 21%',
     backgroundColor: '#000',
     position: 'relative',
     color: 'white',
-    textAlign: 'center'
+    textAlign: 'center',
+    transform: 'scaleX(2.5)',
+    borderRadius: '0 0 50% 50% / 0 0 100% 100%',
+    '& *': {
+      transform: 'scaleX(0.4)'
+    }
+  },
+  textContainer: {
+    left: 0,
+    right: 0,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    top: '40%',
+    maxWidth: '40rem',
+    transform: 'scaleX(1)',
+    position: 'absolute'
   },
   title1: {
-    position: 'absolute',
-    marginLeft: '35%',
-    top: '11rem',
     fontSize: '2.5rem',
     fontWeight: '500',
     opacity: 0.6
   },
   title2: {
-    position: 'absolute',
-    marginLeft: '25%',
-    top: '14rem',
     fontSize: '2.5rem',
     fontWeight: '500'
   },
   subTitle1: {
-    position: 'absolute',
-    margin: 'auto',
-    padding: '1.5rem',
-    top: '19rem',
-    fontSize: '0.9rem',
+    marginTop: '2rem',
+    padding: '0 2rem',
+    fontSize: '1rem',
     fontWeight: '400'
   }
 }))
@@ -272,11 +278,13 @@ export default function Main () {
               src={landingPageHeader}
               className={classes.landingPageHeader}
             />
-            <div className={classes.title1}>Let's</div>
-            <div className={classes.title2}>be Better.</div>
-            <div className={classes.subTitle1}>
-              Basic necessities are every individual’s birth right. We connect
-              those deserving of aid and those providing it.
+            <div className={classes.textContainer}>
+              <div className={classes.title1}>Let's</div>
+              <div className={classes.title2}>be Better.</div>
+              <div className={classes.subTitle1}>
+                Basic necessities are every individual’s birth right. We connect
+                those deserving of aid and those providing it.
+              </div>
             </div>
           </div>
           <h3 className={classes.mottoMobile}>Be the Change</h3>
