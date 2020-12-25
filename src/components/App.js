@@ -14,6 +14,7 @@ import Register from './auth/register'
 import SignIn from './auth/signin'
 import AboutUs from './aboutUs'
 import NotFound from './notFound'
+import ScrollToTop from './scrollToTop'
 
 function App () {
   const dispatch = useDispatch()
@@ -37,19 +38,21 @@ function App () {
   }, [dispatch, logged_in_user])
   return (
     <BrowserRouter>
-      <div>
-        <Switch>
-          <Route exact path={'/'} component={Main} />
-          <Route exact path={'/add'} component={AddComplaint} />
-          <Route exact path={'/login'} component={Login} />
-          <Route exact path={'/update_user'} component={UpdateUser} />
-          <Route exact path={'/register'} component={Register} />
-          <Route exact path={'/sign_in'} component={SignIn} />
-          <Route exact path={'/about_us'} component={AboutUs} />
-          <Route exact path={'/:id'} component={MainDetail} />
-          <Route component={NotFound} />
-        </Switch>
-      </div>
+      <ScrollToTop>
+        <div>
+          <Switch>
+            <Route exact path={'/'} component={Main} />
+            <Route exact path={'/add'} component={AddComplaint} />
+            <Route exact path={'/login'} component={Login} />
+            <Route exact path={'/update_user'} component={UpdateUser} />
+            <Route exact path={'/register'} component={Register} />
+            <Route exact path={'/sign_in'} component={SignIn} />
+            <Route exact path={'/about_us'} component={AboutUs} />
+            <Route exact path={'/:id'} component={MainDetail} />
+            <Route component={NotFound} />
+          </Switch>
+        </div>
+      </ScrollToTop>
     </BrowserRouter>
   )
 }
