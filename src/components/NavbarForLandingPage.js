@@ -71,17 +71,8 @@ const useSelectStyles = makeStyles(theme => ({
 const useChipStyles = makeStyles(theme => ({
   '@global': {
     '*::-webkit-scrollbar': {
-      width: '0.1em',
-      height: '0.6rem',
-      backgroundColor: 'rgba(0,0,0,0.03)'
+      height: '0rem',
     },
-    '*::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 4px rgba(0,0,0,0.00)'
-    },
-    '*::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,0.08)',
-      borderRadius: '1rem'
-    }
   },
   root: {
     display: 'flex',

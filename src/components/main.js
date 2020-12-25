@@ -137,7 +137,11 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   landingPageHeader: {
-    width: '100%'
+    width: '100%',
+    height: '100%',
+    borderBottomLeftRadius: '60% 20%',
+    borderBottomRightRadius: '60% 20%',
+    opacity: 0.6
   },
   navbarHeaderDesktop: {
     padding: '1% 10% 1% 10%',
@@ -155,6 +159,41 @@ const useStyles = makeStyles(theme => ({
     background: '#fff',
     zIndex: '1100',
     boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)'
+  },
+  HeaderContainer: {
+    background: '#fff',
+    paddingBottom: '1rem'
+  },
+  ImageContainer: {
+    borderBottomLeftRadius: '60% 21%',
+    borderBottomRightRadius: '60% 21%',
+    backgroundColor: '#000',
+    position: 'relative',
+    color: 'white',
+    textAlign: 'center'
+  },
+  title1: {
+    position: 'absolute',
+    marginLeft: '35%',
+    top: '11rem',
+    fontSize: '2.5rem',
+    fontWeight: '500',
+    opacity: 0.6
+  },
+  title2: {
+    position: 'absolute',
+    marginLeft: '25%',
+    top: '14rem',
+    fontSize: '2.5rem',
+    fontWeight: '500'
+  },
+  subTitle1: {
+    position: 'absolute',
+    margin: 'auto',
+    padding: '1.5rem',
+    top: '19rem',
+    fontSize: '0.9rem',
+    fontWeight: '400'
   }
 }))
 
@@ -227,8 +266,19 @@ export default function Main () {
     <React.Fragment>
       <NavbarForLandingPage />
       {isMobile ? (
-        <div style={{ background: '#fff', paddingBottom: '1rem' }}>
-          <img src={landingPageHeader} className={classes.landingPageHeader} />
+        <div className={classes.HeaderContainer}>
+          <div className={classes.ImageContainer}>
+            <img
+              src={landingPageHeader}
+              className={classes.landingPageHeader}
+            />
+            <div className={classes.title1}>Let's</div>
+            <div className={classes.title2}>be Better.</div>
+            <div className={classes.subTitle1}>
+              Basic necessities are every individual’s birth right. We connect
+              those deserving of aid and those providing it.
+            </div>
+          </div>
           <h3 className={classes.mottoMobile}>Be the Change</h3>
         </div>
       ) : (
