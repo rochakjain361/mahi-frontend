@@ -18,6 +18,7 @@ import Asset2 from '../icons/asset2'
 import Asset3 from '../icons/asset3'
 import MahiIcon from '../icons/mahi'
 import Navbar from './Navbar'
+import aboutUsPageHeader from '../media/aboutUsPageHeader.png'
 import aboutUsHeader from '../media/aboutUsHeader.png'
 import { isMobile } from 'react-device-detect'
 
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '612px',
     margin: 'auto'
   },
-  headerContent:{
+  headerContent: {
     fontSize: '20px',
     padding: '0 1.25rem',
     lineHeight: '1.875rem',
@@ -57,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '590px',
     margin: 'auto',
     fontFamily: 'Montserrat',
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   },
   subtitle: {
     fontSize: '1rem',
@@ -101,7 +102,40 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto'
   },
   aboutUsHeaderImage: {
-    width: '100%',
+    width: '100%'
+  },
+  ImageContainer: {
+    background: '#fff',
+    textAlign: 'center',
+    color: 'white'
+  },
+  image: {
+    width: '100%'
+  },
+  title1: {
+    margin: 'auto',
+    top: '13rem',
+    position: 'absolute',
+    padding: '3.5rem',
+    fontSize: '1rem',
+    fontFamily: 'Montserrat',
+    fontStyle: 'italic',
+    fontWeight: '500',
+    lineHeight: '1.25rem'
+  },
+  subtitle1: {
+    position: 'absolute',
+    left: '60%',
+    fontSize: '0.75rem',
+    top: '22rem',
+    fontFamily: 'Montserrat',
+    fontWeight: '400',
+    lineHeight: '1.25rem'
+  },
+  subHeaderContent: {
+    textAlign: 'right',
+    marginTop: '1rem',
+    fontStyle: 'normal'
   }
 }))
 
@@ -110,28 +144,53 @@ export default function AboutUs (props) {
   return (
     <div>
       <Navbar />
+      {isMobile ? (
+        <div className={classes.ImageContainer}>
+          <img src={aboutUsPageHeader} cclassName={classes.image} />
+          <div className={classes.title1}>
+            " I cannot do all the good that the world needs. But the world needs
+            all the good that I can do. "
+          </div>
+          <div className={classes.subtitle1}>Jana Stanfield</div>
+        </div>
+      ) : (
+        ''
+      )}
       <Container className={classes.root} maxWidth={false}>
         <ThemeProvider theme={theme}>
           <div className={classes.mainDiv}>
-          {isMobile ? (
-                ''
-              ) : (
-                <Grid container lg={12} className={classes.gridContent} style={{marginBottom: '5rem'}}>
-                  <Grid item lg={6} sm={6} xs={12}>
-                    <div style={{ margin: '0.5rem' }}>
-                      <img
-                        src={aboutUsHeader}
-                        className={classes.aboutUsHeaderImage}
-                      />
-                    </div>
-                  </Grid>
-                  <Grid item lg={6} sm={6} xs={12} className={classes.headerContent}>
-                    I cannot do all the good that the world needs. But the world
-                    needs all the good that I can do. <br />
-                    <div style={{ textAlign: 'right', marginTop: '1rem', fontStyle: 'normal' }}> - Jana Stanfield</div>
-                  </Grid>
+            {isMobile ? (
+              ''
+            ) : (
+              <Grid
+                container
+                lg={12}
+                className={classes.gridContent}
+                style={{ marginBottom: '5rem' }}
+              >
+                <Grid item lg={6} sm={6} xs={12}>
+                  <div style={{ margin: '0.5rem' }}>
+                    <img
+                      src={aboutUsHeader}
+                      className={classes.aboutUsHeaderImage}
+                    />
+                  </div>
                 </Grid>
-              )}
+                <Grid
+                  item
+                  lg={6}
+                  sm={6}
+                  xs={12}
+                  className={classes.headerContent}
+                >
+                  I cannot do all the good that the world needs. But the world
+                  needs all the good that I can do. <br />
+                  <div className={classes.subHeaderContent}>
+                    Jana Stanfield
+                  </div>
+                </Grid>
+              </Grid>
+            )}
             <h3 className={classes.title}>About Us.</h3>
             <Typography className={classes.content}>
               Mahi literally means “The Union of Heaven and Earth”. The vision

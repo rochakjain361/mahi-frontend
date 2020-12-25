@@ -14,11 +14,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import ClearIcon from '@material-ui/icons/Clear'
-
 import PostCard from './postCard'
 import { getAllCauses, getMoreCauses } from '../actions/CauseActions'
 import { theme } from '../theme'
-import NavbarForLandingPage from './NavbarForLandingPage'
+import landingPageHeader from '../media/landingPageHeader.png'
+import NavbarForLandingPage, {
+  Chips,
+  SimpleSelect
+} from './NavbarForLandingPage'
 
 const useStyles = makeStyles(theme => ({
   desktopRoot: {
@@ -58,7 +61,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     position: 'sticky',
-    bottom: '1rem'
+    bottom: '1rem',
+    zIndex: '1200'
   },
   fabContainerDesktop: {
     display: 'flex',
@@ -70,7 +74,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     position: 'sticky',
-    bottom: '4rem'
+    bottom: '4rem',
+    zIndex: '1200'
   },
   loader: {
     width: '100%',
@@ -119,6 +124,76 @@ const useStyles = makeStyles(theme => ({
   closeAlertDesktop: {
     paddingTop: '0.75rem',
     marginLeft: '2rem'
+  },
+  motto: {
+    padding: '0 1.25rem',
+    fontSize: '1.5rem',
+    fontWeight: 500
+  },
+  mottoMobile: {
+    padding: '0 1.25rem',
+    fontSize: '1.5rem',
+    fontWeight: 500,
+    textAlign: 'center'
+  },
+  landingPageHeader: {
+    width: '100%',
+    height: '100%',
+    borderBottomLeftRadius: '60% 20%',
+    borderBottomRightRadius: '60% 20%',
+    opacity: 0.6
+  },
+  navbarHeaderDesktop: {
+    padding: '1% 10% 1% 10%',
+    boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)',
+    background: 'white',
+    borderTop: '-1rem',
+    position: 'sticky',
+    top: '4rem',
+    zIndex: '1100'
+  },
+  navbarHeaderMobile: {
+    position: 'sticky',
+    top: '3.5rem',
+    paddingTop: '0.5rem',
+    background: '#fff',
+    zIndex: '1100',
+    boxShadow: '0px 7px 7px -7px rgba(0, 0, 0, 0.1)'
+  },
+  HeaderContainer: {
+    background: '#fff',
+    paddingBottom: '1rem'
+  },
+  ImageContainer: {
+    borderBottomLeftRadius: '60% 21%',
+    borderBottomRightRadius: '60% 21%',
+    backgroundColor: '#000',
+    position: 'relative',
+    color: 'white',
+    textAlign: 'center'
+  },
+  title1: {
+    position: 'absolute',
+    marginLeft: '35%',
+    top: '11rem',
+    fontSize: '2.5rem',
+    fontWeight: '500',
+    opacity: 0.6
+  },
+  title2: {
+    position: 'absolute',
+    marginLeft: '25%',
+    top: '14rem',
+    fontSize: '2.5rem',
+    fontWeight: '500'
+  },
+  subTitle1: {
+    position: 'absolute',
+    margin: 'auto',
+    padding: '1.5rem',
+    top: '19rem',
+    fontSize: '0.9rem',
+    fontWeight: '400'
   }
 }))
 
@@ -190,6 +265,42 @@ export default function Main () {
   return (
     <React.Fragment>
       <NavbarForLandingPage />
+      {isMobile ? (
+        <div className={classes.HeaderContainer}>
+          <div className={classes.ImageContainer}>
+            <img
+              src={landingPageHeader}
+              className={classes.landingPageHeader}
+            />
+            <div className={classes.title1}>Let's</div>
+            <div className={classes.title2}>be Better.</div>
+            <div className={classes.subTitle1}>
+              Basic necessities are every individual’s birth right. We connect
+              those deserving of aid and those providing it.
+            </div>
+          </div>
+          <h3 className={classes.mottoMobile}>Be the Change</h3>
+        </div>
+      ) : (
+        <div className={classes.navbarHeaderDesktop}>
+          <Grid container lg={12}>
+            <Grid item xs={12} sm={12} lg={8}>
+              <Chips />
+            </Grid>
+            <Grid item xs={12} sm={12} lg={4}>
+              <SimpleSelect />
+            </Grid>
+          </Grid>
+        </div>
+      )}
+      {isMobile ? (
+        <div className={classes.navbarHeaderMobile}>
+          <Chips />
+          <SimpleSelect />
+        </div>
+      ) : (
+        ''
+      )}
       <ThemeProvider theme={theme}>
         {pending_causes ? (
           <div className={classes.loader}>

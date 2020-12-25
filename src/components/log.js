@@ -65,6 +65,11 @@ function a11yProps (index) {
 }
 
 const useStyles = makeStyles(theme => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0rem'
+    },
+  },
   root: {
     width: '100%',
     display: 'flex',
@@ -354,15 +359,10 @@ function LogTabs () {
             />
           </Tabs>
         </div>
-        <SwipeableViews
-          className={classes.swipeableContainer}
-          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-        >
+          <div className={classes.swipeableContainer}>
           <TabPanel value={value} index={0} dir={theme.direction} className={classes.tabPanel}>
             <GridList className={classes.gridList} cols={1}>
-              <GridListTile key='0'>
+              <GridListTile key='0' style={{minHeight: '22.5vw', overflow: 'hidden'}}>
                 <Card className={classes.inputCard}>
                   <FormLabel className={classes.formLabel}>
                     <div onClick={() => removeImage('needy_photo')}>
@@ -458,8 +458,8 @@ function LogTabs () {
               {moreCauseActivities}
             </Collapse>
           </TabPanel>
-        </SwipeableViews>
         <ToastContainer />
+      </div>
       </div>
     </ThemeProvider>
   )

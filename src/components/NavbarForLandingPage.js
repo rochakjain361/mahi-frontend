@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Chip from '@material-ui/core/Chip'
-import { ThemeProvider } from '@material-ui/core'
+import { Grid, ThemeProvider } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
@@ -15,14 +15,15 @@ import {
   showPendingCause
 } from '../actions/extraActions'
 import NavbarContent, { NavbarContentDesktop, NavbarExtra } from './Navbar'
-import { isMobile } from 'react-device-detect'
+import { isMobile, isTablet } from 'react-device-detect'
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    boxShadow: '0px 0px 7px rgba(0, 0, 0, 0.1)',
     width: '100%',
-    zIndex: 1100
+    zIndex: 1100,
+    border: 'none',
+    boxShadow: 'none',
   },
   motto: {
     padding: '0 1.25rem',
@@ -40,7 +41,6 @@ const useSelectStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'baseline',
     fontSize: '0.75rem',
-    flexDirection: 'column'
   },
   selectContainer: {
     display: 'flex',
@@ -69,10 +69,16 @@ const useSelectStyles = makeStyles(theme => ({
 }))
 
 const useChipStyles = makeStyles(theme => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      height: '0rem',
+    },
+  },
   root: {
     display: 'flex',
     overflowX: 'auto',
-    padding: '0 0 0 1.25rem',
+    margin: '0 1rem',
+    padding: '0 0 0 0.5rem',
     marginBottom: theme.spacing(2),
     '& > *': {
       backgroundColor: '#F5F5F5',
@@ -87,7 +93,7 @@ const useChipStyles = makeStyles(theme => ({
   }
 }))
 
-function SimpleSelect () {
+export function SimpleSelect () {
   const classes = useSelectStyles()
   const dispatch = useDispatch()
   const ordering = useSelector(state => state.extras.ordering)
@@ -113,8 +119,8 @@ function SimpleSelect () {
   }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.selectContainer}>
+    <Grid container lg={12} className={classes.root}>
+      <Grid item lg={6} xs={5} className={classes.selectContainer}>
         <FormControl className={classes.labelControl}>
           <div>Sorted by</div>
         </FormControl>
@@ -130,9 +136,9 @@ function SimpleSelect () {
             <MenuItem value={'-supporter_count'}>Supports</MenuItem>
           </Select>
         </FormControl>
-      </div>
+      </Grid>
       {user && user.is_volunteer && (
-        <div className={classes.selectContainer}>
+        <Grid item lg={6} xs={7} className={classes.selectContainer}>
           <FormControl className={classes.labelControl}>
             <div>Show:</div>
           </FormControl>
@@ -148,13 +154,13 @@ function SimpleSelect () {
               <MenuItem value={true}>Pending complains</MenuItem>
             </Select>
           </FormControl>
-        </div>
+        </Grid>
       )}
-    </div>
+    </Grid>
   )
 }
 
-function Chips () {
+export function Chips () {
   const classes = useChipStyles()
   const dispatch = useDispatch()
   useEffect(() => {
@@ -198,12 +204,10 @@ export default function NavbarForLandingPage (props) {
       <div className={classes.root}>
         <ThemeProvider theme={theme}>
           <AppBar position='static' elevation={0}>
-            {isMobile ? <NavbarContent /> : <NavbarContentDesktop />}
+            {isMobile ? <NavbarContent/> : <NavbarContentDesktop />}
             <div className={isMobile ? '' : classes.appBarDesktop}>
               {isMobile ? '' : <NavbarExtra />}
-              <h3 className={classes.motto}>Be the Change</h3>
-              <Chips />
-              <SimpleSelect />
+              {isMobile ? '' : <h3 className={classes.motto}>Be the Change</h3>}
             </div>
           </AppBar>
         </ThemeProvider>

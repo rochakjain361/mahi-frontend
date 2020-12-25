@@ -23,7 +23,7 @@ import MenuIcon from '../icons/menu'
 import { theme } from '../theme'
 import { useHistory } from 'react-router-dom'
 import { logout } from '../actions/AuthActions'
-import { isMobile } from 'react-device-detect'
+import { isMobile, isTablet } from 'react-device-detect'
 import MahiIcon from '../icons/mahi'
 
 const useStyles = makeStyles(theme => ({
@@ -392,7 +392,7 @@ export default function Navbar (props) {
       <div className={classes.root}>
         <ThemeProvider theme={theme}>
           <AppBar position='static' elevation={0}>
-            {isMobile ? <NavbarContent /> : <NavbarContentDesktop />}
+            {isMobile ? <NavbarContent/> : <NavbarContentDesktop />}
           </AppBar>
         </ThemeProvider>
       </div>
