@@ -15,8 +15,12 @@ import {
   AUTH_ERROR,
   OTP_ERROR,
   SIGNING_OUT,
-  CLEAR_USER
+  CLEAR_USER,
+  VERIFY_EMAIL_PENDING,
+  UPDATE_USER_PENDING,
+  SENDING_EMAIL
 } from './AuthActionTypes'
+import { toast } from 'material-react-toastify'
 
 const apiDispatch = (actionType = '', data) => {
   return {
@@ -56,7 +60,9 @@ export const sendOTP = (
         let phone_number_exists = response_data.phone_number_exists
         if (!phone_number_exists) {
           dispatch(apiDispatch(GET_PHONE_NUMBER_EXISTS, false))
-          failure_callback('Phone number does not exist. Try creating a new account with this phone number')
+          failure_callback(
+            'Phone number does not exist. Try creating a new account with this phone number'
+          )
         } else {
           dispatch(apiDispatch(GET_PHONE_NUMBER_EXISTS, true))
           dispatch(apiDispatch(GET_OTP_SENDING, true))
@@ -356,5 +362,62 @@ export const logout = () => {
             window.location.href = '/'
           })
       })
+  }
+}
+
+export const updateUser = (
+  data,
+  success_callback = message => {},
+  error_callback = message => {}
+) => {
+  let url = USER_APIS.update_profile
+  return dispatch => {
+    dispatch(apiDispatch(UPDATE_USER_PENDING, true))
+    apiAuthClient
+      .patch(url, data)
+      .then(response => {
+        let response_data = response.data
+        dispatch(apiDispatch(UPDATE_USER_PENDING, false))
+        dispatch(apiDispatch(GET_LOGGEDINUSER, response_data))
+        success_callback('Data updated successfully')
+      })
+      .catch(error => {
+        dispatch(apiDispatch(UPDATE_USER_PENDING, false))
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          error_callback(error.response.data.error)
+        } else error_callback('Unable to update user info')
+      })
+  }
+}
+
+export const verifyEmail = () => {
+  return dispatch => {
+    dispatch(apiDispatch(SENDING_EMAIL, true))
+    dispatch(apiDispatch(VERIFY_EMAIL_PENDING, true))
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        user
+          .sendEmailVerification()
+          .then(() => {
+            // Email sent.
+            dispatch(apiDispatch(SENDING_EMAIL, false))
+            toast.success('Verification link sent on email', {
+              position: toast.POSITION.BOTTOM_CENTER
+            })
+            apiAuthClient.post(USER_APIS.firebase_sync, {})
+          })
+          .catch(error => {
+            dispatch(apiDispatch(VERIFY_EMAIL_PENDING, false))
+            dispatch(apiDispatch(SENDING_EMAIL, false))
+            toast.error('Unable to send verification link', {
+              position: toast.POSITION.BOTTOM_CENTER
+            })
+          })
+      }
+    })
   }
 }

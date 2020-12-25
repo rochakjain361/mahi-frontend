@@ -7,7 +7,10 @@ import {
   SIGNING_IN,
   SIGNING_OUT,
   CLEAR_USER,
-  AUTH_ERROR
+  AUTH_ERROR,
+  SENDING_EMAIL,
+  VERIFY_EMAIL_PENDING,
+  UPDATE_USER_PENDING,
 } from '../actions/AuthActionTypes'
 
 const initialCreatingStatus = { creatingAccount: false }
@@ -17,7 +20,10 @@ const initialSigningStatus = { signingIn: false, signingOut: false }
 const initialAuthenticationStatus = { isAuthenticated: false }
 
 const initialPendingState = {
-  getLoggedinuserPending: false
+  getLoggedinuserPending: false,
+  sendEmailPending: false,
+  updateUserPending: false,
+  verifyEmailPending: false,
 }
 
 const initialState = {
@@ -45,6 +51,12 @@ const AuthReducer = (state = initialState, action) => {
       return { ...state, signingOut: payload }
     case CLEAR_USER:
       return { ...initialState }
+    case SENDING_EMAIL: 
+      return { ...state, sendEmailPending: payload }
+    case VERIFY_EMAIL_PENDING:
+      return { ...state, verifyEmailPending: payload }
+    case UPDATE_USER_PENDING:
+      return { ...state, updateUserPending: payload }
     case AUTH_ERROR:
       return { ...state, error: error }
     default:

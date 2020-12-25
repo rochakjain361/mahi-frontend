@@ -152,7 +152,6 @@ const causeReducer = (state = initialState, action) => {
         error.response.status &&
         error.response.status === 403
       ) {
-        console.log('true')
         toast.error('You are not authorized to perform such action', {
           position: toast.POSITION.BOTTOM_CENTER
         })

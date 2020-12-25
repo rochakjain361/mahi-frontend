@@ -250,6 +250,7 @@ export function NavbarContent (props) {
             : ''
         }
         className={classes.avatar}
+        onClick = {() => {history.push('/update_user')}}
       >
         {LoggedInUser && LoggedInUser.first_name
           ? LoggedInUser.first_name[0]
@@ -375,6 +376,7 @@ export function NavbarContentDesktop (props) {
               : ''
           }
           className={classes.avatar}
+          onClick = {() => {history.push('/update_user')}}
         >
           {LoggedInUser && LoggedInUser.first_name
             ? LoggedInUser.first_name[0]
