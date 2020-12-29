@@ -24,6 +24,11 @@ import NavbarForLandingPage, {
 } from './NavbarForLandingPage'
 
 const useStyles = makeStyles(theme => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.1em',
+    },
+  },
   desktopRoot: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -68,7 +73,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     position: 'sticky',
-    bottom: '5.5rem'
+    bottom: '5.5rem',
+    zIndex: '1200'
   },
   fabContainerMobile: {
     display: 'flex',
@@ -92,7 +98,8 @@ const useStyles = makeStyles(theme => ({
     padding: '1rem',
     position: 'sticky',
     bottom: '0',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    zIndex: '1200'
   },
   alertBarMobile: {
     width: '100%',
@@ -101,7 +108,8 @@ const useStyles = makeStyles(theme => ({
     padding: '0.25rem 0',
     position: 'sticky',
     bottom: '0',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    zIndex: '1200'
   },
   hiddenAlertBar: {
     display: 'none'
