@@ -31,6 +31,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
 import { isMobile } from 'react-device-detect'
 import Navbar from '../Navbar'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -113,6 +114,7 @@ const useStyles = makeStyles(theme => ({
 export default function UpdateUser () {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const history = useHistory()
   const [first_name, setFirstName] = useState(null)
   const [last_name, setLastName] = useState(null)
   const [email, setEmail] = useState(null)
@@ -182,6 +184,7 @@ export default function UpdateUser () {
   return (
     <React.Fragment>
       <Navbar />
+      {isAuthenticated===false && history.push('/')}
       <div className={isMobile ? classes.root : classes.rootDesktop}>
         <div
           className={isMobile ? classes.container : classes.containerDesktop}
