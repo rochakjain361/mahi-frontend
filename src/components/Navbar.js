@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
@@ -11,6 +11,7 @@ import extraNavbarMedia from '../media/extraNavbarMedia.png'
 import {
   Button,
   Divider,
+  Grid,
   List,
   ListItem,
   ListItemText,
@@ -60,7 +61,7 @@ const useStyles = makeStyles(theme => ({
   },
   extraNavbar: {
     display: 'flex',
-    marginTop: '8%',
+    marginTop: '5%',
     justifyContent: 'space-between'
   },
   extraNavbarDescription: {
@@ -71,7 +72,7 @@ const useStyles = makeStyles(theme => ({
   },
   extraNavbarMedia: {
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   topExtraNavbar: {
     fontSize: '5rem',
@@ -82,7 +83,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   midExtraNavbar: {
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    paddingRight: '5rem'
   },
   lets: {},
   createUtopia: {},
@@ -121,7 +123,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: 'max-content'
   },
   sideBar: {
-    width: 250
+    width: 270
   },
   list: {
     padding: '1.75rem 0.25rem'
@@ -266,8 +268,10 @@ export function NavbarExtra (props) {
   const dispatch = useDispatch()
 
   return (
-    <div className={classes.extraNavbar}>
-      <div className={classes.extraNavbarDescription}>
+    <div>
+      <Grid container className={classes.extraNavbar}>
+        <Grid item lg={6} xs={6} className={classes.extraNavbarDescription}>
+        <div>
         <div className={classes.topExtraNavbar}>
           <div className={classes.lets}>Let's</div>
           <div className={classes.createUtopia}>Create a Utopia</div>
@@ -293,9 +297,13 @@ export function NavbarExtra (props) {
           </Button>
         </div>
       </div>
-      <div className={classes.extraNavbarMedia}>
-        <img src={extraNavbarMedia}></img>
+        </Grid>
+      <Grid item lg={6} xs={6} className={classes.extraNavbarMedia}> 
+      <div>
+        <img src={extraNavbarMedia} style={{width: '100%'}}/>
       </div>
+      </Grid>
+      </Grid>
     </div>
   )
 }
@@ -389,12 +397,29 @@ export function NavbarContentDesktop (props) {
 
 export default function Navbar (props) {
   const classes = useStyles()
+
+  const[state, setState] = useState({
+    responseView: false,
+  })
+
+  useEffect(() => {
+    const setResponsiveness = () => {
+      return window.innerWidth < 1300
+        ? setState((prevState) => ({ ...prevState, responseView: true }))
+        : setState((prevState) => ({ ...prevState, responseView: false }));
+    };
+
+    setResponsiveness();
+
+    window.addEventListener("resize", () => setResponsiveness());
+  }, []);
+
   return (
     <div>
       <div className={classes.root}>
         <ThemeProvider theme={theme}>
           <AppBar position='static' elevation={0}>
-            {isMobile ? <NavbarContent/> : <NavbarContentDesktop />}
+            {isMobile ? <NavbarContent/> : state.responseView ? <NavbarContent/> : <NavbarContentDesktop />}
           </AppBar>
         </ThemeProvider>
       </div>

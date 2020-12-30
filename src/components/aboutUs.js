@@ -21,6 +21,9 @@ import Navbar from './Navbar'
 import aboutUsPageHeader from '../media/aboutUsPageHeader.png'
 import aboutUsHeader from '../media/aboutUsHeader.png'
 import { isMobile } from 'react-device-detect'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { getAllTags } from '../actions/extraActions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,11 +31,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     flexFlow: 'column',
     flexGrow: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: '0'
   },
   mainDiv: {
     width: '100%',
-    padding: '1rem 1rem 2.5rem 1rem',
+    padding: '1rem 0rem 2.5rem 0rem',
     marginBottom: '1rem',
     background: 'white',
     textAlign: 'center'
@@ -141,12 +145,18 @@ const useStyles = makeStyles(theme => ({
 
 export default function AboutUs (props) {
   const classes = useStyles()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getAllTags())
+  }, [dispatch])
+  const all_tags = useSelector(state => state.extras.Tags)
+  console.log(all_tags)
   return (
     <div>
       <Navbar />
       {isMobile ? (
         <div className={classes.ImageContainer}>
-          <img src={aboutUsPageHeader} cclassName={classes.image} />
+          <img src={aboutUsPageHeader} className={classes.image} />
           <div className={classes.title1}>
             " I cannot do all the good that the world needs. But the world needs
             all the good that I can do. "
@@ -259,10 +269,10 @@ export default function AboutUs (props) {
           </div>
           <div className={classes.mainDiv}>
             <Grid container lg={12} className={classes.gridContent}>
-              <Grid item lg={2} sm={4} xs={12}>
+              <Grid item lg={3} sm={6} xs={12}>
                 <MahiIcon className={classes.mahIcon} />
               </Grid>
-              <Grid item lg={2} sm={4} xs={12}>
+              <Grid item lg={3} sm={6} xs={12}>
                 <div className={classes.subtitle}>Resources</div>
                 <Typography className={classes.subcontent}>
                   Home <br />
@@ -270,24 +280,14 @@ export default function AboutUs (props) {
                   Volunteer <br />
                 </Typography>
               </Grid>
-              <Grid item lg={2} sm={4} xs={12}>
+              <Grid item lg={3} sm={6} xs={12}>
                 <div className={classes.subtitle}>Add Complaint</div>
                 <Typography className={classes.subcontent}>
-                  Hunger <br />
-                  Health <br />
-                  Homeless <br />
-                  JEE/NEET <br />
-                  Others <br />
-                </Typography>
-              </Grid>
-              <Grid item lg={3} sm={6} xs={12}>
-                <div className={classes.subtitle}>More</div>
-                <Typography className={classes.subcontent}>
-                  Become a Volunteer
-                  <br />
-                  Help Needy <br />
-                  Success Stories <br />
-                  Common Question <br />
+                  {all_tags && all_tags.map(tag => (
+                    <div>
+                      {tag.tag_name}
+                    </div>
+                  ))}
                 </Typography>
               </Grid>
               <Grid item lg={3} sm={6} xs={12}>

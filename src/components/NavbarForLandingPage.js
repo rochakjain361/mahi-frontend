@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
@@ -199,12 +199,29 @@ export function Chips () {
 
 export default function NavbarForLandingPage (props) {
   const classes = useStyles()
+
+  const[state, setState] = useState({
+    responseView: false,
+  })
+
+  useEffect(() => {
+    const setResponsiveness = () => {
+      return window.innerWidth < 1300
+        ? setState((prevState) => ({ ...prevState, responseView: true }))
+        : setState((prevState) => ({ ...prevState, responseView: false }));
+    };
+
+    setResponsiveness();
+
+    window.addEventListener("resize", () => setResponsiveness());
+  }, []);
+
   return (
     <div>
       <div className={classes.root}>
         <ThemeProvider theme={theme}>
           <AppBar position='static' elevation={0}>
-            {isMobile ? <NavbarContent/> : <NavbarContentDesktop />}
+            {isMobile ? <NavbarContent/> : state.responseView ? <NavbarContent/> : <NavbarContentDesktop />}
             <div className={isMobile ? '' : classes.appBarDesktop}>
               {isMobile ? '' : <NavbarExtra />}
               {isMobile ? '' : <h3 className={classes.motto}>Be the Change</h3>}
